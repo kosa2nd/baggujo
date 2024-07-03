@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 public class SecurityConfig {
@@ -21,7 +23,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer()throws Exception {
         //이미지,JS파일 리소스 사용가능하게함
-        return (web) -> web.ignoring().requestMatchers("/static/**");
+        return (web) -> web.ignoring().requestMatchers("/favicon.ico", "/static/**", "/error");
     }
 
     @Bean
@@ -34,11 +36,15 @@ public class SecurityConfig {
                 //특정 페이지에 대해 접근 제한 해제
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/login", "/register").permitAll()
+                                .requestMatchers("/member/login", "/register").permitAll()
                                 .requestMatchers("/**").authenticated())
 
                 //폼 로그인 url 설정
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin((formLogin) ->
+                        formLogin
+                                .loginPage("/member/login")
+                                .loginProcessingUrl("/loginProcess")
+                                .permitAll())
 
                 //로그아웃 시 세션 파기 설정
                 .logout(logout ->
@@ -47,6 +53,13 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true));
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+        handler.setUseReferer(true); // 리퍼러 사용 설정
+        return handler;
     }
 
 }
