@@ -33,7 +33,7 @@ public class SecurityConfig {
                 //특정 페이지에 대해 접근 제한 해제
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/", "/register").permitAll())
+                                .requestMatchers("/**", "/register").permitAll())
 
                 //폼 로그인 url 설정
                 .formLogin(formLogin ->
