@@ -1,0 +1,11 @@
+<!doctype html>
+<<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+
+</head>
+<body>
+<h1>hello</h1>
+<p th:text="${#authentication.principal.id}"></p>
+<p th:text="${#authentication.principal.nickname}"></p>
+</body>
+</html>
