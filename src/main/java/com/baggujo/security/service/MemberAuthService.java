@@ -28,7 +28,7 @@ public class MemberAuthService implements UserDetailsService {
             throw new UsernameNotFoundException("SQL 문제 발생");
         }
 
-        return new MemberAuthDTO(memberDTO.getId(), memberDTO.getEmail(), memberDTO.getNickname());
+        return new MemberAuthDTO(memberDTO.getId(), memberDTO.getEmail(), memberDTO.getNickname(), memberDTO.getPassword());
     }
 
 }

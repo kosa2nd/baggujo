@@ -14,6 +14,7 @@ public class MemberAuthDTO implements UserDetails {
     private long id;
     private String email;
     private String nickname;
+    private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -22,11 +23,11 @@ public class MemberAuthDTO implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 }
