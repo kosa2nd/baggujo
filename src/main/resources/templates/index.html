@@ -1,11 +1,11 @@
 <!doctype html>
-<<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-
-</head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 <body>
 <h1>hello</h1>
-<p th:text="${#authentication.principal.id}"></p>
-<p th:text="${#authentication.principal.nickname}"></p>
+<div sec:authorize="isAuthenticated()">
+    <p th:text="${#authentication.principal.id}"></p>
+    <p th:text="${#authentication.principal.nickname}"></p>
+</div>
 </body>
 </html>

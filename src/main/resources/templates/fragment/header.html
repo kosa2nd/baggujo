@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en">
+<<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="headerFragment">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -51,7 +52,8 @@
                 <div role="button" class="cursor dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-list text-white fs-4"></i>
                 </div>
-                <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+                <!--로그인 전-->
+                <div  sec:authorize="isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
                         <i class="bi bi-person fs-5 pr-1"></i>
                         <span>마이페이지</span>
@@ -65,9 +67,17 @@
                         <span>거래내역</span>
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/logout">
                         <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
                         <span>로그아웃</span>
+                    </a>
+                </div>
+                <!--로그인 후-->
+                <div  sec:authorize="!isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/member/login">
+                        <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
+                        <span>로그인</span>
                     </a>
                 </div>
             </div>
@@ -79,4 +89,5 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+</th:block>
 </html>

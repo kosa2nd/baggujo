@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer()throws Exception {
         //이미지,JS파일 리소스 사용가능하게함
-        return (web) -> web.ignoring().requestMatchers("/favicon.ico", "/static/**", "/error");
+        return (web) -> web.ignoring().requestMatchers("/favicon.ico", "resources/**", "/error");
     }
 
     @Bean
@@ -36,9 +36,9 @@ public class SecurityConfig {
                 //특정 페이지에 대해 접근 제한 해제
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/member/login", "/register").permitAll()
-                                .requestMatchers("/**").authenticated())
-
+                                //.requestMatchers("/member/login", "/register", "/fragment/**").permitAll())
+                                //.requestMatchers("/").authenticated())
+                                .requestMatchers("/**").permitAll())
                 //폼 로그인 url 설정
                 .formLogin((formLogin) ->
                         formLogin
@@ -49,7 +49,7 @@ public class SecurityConfig {
                 //로그아웃 시 세션 파기 설정
                 .logout(logout ->
                         logout
-                            .logoutSuccessUrl("/")
+                                .logoutSuccessUrl("/")
                                 .invalidateHttpSession(true));
 
         return http.build();
