@@ -1,0 +1,84 @@
+/* reset.css */
+
+/* 박스 모델을 일관되게 설정합니다 */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* HTML5 요소를 기본 스타일로 설정합니다 */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display: block;
+}
+
+/* 기본 폰트 설정을 초기화합니다 */
+body {
+    line-height: 1;
+    font-family: Arial, sans-serif;
+}
+
+
+/* 목록 스타일을 초기화합니다 */
+ol, ul {
+    list-style: none;
+}
+
+/* 인용구 스타일을 초기화합니다 */
+blockquote, q {
+    quotes: none;
+}
+
+blockquote::before, blockquote::after,
+q::before, q::after {
+    content: '';
+    content: none;
+}
+
+/* 테이블 스타일을 초기화합니다 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 링크 스타일을 초기화합니다 */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 폼 요소 스타일을 초기화합니다 */
+input, button, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button, input {
+    border: none;
+    background: none;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+}
+
+textarea {
+    resize: none;
+    outline: none;
+}
+
+select {
+    appearance: none;
+    outline: none;
+    border: none;
+    background: none;
+}
+
+/* 이미지 스타일을 초기화합니다 */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}

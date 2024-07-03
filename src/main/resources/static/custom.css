@@ -1,0 +1,89 @@
+.border-none {
+    border: none !important;
+}
+
+.no-outline:focus {
+    outline: none !important;
+    box-shadow: none;
+}
+
+/* 폰트 사이즈 */
+.fs-1 {
+    font-size: 2.5rem;
+}
+.fs-2 {
+    font-size: 2rem;
+}
+.fs-3 {
+    font-size: 1.75rem;
+}
+.fs-4 {
+    font-size: 1.5rem;
+}
+.fs-5 {
+    font-size: 1.25rem;
+}
+.fs-6 {
+    font-size: 1rem;
+}
+
+
+/* 알림 */
+.alarm {
+    position: relative;
+}
+.alarm::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+.alarm-read {
+    color: darkgray;
+}
+.alarm-read:hover{
+    color: gray;
+    background-color: #fff;
+}
+
+/* 커서 */
+.cursor {
+    cursor: pointer;
+}
+.cursor-none{
+    cursor: none;
+}
+
+.box-size{
+    width: 300px;
+    height: 300px;
+}
+
+
+/* 드롭 다운 */
+.dropdown-item:active {
+    background-color: #375a7f;
+    color: white;
+}
+
+.dropdown-menu {
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 드롭다운 화살표 스타일 */
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 18px;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+}
+
