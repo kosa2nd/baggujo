@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.List;
 @RequestMapping("/item")
 public class ItemController {
 
-    //@Autowired
-    //private ItemService itemService;
+    @Autowired
+    private ItemService itemService;
 
     @GetMapping("/insert")
     public String insert() {
@@ -26,9 +27,9 @@ public class ItemController {
     }
 
     @PostMapping("/insert")
-    public String submitPost(@ModelAttribute ItemInsertDTO itemInsertDTO) {
+    public String submitPost(@ModelAttribute ItemInsertDTO itemInsertDTO, MultipartFile[] multipartFiles) {
         try {
-            ItemInsertDTO insertedItem = itemService.insertItem(itemInsertDTO);
+            long id = itemService.insertItem(itemInsertDTO, multipartFiles);
         } catch (Exception e) {
             e.printStackTrace();
         }
