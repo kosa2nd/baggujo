@@ -1,93 +1,64 @@
-<!doctype html>
-<<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <th:block th:fragment="headerFragment">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="../../static/logo/favicon.png" type="image/png">
-    <!-- Bootstrap core CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootswatch Litera theme -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0" rel="stylesheet">
-    <!-- Bootstrap Icons CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="../../static/reset.css?ver=1.0" rel="stylesheet">
-    <link href="../../static/custom.css?ver=1.0" rel="stylesheet">
-
-    <title>바꾸조</title>
-</head>
-<body>
-<nav class="navbar fixed-top bg-dark container-fluid m-0 p-0">
-    <div class="container-fluid d-flex justify-content-between align-items-center m-0 p-0">
-        <a class="navbar-brand pl-2" href="#">
-            <img class="p-0 m-0" src="../../static/logo/logo_white.svg" alt="logo" width="65" height="65" />
-        </a>
-        <div class="w-75">
-            <form class="d-flex w-60 mx-auto rounded-pill bg-white">
-                <input class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" type="search" placeholder="Search">
-                <button class="btn no-outline rounded-circle" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </form>
-        </div>
-        <div class="d-flex justify-content-between align-items-center pr-3">
-            <!-- 로그인 전 -->
-            <!-- <div class="pr-3 cursor"> -->
-            <!--     <i class="bi bi-box-arrow-in-right text-white fs-4"></i> -->
-            <!-- </div> -->
-            <div class="dropdown">
-                <div class="pr-3 cursor" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-bell text-white fs-4 alarm"></i>
-                </div>
-                <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="notificationDropdown">
-                    <a class="dropdown-item py-2" href="#">교환 신청 | ㅇㅇ님의 교환 신청이 도착했습니다.</a>
-                    <a class="dropdown-item py-2 alarm-read" href="#">교환 완료 | ㅇㅇ님과의 교환이 완료되었습니다.</a>
-                    <a class="dropdown-item py-2 alarm-read" href="#">교환 신청 | ㅇㅇ님이 교환 신청을 수락했습니다. </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center py-2" href="#"><strong>모든 알림 보기</strong></a>
-                </div>
+    <nav class="navbar fixed-top bg-dark container-fluid m-0 p-0">
+        <div class="container-fluid d-flex justify-content-between align-items-center m-0 p-0">
+            <a class="navbar-brand pl-2" href="/">
+                <img class="p-0 m-0" th:src="@{/static/logo/logo_white.svg}" alt="logo" width="65" height="65" />
+            </a>
+            <div class="w-75">
+                <form class="d-flex w-60 mx-auto rounded-pill bg-white">
+                    <input class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" type="search" placeholder="Search">
+                    <button class="btn no-outline rounded-circle" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
             </div>
-            <div class="dropdown">
-                <div role="button" class="cursor dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-list text-white fs-4"></i>
+            <div class="d-flex justify-content-between align-items-center pr-3">
+                <div class="dropdown">
+                    <div class="pr-3 cursor" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-bell text-white fs-4 alarm"></i>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="notificationDropdown">
+                        <a class="dropdown-item py-2" href="#">교환 신청 | ㅇㅇ님의 교환 신청이 도착했습니다.</a>
+                        <a class="dropdown-item py-2 alarm-read" href="#">교환 완료 | ㅇㅇ님과의 교환이 완료되었습니다.</a>
+                        <a class="dropdown-item py-2 alarm-read" href="#">교환 신청 | ㅇㅇ님이 교환 신청을 수락했습니다. </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-center py-2" href="#"><strong>모든 알림 보기</strong></a>
+                    </div>
                 </div>
-                <!--로그인 전-->
-                <div  sec:authorize="isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
-                        <i class="bi bi-person fs-5 pr-1"></i>
-                        <span>마이페이지</span>
-                    </a>
-                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
-                        <i class="bi bi-heart fs-6 pr-2"></i>
-                        <span>관심목록</span>
-                    </a>
-                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
-                        <i class="bi bi-card-list fs-6 pr-2"></i>
-                        <span>거래내역</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/logout">
-                        <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
-                        <span>로그아웃</span>
-                    </a>
-                </div>
-                <!--로그인 후-->
-                <div  sec:authorize="!isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/member/login">
-                        <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
-                        <span>로그인</span>
-                    </a>
+                <div class="dropdown">
+                    <div role="button" class="cursor dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-list text-white fs-4"></i>
+                    </div>
+                    <!--로그인 전-->
+                    <div  sec:authorize="isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                            <i class="bi bi-person fs-5 pr-1"></i>
+                            <span>마이페이지</span>
+                        </a>
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                            <i class="bi bi-heart fs-6 pr-2"></i>
+                            <span>관심목록</span>
+                        </a>
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                            <i class="bi bi-card-list fs-6 pr-2"></i>
+                            <span>거래내역</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/logout">
+                            <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </div>
+                    <!--로그인 후-->
+                    <div  sec:authorize="!isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/member/login">
+                            <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
+                            <span>로그인</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</nav>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    </nav>
 </th:block>
-</html>
+
