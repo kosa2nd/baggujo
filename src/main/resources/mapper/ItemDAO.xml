@@ -3,14 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baggujo.dao.ItemDAO">
     <insert id="insertItem" parameterType="com.baggujo.dto.ItemInsertDTO">
+        <selectKey order="BEFORE" keyProperty="id" resultType="long">
+            select item_pk_seq.nextval from dual
+        </selectKey>
         <![CDATA[
-            insert into item (title, description, status,
+            insert into item (id, title, description, status,
             condition, item_category_id, member_id)
-            values(#{title}, #{description}, #{itemStatus},
+            values(#{id}, #{title}, #{description}, #{itemStatus},
             #{itemCondition}, #{itemCategoryId}, #{memberId})
         ]]>
-<!--        <selectKey resultType="long" order="AFTER">-->
-<!--            select id from (select id from item order by id desc) where rownum = 1-->
-<!--        </selectKey>-->
     </insert>
 </mapper>

@@ -1,8 +1,14 @@
 package com.baggujo.controller;
 
+import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.ItemInsertDTO;
+import com.baggujo.dto.enums.ItemCondition;
 import com.baggujo.service.ItemService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +28,7 @@ public class ItemController {
     private ItemService itemService;
 
     @GetMapping("/insert")
-    public String insert() {
+    public String insert(Model model) {
         return "item/insert";
     }
 
@@ -33,6 +39,7 @@ public class ItemController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return "redirect:/item/list";
     }
 

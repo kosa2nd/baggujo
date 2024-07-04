@@ -38,7 +38,9 @@ public class ItemService {
 
     @Transactional
     public long insertItem(ItemInsertDTO itemInsertDTO, MultipartFile[] multipartFiles) throws SQLException, FileNotFoundException {
-        long id = itemDAO.insertItem(itemInsertDTO);  //id 값 반환
+        itemDAO.insertItem(itemInsertDTO);
+        long id = itemInsertDTO.getId();
+        System.out.println(id);
 
 //        List<ItemImageInsertDTO> itemInsertDTOList = new ArrayList<>();
 //        LocalDate today = LocalDate.now();
