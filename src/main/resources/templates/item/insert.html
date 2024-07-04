@@ -25,32 +25,39 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">
+                  <div class="card-header">
                         <h4 class="card-title">게시글 작성</h4>
                     </div>
                     <div class="card-body">
-                        <form action="/submitPost" method="post">
+                        <form th:action="@{/item/insert}" th:method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <input type="file">
-                            </div>
-                            <div class="form-group">
-                                <!--select box-->
-                                <div class="btn-group m-3" role="group">
-                                    <button id="btnGroupDrop2" type="button" class="btn btn-light border dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">사용감</button>
-                                    <div class="dropdown-menu text-center" aria-labelledby="usageDropdown2" id="usageDropdown">
-                                        <a class="dropdown-item py-2 px-0" href="#">사용감 많음</a>
-                                        <a class="dropdown-item py-2 px-0" href="#">사용감 있음</a>
-                                        <a class="dropdown-item py-2 px-0" href="#">사용감 적음</a>
-                                    </div>
-                                </div>
+                                <label for="files">파일 업로드</label>
+                                <input type="file" class="form-control" id="files" name="files" multiple>
                             </div>
                             <div class="form-group">
                                 <label for="title">제목</label>
                                 <input type="text" class="form-control" id="title" name="title" required>
                             </div>
                             <div class="form-group">
-                                <label for="content">내용</label>
-                                <textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+                                <label for="description">내용</label>
+                                <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">사용감</label>
+                                <input type="text" class="form-control" id="condition" name="condition" required>
+                                <!--                               select box-->
+                                <!--                                <div class="btn-group m-3" role="group">-->
+                                <!--                                    <button id="btnGroupDrop2" type="button" class="btn btn-light border dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">사용감</button>-->
+                                <!--                                    <div class="dropdown-menu text-center" aria-labelledby="usageDropdown2" id="usageDropdown">-->
+                                <!--                                        <a class="dropdown-item py-2 px-0" href="#">사용감 많음</a>-->
+                                <!--                                        <a class="dropdown-item py-2 px-0" href="#">사용감 있음</a>-->
+                                <!--                                        <a class="dropdown-item py-2 px-0" href="#">사용감 적음</a>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="itemCategoryId">카테고리 ID</label>
+                                <input type="number" class="form-control" id="itemCategoryId" name="itemCategoryId" required>
                             </div>
                             <button type="submit" class="btn btn-primary">등록</button>
                         </form>
