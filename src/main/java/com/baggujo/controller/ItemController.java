@@ -17,8 +17,8 @@ import java.util.List;
 @RequestMapping("/item")
 public class ItemController {
 
-    @Autowired
-    private ItemService itemService;
+    //@Autowired
+    //private ItemService itemService;
 
     @GetMapping("/insert")
     public String insert() {
