@@ -16,8 +16,8 @@ public class ItemInsertDTO {
     private String title;
     @NotNull
     private String description;
-    @NotNull
-    private int enable;
+//    @NotNull
+//    private int enable;
     @NotNull
     private ItemStatus itemStatus;
     @NotNull
