@@ -2,5 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baggujo.dao.ItemDAO">
-
+    <insert id="insertItem" parameterType="com.baggujo.dto.ItemInsertDTO">
+        <![CDATA[
+            insert into item (title, description, enable, status,
+            condition, item_category_id)
+            values(#{title}, #{description},
+            #{enable}, #{itemStatus},
+            #{itemCondition}, #{itemCategoryId})
+        ]]>
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT id from item
+        </selectKey>
+    </insert>
 </mapper>
