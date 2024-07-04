@@ -19,12 +19,11 @@
 </head>
 <body>
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
-<div class="magrin-top" sec:authorize="isAuthenticated()">
-    <p th:text="${#authentication.principal.id}"></p>
-    <p th:text="${#authentication.principal.nickname}"></p>
+
+<div class="margin-top">
+    <form action=""></form>
 </div>
 
-<button type="button" onclick="location.href='/post'" class="margin-top btn btn-primary rounded-pill">+</button>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
