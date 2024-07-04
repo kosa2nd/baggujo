@@ -19,8 +19,9 @@ public class InsertItemTest {
     @Test
     @DisplayName("상품글 삽입 테스트")
     public void insertItem() throws Exception {
-        ItemInsertDTO dto = new ItemInsertDTO("키보드","설명",1, ItemStatus.미거래, ItemCondition.미개봉, 2);
+        ItemInsertDTO dto = new ItemInsertDTO("키보드","설명",1, ItemStatus.미거래, ItemCondition.미개봉, 2, 2);
         Long id  = itemdao.insertItem(dto);
+        System.out.println("----" + id);
         Assertions.assertNotNull(id);
     }
 }

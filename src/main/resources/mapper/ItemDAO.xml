@@ -5,13 +5,13 @@
     <insert id="insertItem" parameterType="com.baggujo.dto.ItemInsertDTO">
         <![CDATA[
             insert into item (title, description, enable, status,
-            condition, item_category_id)
+            condition, item_category_id, member_id)
             values(#{title}, #{description},
             #{enable}, #{itemStatus},
-            #{itemCondition}, #{itemCategoryId})
+            #{itemCondition}, #{itemCategoryId}, #{memberId})
         ]]>
-        <selectKey keyProperty="id" resultType="long" order="AFTER">
-            SELECT id from item
-        </selectKey>
+<!--        <selectKey resultType="long" order="AFTER">-->
+<!--            select id from (select id from item order by id desc) where rownum = 1-->
+<!--        </selectKey>-->
     </insert>
 </mapper>

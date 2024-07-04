@@ -24,5 +24,7 @@ public class ItemInsertDTO {
     private ItemCondition itemCondition;
     @NotNull
     private long itemCategoryId;
+    @NotNull
+    private long memberId;
 
 }
