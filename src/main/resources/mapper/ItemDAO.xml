@@ -4,10 +4,9 @@
 <mapper namespace="com.baggujo.dao.ItemDAO">
     <insert id="insertItem" parameterType="com.baggujo.dto.ItemInsertDTO">
         <![CDATA[
-            insert into item (title, description, enable, status,
+            insert into item (title, description, status,
             condition, item_category_id, member_id)
-            values(#{title}, #{description},
-            #{enable}, #{itemStatus},
+            values(#{title}, #{description}, #{itemStatus},
             #{itemCondition}, #{itemCategoryId}, #{memberId})
         ]]>
 <!--        <selectKey resultType="long" order="AFTER">-->
