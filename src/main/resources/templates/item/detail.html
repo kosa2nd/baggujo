@@ -19,11 +19,26 @@
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 
 <div class="margin-top container">
-    <h1>게시글 상세</h1>
-    <div>
+    <div class="w-80 pt-5">
+        <div class="d-flex">
+            <div th:each="itemImage : ${itemDetail.itemImages}">
+                <img th:src="${itemImage}" alt="상품이미지" />
+                <p th:text="${itemImage}">경로</p>
+            </div>
+        </div>
+        <div class="d-flex">
+            <label class="pr-3">닉네임</label>
+            <p th:text="${itemDetail.nickname}">닉네임</p>
+        </div>
+        <div class="">
+            <p th:text="${itemDetail.formattedUploadDate}">업로드 날짜</p>
+        </div>
+        <div class="">
+            <p th:text="${itemDetail.formattedUpdateDate}">업데이트 날짜</p>
+        </div>
         <div class="d-flex">
             <label class="pr-3">제목</label>
-            <h3 th:text="${itemDetail.title}">제목</h3>
+            <p th:text="${itemDetail.title}">제목</p>
         </div>
         <div class="d-flex">
             <label class="pr-3">내용</label>

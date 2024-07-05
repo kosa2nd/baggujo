@@ -68,7 +68,7 @@ public class ItemController {
     }
 
 
-    @GetMapping("detail/{id}")
+    @GetMapping("/detail/{id}")
     public String getItemDetail(@PathVariable("id") long id, Model model) throws SQLException {
         ItemDetailDTO itemDetail = itemService.getItemDetailById(id);
         model.addAttribute("itemDetail", itemDetail);
