@@ -21,7 +21,7 @@
 <div class="margin-top container">
     <div class="w-80 pt-5">
         <div class="d-flex">
-            <div th:each="itemImage : ${itemDetail.itemImages}">
+            <div th:each="itemImage : ${itemImageNames}">
                 <img th:src="${itemImage}" alt="상품이미지" />
                 <p th:text="${itemImage}">경로</p>
             </div>
