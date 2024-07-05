@@ -60,7 +60,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="itemCategoryId">카테고리</label>
-                                <select class="form-control" id="itemCategoryId" name="itemCategoryId" required>
+                                <select class="form-control" id="itemCategoryId"  required>
                                     <option value="" disabled selected>카테고리 선택</option>
                                     <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
                                 </select>
