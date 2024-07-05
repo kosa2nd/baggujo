@@ -20,5 +20,16 @@ public class ItemPreviewDTO {
     private String category;
     private String member_id;
     private String nickname;
+    //테스트 할 때 필요.?
+    public ItemPreviewDTO(long id, String s_name, LocalDate uploadDate, ItemStatus status, long itemCategoryId, String category, String member_id, String nickname) {
+        this.id = id;
+        this.s_name = s_name;
+        this.uploadDate = uploadDate;
+        this.status = status;
+        this.itemCategoryId = itemCategoryId;
+        this.category = category;
+        this.member_id = member_id;
+        this.nickname = nickname;
+    }
 
 }

@@ -16,5 +16,5 @@ public interface ItemDAO {
     ItemDetailDTO getItemDetailById(long id);
     List<CategoryDTO> getCategories();
 
-    List<ItemPreviewDTO> getItemPreviews(int page, int offset) throws SQLException;
+    List<ItemPreviewDTO> getItemPreviews(int page, int offset) throws  SQLException;
 }

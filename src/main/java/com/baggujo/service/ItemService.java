@@ -2,10 +2,7 @@ package com.baggujo.service;
 
 import com.baggujo.dao.ItemDAO;
 import com.baggujo.dao.ItemImageDAO;
-import com.baggujo.dto.CategoryDTO;
-import com.baggujo.dto.ItemDetailDTO;
-import com.baggujo.dto.ItemImageInsertDTO;
-import com.baggujo.dto.ItemInsertDTO;
+import com.baggujo.dto.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.util.ThumbnailatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +97,7 @@ public class ItemService {
         return itemDAO.getCategories();
     }
 
-
+    public List<ItemPreviewDTO> getItemPreviews(int itemId, int offset) throws SQLException{
+        return itemDAO.getItemPreviews(itemId, offset);
+    }
 }
