@@ -31,47 +31,44 @@ public class ItemService {
     private ItemDAO itemDAO;
     @Autowired
     private ItemImageDAO itemImageDAO;
-    //@Autowired
-    //private ThumbnailatorUtils thumbnailatorUtils;
     @Value("${com.baggujo.upload.path}")
     private String uploadPath;
 
     @Transactional
-    public long insertItem(ItemInsertDTO itemInsertDTO, MultipartFile[] multipartFiles) throws SQLException, FileNotFoundException {
+    public long insertItem(ItemInsertDTO itemInsertDTO) throws SQLException, FileNotFoundException {
         itemDAO.insertItem(itemInsertDTO);
         long id = itemInsertDTO.getId();
-        System.out.println(id);
 
-//        List<ItemImageInsertDTO> itemInsertDTOList = new ArrayList<>();
-//        LocalDate today = LocalDate.now();
-//        String path = makeFolder();
-//
-//        for (int i = 0; i < multipartFiles.length; i++) {
-//            if(!multipartFiles[i].getContentType().startsWith("image")){
-//                continue;
-//            }
-//
-//            String originalName = multipartFiles[i].getOriginalFilename();
-//            String folderPath = makeFolder();
-//            String uuid = UUID.randomUUID().toString();
-//            String saveName = uploadPath + File.separator + folderPath +
-//                    File.separator+ uuid + "_" + originalName;
-//            Path savePath = Paths.get(saveName);
-//            try{ //실제 저장
-//                // 원본 이미지 파일 저장
-//                multipartFiles[i].transferTo(savePath);
-//                String thumbnailSaveName = uploadPath + File.separator + folderPath +
-//                        File.separator + "s_" + uuid + "_" + originalName;
-//                File thumbnailFile = new File(thumbnailSaveName);
-//                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100,100);
-//                itemInsertDTOList.add(new ItemImageInsertDTO(saveName, thumbnailSaveName, i + 1, id));
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//
-//            int actualUpload = itemImageDAO.insertItemImages(itemInsertDTOList);
-//
-//        }
+        List<ItemImageInsertDTO> itemInsertDTOList = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        String path = makeFolder();
+
+        MultipartFile[] multipartFiles = itemInsertDTO.getMultipartFiles();
+        for (int i = 0; i < multipartFiles.length; i++) {
+            if(!multipartFiles[i].getContentType().startsWith("image")){
+                continue;
+            }
+
+            String originalName = multipartFiles[i].getOriginalFilename();
+            String folderPath = makeFolder();
+            String uuid = UUID.randomUUID().toString();
+            String saveName = uploadPath + File.separator + folderPath +
+                    File.separator+ uuid + "_" + originalName;
+            Path savePath = Paths.get(saveName);
+            try{ //실제 저장
+                // 원본 이미지 파일 저장
+                multipartFiles[i].transferTo(savePath);
+                String thumbnailSaveName = uploadPath + File.separator + folderPath +
+                        File.separator + "s_" + uuid + "_" + originalName;
+                File thumbnailFile = new File(thumbnailSaveName);
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100,100);
+                itemInsertDTOList.add(new ItemImageInsertDTO(saveName, thumbnailSaveName, i + 1, id));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            int actualUpload = itemImageDAO.insertItemImages(itemInsertDTOList);
+        }
 
         return id;
     }
