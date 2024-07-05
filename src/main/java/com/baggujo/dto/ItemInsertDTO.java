@@ -25,7 +25,7 @@ public class ItemInsertDTO {
     private long itemCategoryId;
     @NotNull
     private long memberId;
-    private MultipartFile[] multipartFiles;
+    private MultipartFile[] files;
 
     public ItemInsertDTO(String title, String description, ItemStatus itemStatus, ItemCondition itemCondition, long itemCategoryId, long memberId) {
         this.title = title;
