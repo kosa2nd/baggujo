@@ -35,7 +35,7 @@ public class ItemController {
     @PostMapping("/insert")
     public String submitPost(@ModelAttribute ItemInsertDTO itemInsertDTO, MultipartFile[] multipartFiles) {
         try {
-            long id = itemService.insertItem(itemInsertDTO, multipartFiles);
+            long id = itemService.insertItem(itemInsertDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }
