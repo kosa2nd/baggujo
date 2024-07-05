@@ -19,7 +19,7 @@
     <select id="getItemDetailById" parameterType="long" resultType="com.baggujo.dto.ItemDetailDTO">
         SELECT i.id, i.title, i.description, i.enable, i.status AS itemStatus, i.condition AS itemCondition,
                i.item_category_id AS itemCategoryId, c.category AS itemCategoryName
-        FROM BAGGUJO.ITEM i
+        FROM item i
                  JOIN ITEM_CATEGORY c ON i.item_category_id = c.id
         WHERE i.id = #{id}
     </select>

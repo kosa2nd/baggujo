@@ -1,0 +1,101 @@
+<th:block th:fragment="cardsFragment">
+<!--select box-->
+<div style="margin-top: 75px;">
+    <div class="btn-group m-3" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-light border dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">모든 제품</button>
+        <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1" id="productDropdown">
+            <a class="dropdown-item py-2 px-0" href="#">모든 제품</a>
+            <a class="dropdown-item py-2 px-0" href="#">카테고리1</a>
+            <a class="dropdown-item py-2 px-0" href="#">카테고리2</a>
+            <a class="dropdown-item py-2 px-0" href="#">카테고리3</a>
+            <a class="dropdown-item py-2 px-0" href="#">카테고리4</a>
+            <a class="dropdown-item py-2 px-0" href="#">카테고리5</a>
+        </div>
+    </div>
+</div>
+
+<!--product card-->
+<div class="container mt-3 p-0">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="product-card border rounded-lg cursor p-2">
+                <div class="product-image">
+                    <img class="w-100 h-100 border rounded-lg my-2" src="../../static/logo/logo_black.svg" alt="제품이미지" />
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span class="badge rounded-pill bg-secondary text-white px-2 py-1">교환완료</span>
+                    <div class="product-like">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                </div>
+                <h5 class="product-title text-truncate py-1"><b>키보드 교환 구해요</b></h5>
+                <p class="product-detail text-truncate">갈축 키보드입니다. 저소음 적축 구해요!</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="product-card border rounded-lg cursor p-2">
+                <div class="product-image">
+                    <img class="w-100 h-100 border rounded-lg my-2" src="../../static/logo/logo_black.svg" alt="제품이미지" />
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span class="badge rounded-pill bg-success text-white px-2 py-1">거래중</span>
+                    <div class="product-like">
+                        <i class="bi bi-heart-fill" style="color: red;"></i>
+                    </div>
+                </div>
+                <h5 class="product-title text-truncate py-1"><b>키보드 교환 구해요</b></h5>
+                <p class="product-detail text-truncate">갈축 키보드입니다. 저소음 적축 구해요!</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="product-card border rounded-lg cursor p-2">
+                <div class="product-image">
+                    <img class="w-100 h-100 border rounded-lg my-2" src="../../static/logo/logo_black.svg" alt="제품이미지" />
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span class="badge rounded-pill bg-primary text-white px-2 py-1">교환신청</span>
+                    <div class="product-like">
+                        <i class="bi bi-heart-fill" style="color: red;"></i>
+                    </div>
+                </div>
+                <h5 class="product-title text-truncate py-1"><b>키보드 교환 구해요</b></h5>
+                <p class="product-detail text-truncate">갈축 키보드입니다. 저소음 적축 구해요!</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="product-card border rounded-lg cursor p-2">
+                <div class="product-image">
+                    <img class="w-100 h-100 border rounded-lg my-2" src="../../static/logo/logo_black.svg" alt="제품이미지" />
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span class="badge rounded-pill bg-success text-white px-2 py-1">거래중</span>
+                    <div class="product-like">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                </div>
+                <h5 class="product-title text-truncate py-1"><b>키보드 교환 구해요</b></h5>
+                <p class="product-detail text-truncate">갈축 키보드입니다. 저소음 적축 구해요!</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="product-card border rounded-lg cursor p-2">
+                <div class="product-image">
+                    <img class="w-100 h-100 border rounded-lg my-2" src="../../static/logo/logo_black.svg" alt="제품이미지" />
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span class="badge rounded-pill bg-success text-white px-2 py-1">거래중</span>
+                    <div class="product-like">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                </div>
+                <h5 class="product-title text-truncate py-1"><b>키보드 교환 구해요</b></h5>
+                <p class="product-detail text-truncate">갈축 키보드입니다. 저소음 적축 구해요!</p>
+            </div>
+        </div>
+    </div>
+</div>
+</th:block>

@@ -23,6 +23,7 @@
     <p th:text="${#authentication.principal.id}"></p>
     <p th:text="${#authentication.principal.nickname}"></p>
 </div>
+<div th:replace="~{/fragment/cards :: cardsFragment}"></div>
 
 <button type="button" onclick="location.href='/item/insert'" class="margin-top btn btn-primary rounded-pill">+</button>
 

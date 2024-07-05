@@ -10,6 +10,11 @@
 <div class="container mt-5">
     <h1>게시글 상세</h1>
     <div>
+        <img src="C:\baggujoImage\2024\07\05\s_8cf05b46-bd10-423d-8cf0-3e222166005e_1877490827100.jpg">
+        <tr th:each="img : ${itemDetail.itemImages}">
+
+            <p th:text="${img}"></p>
+        </tr>
         <div class="d-flex">
             <label class="pr-3">제목</label>
             <h3 th:text="${itemDetail.title}">제목</h3>
