@@ -3,21 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 상세</title>
+    <title>바꾸조</title>
+    <link rel="icon" href="../../static/logo/favicon.png" type="image/png">
+    <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootswatch Litera theme -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="../../static/reset.css?ver=1.0" rel="stylesheet">
+    <link href="../../static/custom.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <h1>게시글 상세</h1>
-    <div>
-        <img src="C:\baggujoImage\2024\07\05\s_8cf05b46-bd10-423d-8cf0-3e222166005e_1877490827100.jpg">
-        <tr th:each="img : ${itemDetail.itemImages}">
 
-            <p th:text="${img}"></p>
-        </tr>
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+
+<div class="margin-top container">
+    <div class="w-80 pt-5">
+        <div class="d-flex">
+            <div th:each="itemImage : ${itemImageNames}">
+                <img th:src="${itemImage}" alt="상품이미지" />
+                <p th:text="${itemImage}">경로</p>
+            </div>
+        </div>
+        <div class="d-flex">
+            <label class="pr-3">닉네임</label>
+            <p th:text="${itemDetail.nickname}">닉네임</p>
+        </div>
+        <div class="">
+            <p th:text="${itemDetail.formattedUploadDate}">업로드 날짜</p>
+        </div>
+        <div class="">
+            <p th:text="${itemDetail.formattedUpdateDate}">업데이트 날짜</p>
+        </div>
         <div class="d-flex">
             <label class="pr-3">제목</label>
-            <h3 th:text="${itemDetail.title}">제목</h3>
+            <p th:text="${itemDetail.title}">제목</p>
         </div>
         <div class="d-flex">
             <label class="pr-3">내용</label>
@@ -37,5 +58,9 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
