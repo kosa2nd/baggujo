@@ -38,7 +38,7 @@ public class ItemService {
     public long insertItem(ItemInsertDTO itemInsertDTO) throws SQLException, FileNotFoundException {
         itemDAO.insertItem(itemInsertDTO);
         long id = itemInsertDTO.getId();
-
+        /*
         List<ItemImageInsertDTO> itemInsertDTOList = new ArrayList<>();
         LocalDate today = LocalDate.now();
         String path = makeFolder();
@@ -69,7 +69,7 @@ public class ItemService {
 
             int actualUpload = itemImageDAO.insertItemImages(itemInsertDTOList);
         }
-
+        */
         return id;
     }
 
