@@ -2,17 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baggujo.dao.ItemImageDAO">
-<!--    <update id="insertItemImages" parameterType="java.util.Map">-->
-<!--        <foreach collection="list" item="item" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">-->
-<!--            into item_image (-->
-<!--                name, s_name, img_no, item_id)-->
-<!--            values (-->
-<!--            #{item.name},-->
-<!--            #{item.sName},-->
-<!--            #{item.imgNo},-->
-<!--            #{item.itemId})-->
-<!--        </foreach>-->
-<!--    </update>-->
 
     <insert id="insertItemImages" parameterType="java.util.Map">
         INSERT INTO item_image (

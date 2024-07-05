@@ -2,6 +2,8 @@ package com.baggujo.service;
 
 import com.baggujo.dao.ItemDAO;
 import com.baggujo.dao.ItemImageDAO;
+import com.baggujo.dto.CategoryDTO;
+import com.baggujo.dto.ItemDetailDTO;
 import com.baggujo.dto.ItemImageInsertDTO;
 import com.baggujo.dto.ItemInsertDTO;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -89,5 +91,14 @@ public class ItemService {
 
         return folderPath;
     }
+
+    public ItemDetailDTO getItemDetailById(long id) throws SQLException {
+        return itemDAO.getItemDetailById(id);
+    }
+
+    public List<CategoryDTO> getCategories() {
+        return itemDAO.getCategories();
+    }
+
 
 }
