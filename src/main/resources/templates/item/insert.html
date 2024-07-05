@@ -16,6 +16,16 @@
     <link href="../../static/custom.css" rel="stylesheet">
 
     <title>바꾸조</title>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        /* 유효성 검사 실패 시 경고창을 띄우는 스크립트 */
+        var errorMessage = [[${errorMessage}]];
+        if (errorMessage) {
+            alert(errorMessage);
+        }
+        /*]]>*/
+    </script>
 </head>
 <body>
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
@@ -29,7 +39,7 @@
                         <h4 class="card-title">게시글 작성</h4>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/item/insert}" th:method="post" enctype="multipart/form-data">
+                        <form th:action="@{/item/insert}" th:method="post" th:object="${itemInsertDTO}" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="files">파일 업로드</label>
                                 <input type="file" class="form-control" id="files" name="files" multiple>
@@ -49,8 +59,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="itemCategoryId">카테고리 ID</label>
-                                <input type="number" class="form-control" id="itemCategoryId" name="itemCategoryId" required>
+                                <label for="itemCategoryId">카테고리</label>
+                                <select class="form-control" id="itemCategoryId"  required>
+                                    <option value="" disabled selected>카테고리 선택</option>
+                                    <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
+                                </select>
                             </div>
                             <input type="text" name="memberId" th:value="${#authentication.principal.id}" hidden>
                             <input type="text" name="itemStatus" th:value="${T(com.baggujo.dto.enums.ItemStatus).WAITING}" hidden>
