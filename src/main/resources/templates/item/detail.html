@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>게시글 상세</h1>
+    <div>
+        <div class="d-flex">
+            <label class="pr-3">제목</label>
+            <h3 th:text="${itemDetail.title}">제목</h3>
+        </div>
+        <div class="d-flex">
+            <label class="pr-3">내용</label>
+            <p th:text="${itemDetail.description}">내용</p>
+        </div>
+        <div class="d-flex">
+            <label class="pr-3">사용감</label>
+            <p th:text="${itemDetail.itemCondition}">사용감</p>
+        </div>
+        <div class="d-flex">
+            <label class="pr-3">상태</label>
+            <p th:text="${itemDetail.itemStatus}">상태</p>
+        </div>
+        <div class="d-flex">
+            <label class="pr-3">카테고리</label>
+            <p th:text="${itemDetail.itemCategoryName}">카테고리 이름</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

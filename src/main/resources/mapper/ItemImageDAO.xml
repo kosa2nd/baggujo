@@ -2,27 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baggujo.dao.ItemImageDAO">
-<!--    <insert id="insertItemImages" parameterType="java.util.List">-->
-<!--        <![CDATA[-->
-<!--            insert into item_image(name, s_name, img_no, item_id)-->
-<!--            values-->
-<!--            <foreach collection="list" item="item" separator=",">-->
-<!--                 (-->
-<!--                       #{item.name}-->
-<!--                     , #{item.sName}-->
-<!--                     , #{item.imgNo}-->
-<!--                     , #{item.itemId}-->
-<!--                 )-->
-<!--            </foreach>-->
-<!--        ]]>-->
-<!--    </insert>-->
+
     <insert id="insertItemImages" parameterType="java.util.Map">
-        <![CDATA[
-            insert into item_image(name, s_name, img_no, item_id)
-            values
-            <foreach item="item" collection="list" open="INSERT ALL"  close="SELECT * FROM DUAL" separator=" " >
-                (#{item.name}, #{item.sName}, #{item.imgNo}, #{item.itemId})
-            </foreach>
-        ]]>
+        INSERT INTO item_image (
+        name, s_name, img_no, item_id)
+        SELECT A.*
+        FROM (
+        <foreach collection="list" item="item" separator="UNION ALL ">
+            SELECT #{item.name} as name,
+            #{item.sName} as s_name,
+            #{item.imgNo} as img_no,
+            #{item.itemId} as item_id
+            FROM DUAL
+        </foreach>
+        ) A
     </insert>
+
 </mapper>
