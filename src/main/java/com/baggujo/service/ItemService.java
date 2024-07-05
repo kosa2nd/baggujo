@@ -2,6 +2,8 @@ package com.baggujo.service;
 
 import com.baggujo.dao.ItemDAO;
 import com.baggujo.dao.ItemImageDAO;
+import com.baggujo.dto.CategoryDTO;
+import com.baggujo.dto.ItemDetailDTO;
 import com.baggujo.dto.ItemImageInsertDTO;
 import com.baggujo.dto.ItemInsertDTO;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -44,6 +46,11 @@ public class ItemService {
         String path = makeFolder();
 
         MultipartFile[] multipartFiles = itemInsertDTO.getMultipartFiles();
+
+        if (multipartFiles == null) {
+            multipartFiles = new MultipartFile[0];
+        }
+
         for (int i = 0; i < multipartFiles.length; i++) {
             if(!multipartFiles[i].getContentType().startsWith("image")){
                 continue;
@@ -83,6 +90,14 @@ public class ItemService {
         }
 
         return folderPath;
+    }
+
+    public ItemDetailDTO getItemDetailById(long id) throws SQLException {
+        return itemDAO.getItemDetailById(id);
+    }
+
+    public List<CategoryDTO> getCategories() {
+        return itemDAO.getCategories();
     }
 
 }
