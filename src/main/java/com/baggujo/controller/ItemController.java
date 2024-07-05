@@ -34,10 +34,6 @@ public class ItemController {
     @GetMapping("/insert")
     public String insert(Model model) {
         List<CategoryDTO> categories = itemService.getCategories();
-//        System.out.println("카테고리 데이터:");
-//        for (CategoryDTO category : categories) {
-//            System.out.println("ID: " + category.getItemCategoryId() + ", 이름: " + category.getItemCategoryName());
-//        }
         model.addAttribute("categories", categories);
         return "item/insert";
     }
@@ -57,6 +53,7 @@ public class ItemController {
                 sb.insert(0, "모든 값을 입력해주세요. \n");
             }
             model.addAttribute("errorMessage", sb.toString());
+            model.addAttribute("categories", itemService.getCategories());
             return "item/insert";
         }
 
