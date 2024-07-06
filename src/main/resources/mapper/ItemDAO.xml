@@ -34,10 +34,10 @@
 
 
     <!-- 아이템 상세 조회 -->
-    <select id="getItemDetailById" parameterType="long" resultType="com.baggujo.dto.ItemDetailDTO">
-        SELECT i.id, i.title, i.description, i.enable, i.status AS itemStatus, i.condition AS itemCondition,
-               i.item_category_id AS itemCategoryId, c.category AS itemCategoryName
-        FROM item i
+<!--    <select id="getItemDetailById" parameterType="long" resultType="com.baggujo.dto.ItemDetailDTO">-->
+<!--        SELECT i.id, i.title, i.description, i.enable, i.status AS itemStatus, i.condition AS itemCondition,-->
+<!--               i.item_category_id AS itemCategoryId, c.category AS itemCategoryName-->
+<!--        FROM item i-->
     <select id="getItemDetailById" parameterType="long" resultMap="ItemDetailResultMap">
         SELECT i.id, i.title, i.description, i.enable,i.UPLOAD_DATE AS uploadDate, i.UPDATE_DATE AS updateDate,
                i.status AS itemStatus, i.condition AS itemCondition,
@@ -50,7 +50,6 @@
                  LEFT JOIN ITEM_IMAGE img ON i.ID = img.ITEM_ID
         WHERE i.id = #{id}
     </select>
-
 
     <!-- 아이템 카테고리 조회 -->
     <select id="getCategories" resultType="com.baggujo.dto.CategoryDTO">

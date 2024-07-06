@@ -37,7 +37,6 @@ public class ItemService {
     public long insertItem(ItemInsertDTO itemInsertDTO) throws SQLException, FileNotFoundException {
         itemDAO.insertItem(itemInsertDTO);
         long id = itemInsertDTO.getId();
-        System.out.println("물품번호 ====== " + id);
 
         if (itemInsertDTO.getFiles() != null) {
             List<ItemImageInsertDTO> itemInsertDTOList = new ArrayList<>();
@@ -46,23 +45,23 @@ public class ItemService {
 
             MultipartFile[] multipartFiles = itemInsertDTO.getFiles();
             for (int i = 0; i < multipartFiles.length; i++) {
-                if (!multipartFiles[i].getContentType().startsWith("image")) {
+                if (!multipartFiles[i].getContentType().startsWith("image") || multipartFiles[i].isEmpty()) {
                     continue;
                 }
 
                 String originalName = multipartFiles[i].getOriginalFilename();
+                System.out.println(originalName);
                 String folderPath = makeFolder();
                 String uuid = UUID.randomUUID().toString();
-                String saveName = uploadPath + File.separator + folderPath +
+                String saveName = folderPath +
                         File.separator + uuid + "_" + originalName;
-                Path savePath = Paths.get(saveName);
+                Path savePath = Paths.get(uploadPath + File.separator + saveName);
+                System.out.println("=========================" + savePath);
 
-                try { //실제 저장
-                    // 원본 이미지 파일 저장
+                try {
                     multipartFiles[i].transferTo(savePath);
-                    String thumbnailSaveName = uploadPath + File.separator + folderPath +
-                            File.separator + "s_" + uuid + "_" + originalName;
-                    File thumbnailFile = new File(thumbnailSaveName);
+                    String thumbnailSaveName = folderPath + File.separator+ "s_"+uuid + "_" + originalName;
+                    File thumbnailFile = new File(uploadPath + File.separator + thumbnailSaveName);
                     Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
                     itemInsertDTOList.add(new ItemImageInsertDTO(saveName, thumbnailSaveName, i + 1, id));
                 } catch (Exception e) {
@@ -71,7 +70,9 @@ public class ItemService {
 
             }
 
-            itemImageDAO.insertItemImages(Map.of("list", itemInsertDTOList));
+            if (!itemInsertDTOList.isEmpty()) {
+                itemImageDAO.insertItemImages(Map.of("list", itemInsertDTOList));
+            }
         }
 
         return id;

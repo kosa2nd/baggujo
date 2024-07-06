@@ -62,6 +62,8 @@ public class ItemController {
             return "redirect:/item/detail/" + id;
         } catch (Exception e) {
             e.printStackTrace();
+
+            model.addAttribute("categories", itemService.getCategories());
             model.addAttribute("errorMessage", "게시글 등록 중 오류가 발생했습니다.");
             return "item/insert";
         }
