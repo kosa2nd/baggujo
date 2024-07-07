@@ -97,9 +97,7 @@ public class ItemService {
     public List<CategoryDTO> getCategories() {
         return itemDAO.getCategories();
     }
-
     public List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset) throws SQLException {
         return itemDAO.getItemPreviews(lastItemId, offset);
     }
-
 }

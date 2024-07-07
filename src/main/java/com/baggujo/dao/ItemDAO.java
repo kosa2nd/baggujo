@@ -16,5 +16,4 @@ public interface ItemDAO {
     ItemDetailDTO getItemDetailById(long id);
     List<CategoryDTO> getCategories();
     List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset);
-
 }

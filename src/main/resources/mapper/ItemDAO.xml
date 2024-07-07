@@ -51,4 +51,17 @@
     <select id="getCategories" resultType="com.baggujo.dto.CategoryDTO">
         SELECT id as itemCategoryId, category as itemCategoryName FROM ITEM_CATEGORY
     </select>
+    <!-- 상품리스트 조회 -->
+    <select id="getItemPreviews" resultType="com.baggujo.dto.itemPreviewDTO">
+        select * from (
+        select i.id, i.title, i.description, i.enable, i.status as itemStatus, i.condition as itemCondition, ii.s_name
+        from item i, item_image ii, member m
+        join item_image ii on i.id = ii.item_id
+        join member m on i.member_id = m.id
+        where i.id != #{id}
+        order by i.id desc
+        )
+        offset 0 rows fetch first 12 rows only
+    </select>
+
 </mapper>
