@@ -54,15 +54,21 @@
 
     <!-- 상품리스트 조회 -->
     <select id="getItemPreviews" resultType="com.baggujo.dto.ItemPreviewDTO">
+        <![CDATA[
         select * from (
-        select i.id, i.title, i.description, i.enable, i.status as itemStatus, i.condition as itemCondition, ii.s_name
-        from item i, item_image ii, member m
-        join item_image ii on i.id = ii.item_id
-        join member m on i.member_id = m.id
-        where i.id != #{id}
-        order by i.id desc
-        )
-        offset 0 rows fetch first 12 rows only
+            select i.id, i.title, ii.s_name, i.upload_date, i.status, i.item_category_id, ic.category, i.member_id, m.nickname
+            from item i, item_image ii, item_category ic, member m
+            where i.item_category_id = ic.id
+                and i.id = ii.item_id(+)
+                and (ii.img_no = 1 or ii.img_no is null)
+                and i.member_id = m.id
+                and i.status != 'TRADED'
+        ]]>
+            <if test="lastItemId != 0">
+                <![CDATA[and i.id < #{lastItemId}]]>
+            </if>
+            order by i.id desc)
+            fetch first #{offset} rows only
     </select>
 
 </mapper>
