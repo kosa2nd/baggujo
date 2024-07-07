@@ -56,7 +56,6 @@ public class ItemService {
                 String saveName = folderPath +
                         File.separator + uuid + "_" + originalName;
                 Path savePath = Paths.get(uploadPath + File.separator + saveName);
-                System.out.println("=========================" + savePath);
 
                 try {
                     multipartFiles[i].transferTo(savePath);

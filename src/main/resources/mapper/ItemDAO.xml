@@ -51,8 +51,9 @@
     <select id="getCategories" resultType="com.baggujo.dto.CategoryDTO">
         SELECT id as itemCategoryId, category as itemCategoryName FROM ITEM_CATEGORY
     </select>
+
     <!-- 상품리스트 조회 -->
-    <select id="getItemPreviews" resultType="com.baggujo.dto.itemPreviewDTO">
+    <select id="getItemPreviews" resultType="com.baggujo.dto.ItemPreviewDTO">
         select * from (
         select i.id, i.title, i.description, i.enable, i.status as itemStatus, i.condition as itemCondition, ii.s_name
         from item i, item_image ii, member m
