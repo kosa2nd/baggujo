@@ -33,7 +33,7 @@
     </resultMap>
 
     <select id="getItemDetailById" parameterType="long" resultMap="ItemDetailResultMap">
-        SELECT i.id, i.title, i.description, i.enable,i.upload_date, i.update_date,
+        SELECT i.id, i.title, i.description, i.enable, i.upload_date as uploadDate, i.update_date as updateDate,
                i.status AS itemStatus, i.condition AS itemCondition,
                i.item_category_id, c.category AS itemCategoryName,
                i.member_id, m.nickname,
