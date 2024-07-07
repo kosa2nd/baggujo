@@ -4,6 +4,7 @@ import com.baggujo.dto.CategoryDTO;
 import com.baggujo.dto.ItemDetailDTO;
 import com.baggujo.dto.ItemInsertDTO;
 import com.baggujo.dto.ItemPreviewDTO;
+import com.baggujo.dto.enums.ItemStatus;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
@@ -15,5 +16,6 @@ public interface ItemDAO {
 
     ItemDetailDTO getItemDetailById(long id);
     List<CategoryDTO> getCategories();
-    List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset);
+    List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset, ItemStatus itemStatus, int itemCategoryId, boolean exceptTraded, String keyword);
+
 }
