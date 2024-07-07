@@ -42,7 +42,7 @@
                         <form th:action="@{/item/insert}" th:method="post" th:object="${itemInsertDTO}" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="files">파일 업로드</label>
-                                <input type="file" class="form-control" id="files" name="files" multiple>
+                                <input type="file" class="form-control" id="files" name="files" multiple="multiple">
                             </div>
                             <div class="form-group">
                                 <label for="title">제목</label>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="itemCategoryId">카테고리</label>
-                                <select class="form-control" id="itemCategoryId"  required>
+                                <select class="form-control" id="itemCategoryId" name="itemCategoryId" required>
                                     <option value="" disabled selected>카테고리 선택</option>
                                     <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
                                 </select>

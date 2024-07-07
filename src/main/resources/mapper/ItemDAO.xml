@@ -15,12 +15,35 @@
         ]]>
     </insert>
 
-    <!-- 아이템 상세 조회 -->
-    <select id="getItemDetailById" parameterType="long" resultType="com.baggujo.dto.ItemDetailDTO">
-        SELECT i.id, i.title, i.description, i.enable, i.status AS itemStatus, i.condition AS itemCondition,
-               i.item_category_id AS itemCategoryId, c.category AS itemCategoryName
-        FROM BAGGUJO.ITEM i
-                 JOIN ITEM_CATEGORY c ON i.item_category_id = c.id
+    <resultMap id="ItemDetailResultMap" type="com.baggujo.dto.ItemDetailDTO">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="uploadDate" column="uploadDate"/>
+        <result property="updateDate" column="updateDate"/>
+        <result property="itemStatus" column="itemStatus"/>
+        <result property="itemCondition" column="itemCondition"/>
+        <result property="itemCategoryId" column="itemCategoryId"/>
+        <result property="itemCategoryName" column="itemCategoryName"/>
+        <result property="memberId" column="member_id"/>
+        <result property="nickname" column="nickname"/>
+        <collection property="itemImages" ofType="java.lang.String">
+            <result column="imgUrl"/>
+        </collection>
+    </resultMap>
+
+    <select id="getItemDetailById" parameterType="long" resultMap="ItemDetailResultMap">
+        SELECT i.id, i.title, i.description, i.enable,i.upload_date, i.update_date,
+               i.status AS itemStatus, i.condition AS itemCondition,
+               i.item_category_id, c.category AS itemCategoryName,
+               i.member_id, m.nickname,
+               img.name AS imgUrl
+        FROM item i
+        JOIN ITEM_CATEGORY c
+            ON i.item_category_id = c.id
+        JOIN MEMBER m
+            ON i.MEMBER_ID = m.id
+        LEFT JOIN ITEM_IMAGE img ON i.ID = img.ITEM_ID
         WHERE i.id = #{id}
     </select>
 
