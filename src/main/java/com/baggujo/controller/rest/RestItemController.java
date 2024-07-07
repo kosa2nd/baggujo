@@ -28,7 +28,7 @@ public class RestItemController {
         try {
             itemPreviewDTOS = itemService.getItemPreviews(itemId, offset);
         } catch (SQLException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(itemPreviewDTOS, HttpStatus.OK);

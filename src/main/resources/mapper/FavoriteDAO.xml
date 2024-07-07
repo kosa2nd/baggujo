@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.FavoriteDAO">
+
+    <select id="getFavoriteCount" resultType="int">
+        select count(*)
+        from favorite
+        where member_id = #{memberId} and item_id = #{itemId}
+    </select>
+
+    <insert id="insertFavorite">
+        insert into favorite (member_id, item_id)
+        values (#{memberId}, #{itemId})
+    </insert>
+
+    <delete id="deleteFavorite">
+        delete from favorite
+        where member_id = #{memberId} and item_id = #{itemId}
+    </delete>
+
+</mapper>
