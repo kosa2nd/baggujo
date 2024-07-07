@@ -54,7 +54,6 @@
 
     <!-- 상품리스트 조회 -->
     <select id="getItemPreviews" resultType="com.baggujo.dto.ItemPreviewDTO">
-        <![CDATA[
         select * from (
             select i.id, i.title, ii.s_name, i.upload_date, i.status, i.item_category_id, ic.category, i.member_id, m.nickname
             from item i, item_image ii, item_category ic, member m
@@ -62,10 +61,20 @@
                 and i.id = ii.item_id(+)
                 and (ii.img_no = 1 or ii.img_no is null)
                 and i.member_id = m.id
+            <if test="exceptTraded">
                 and i.status != 'TRADED'
-        ]]>
+            </if>
+            <if test="itemCategoryId != 0">
+                and ic.id = #{itemCategoryId}
+            </if>
+            <if test="itemStatus != null">
+                and i.status = #{itemStatus}
+            </if>
             <if test="lastItemId != 0">
                 <![CDATA[and i.id < #{lastItemId}]]>
+            </if>
+            <if test="keyword != null">
+                and i.title like '%' || #{keyword} || '%'
             </if>
             order by i.id desc)
             fetch first #{offset} rows only
