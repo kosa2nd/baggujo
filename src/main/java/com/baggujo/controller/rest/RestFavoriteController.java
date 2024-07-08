@@ -25,6 +25,11 @@ public class RestFavoriteController {
 
     @RequestMapping(value = "/toggle/{itemId}")
     public ResponseEntity<Boolean> toggleFavorite(HttpServletRequest request, @PathVariable long itemId, @AuthenticationPrincipal AuthDTO authDTO) {
+
+        if (authDTO == null) {
+            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED); // 로그인되지 않은 경우 false 반환
+        }
+
         try {
             long memberId = authDTO.getId();
             boolean result = favoriteService.toggleFavorite(memberId, itemId);

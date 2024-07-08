@@ -1,15 +1,15 @@
 package com.baggujo.controller;
 
-import com.baggujo.dto.AuthDTO;
-import com.baggujo.dto.CategoryDTO;
-import com.baggujo.dto.ItemDetailDTO;
-import com.baggujo.dto.ItemInsertDTO;
+import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ItemCondition;
+import com.baggujo.security.dto.MemberAuthDTO;
+import com.baggujo.service.FavoriteService;
 import com.baggujo.service.ItemService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -30,6 +32,8 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     @GetMapping("/insert")
     public String insert(Model model) {
@@ -71,7 +75,7 @@ public class ItemController {
 
 
     @GetMapping("/detail/{id}")
-    public String getItemDetail(@PathVariable("id") long id, Model model) throws SQLException {
+    public String getItemDetail(@PathVariable("id") long id, @AuthenticationPrincipal MemberAuthDTO memberAuthDTO, Model model) throws SQLException {
         ItemDetailDTO itemDetail = itemService.getItemDetailById(id);
         model.addAttribute("itemDetail", itemDetail);
         return "item/detail";

@@ -115,3 +115,19 @@
 .product-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 추가 */
 }
+
+/* favorite */
+.favorite-btn,
+.favorite-btn:focus,
+.favorite-btn:active {
+    outline: none;
+    box-shadow: none;
+    background-color: inherit;
+    border: none
+;
+}
+
+.favorite-btn > .bi-heart,
+.favorite-btn > .bi-heart-fill {
+    color: red;
+}
