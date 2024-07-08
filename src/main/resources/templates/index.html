@@ -24,81 +24,94 @@
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 <div style="margin-top: 75px;">
     <div class="btn-group m-3" role="group">
-        <button id="btnGroupDrop1" type="button" class="btn btn-light border dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">모든 제품
-        </button>
-        <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1" id="productDropdown">
-            <a class="dropdown-item py-2 px-0" href="#">모든 제품</a>
-            <a class="dropdown-item py-2 px-0" href="#">카테고리1</a>
-            <a class="dropdown-item py-2 px-0" href="#">카테고리2</a>
-            <a class="dropdown-item py-2 px-0" href="#">카테고리3</a>
-            <a class="dropdown-item py-2 px-0" href="#">카테고리4</a>
-            <a class="dropdown-item py-2 px-0" href="#">카테고리5</a>
-        </div>
+<!--        <button id="btnGroupDrop1" type="button" class="btn btn-light border dropdown-toggle" data-toggle="dropdown"-->
+<!--                aria-haspopup="true" aria-expanded="false">모든 제품-->
+<!--        </button>-->
+<!--        <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1" id="productDropdown">-->
+<!--            <a class="dropdown-item py-2 px-0" href="#">모든 제품</a>-->
+<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리1</a>-->
+<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리2</a>-->
+<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리3</a>-->
+<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리4</a>-->
+<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리5</a>-->
+<!--        </div>-->
+        <select class="form-control" id="itemCategoryId" name="itemCategoryId" onchange="javascript:changeCategory()">
+            <option value="" selected disabled>카테고리</option>
+            <option value="0">모든 물품</option>
+            <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
+        </select>
     </div>
 </div>
 <div class="container mt-3 p-0">
     <div class="row" id="cards">
     </div>
 </div>
-<div class="more">
-    <button id="more" onclick="getItems()">더보기</button>
+<div id="more">
+    <input type="text" id="lastItemId" value="0" hidden>
+    <a href="javascript:getItems()">더보기</a>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js" type="text/javascript"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js" type="text/javascript"></script>
 <script>
 
-    $(document).ready(function($) {
-
-        let itemId = 0;
-        let itemStatus = '';
-        let itemCategoryId = 0;
-        let exceptTraded = true;
-        let keyword = '';
-
-        function getItems() {
+    function getItems() {
+            urlSearch = new URLSearchParams(location.search);
             $.ajax({
-                url: '/item/list',
-                method: 'GET',
+                url : '/item/list',
+                method : 'GET',
                 dataType: 'json',
                 data: {
-                    "itemId": itemId,
-                    "itemStatus": itemStatus,
-                    "itemCategoryId": itemCategoryId,
-                    "exceptTraded": exceptTraded,
-                    "keyword": keyword
+                    "itemId" : document.getElementById("lastItemId").value,
+                    "itemStatus" : urlSearch.has("itemStatus") ? urlSearch.get("itemStatus") : '',
+                    "itemCategoryId" :  urlSearch.has("itemCategoryId") ? urlSearch.get("itemCategoryId") : 0,
+                    "exceptTraded" : urlSearch.has("exceptTraded") ? urlSearch.get("exceptTraded") : true,
+                    "keyword" : urlSearch.has("keyword") ? urlSearch.get("keyword") : ''
                 },
                 success: function(response) {
+                    if (response.finished) {
+                         alert("마지막 페이지입니다");
+                         return;
+                    }
+
                     response.items.forEach(function(item) {
                         let itemHtml = '<div class="col-md-3 mb-4">'
-                                + '<div class="product-card border rounded-lg cursor p-3">'
-                                    + '<div class="product-image">'
-                                        + '<img class="w-100 h-100 border rounded-lg my-2" src="/images/' + item.s_name + '" alt="제품이미지" />'
-                                    + '</div>'
-                                    + '<div class="d-flex justify-content-between align-items-center py-1">'
-                                        + '<span class="badge rounded-pill bg-secondary text-white px-2 py-1">' + item.status + '</span>'
-                                    + '</div>'
-                                    + '<h5 class="product-title text-truncate py-1"><b>' + item.title + '</b></h5>'
-                                + '</div>'
-                            + '</div>';
+                                        + '<div class="product-card border rounded-lg cursor p-3">'
+                                            + '<div class="product-image">'
+                                                + '<img class="w-100 h-100 border rounded-lg my-2" src="/images/' + item.s_name + '" alt="제품이미지" />'
+                                            + '</div>'
+                                            + '<div class="d-flex justify-content-between align-items-center py-1">'
+                                                + '<span class="badge rounded-pill bg-secondary text-white px-2 py-1">' + item.status + '</span>'
+                                            + '</div>'
+                                            + '<h5 class="product-title text-truncate py-1"><b>' + item.title + '</b></h5>'
+                                            + '<p>' + item.nickname + '</p>'
+                                            + '<p>' + item.uploadDate + '</p>'
+                                        + '</div>'
+                                     + '</div>';
 
                         $('#cards').append(itemHtml);
                     });
-                itemId = response.lastItemId;
+                    document.getElementById("lastItemId").value = response.lastItemId;
                 },
                 error: function(error) {
+                    alert('물품을 불러올 수 없습니다');
                     console.error('Error:', error);
                 }
             });
-        };
+    };
 
-        getItems();
-        console.log(itemId);
-        $("#more").click(getItems());
-    } (jQuery));
+    function changeCategory() {
+        const val = $("#itemCategoryId option:selected").val();
+        if (val != 0) {
+            window.location.href='/?itemCategoryId=' + val;
+        } else {
+            window.location.href='/';
+        }
+    }
+
+    $(document).ready(function() {
+        getItems(0);
+    });
 </script>
 </body>
 </html>

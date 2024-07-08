@@ -30,10 +30,19 @@ public class RestItemController {
         try {
             itemPreviewDTOS = itemService.getItemPreviews(itemId, offset, itemStatus, itemCategoryId, exceptTraded, keyword);
             map.put("items", itemPreviewDTOS);
-            long lastItemId = itemPreviewDTOS.get(itemPreviewDTOS.size() - 1).getId();
+            long lastItemId = -1;
+
+            if (!itemPreviewDTOS.isEmpty()) {
+                lastItemId = itemPreviewDTOS.get(itemPreviewDTOS.size() - 1).getId();
+            } else {
+                map.put("finished", true);
+            }
+
             map.put("lastItemId", lastItemId);
         } catch (SQLException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
