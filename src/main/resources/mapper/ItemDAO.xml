@@ -76,7 +76,7 @@
             <if test="keyword != null">
                 and i.title like '%' || #{keyword} || '%'
             </if>
-            order by i.id desc)
+            order by i.upload_date desc)
             fetch first #{offset} rows only
     </select>
 

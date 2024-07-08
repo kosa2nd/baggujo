@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/item")
@@ -21,15 +24,19 @@ public class RestItemController {
     private int offset;
 
     @GetMapping("/list")
-    public ResponseEntity<List<ItemPreviewDTO>> getItems(@RequestBody int itemId, @RequestParam ItemStatus itemStatus, @RequestParam(defaultValue = "0") int itemCategoryId, @RequestParam(defaultValue = "true") boolean exceptTraded, @RequestParam String keyword) {
+    public ResponseEntity<Map<String, Object>> getItems(@RequestParam(defaultValue = "0") int itemId, @RequestParam(required = false) ItemStatus itemStatus, @RequestParam(defaultValue = "0") int itemCategoryId, @RequestParam(defaultValue = "true") boolean exceptTraded, @RequestParam(required = false) String keyword) {
+        Map<String, Object> map = new HashMap<>();
         List<ItemPreviewDTO> itemPreviewDTOS;
         try {
             itemPreviewDTOS = itemService.getItemPreviews(itemId, offset, itemStatus, itemCategoryId, exceptTraded, keyword);
+            map.put("items", itemPreviewDTOS);
+            long lastItemId = itemPreviewDTOS.get(itemPreviewDTOS.size() - 1).getId();
+            map.put("lastItemId", lastItemId);
         } catch (SQLException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(itemPreviewDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 }
