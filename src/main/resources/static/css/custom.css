@@ -97,15 +97,37 @@
 
 /* 상세 이미지 */
 .detail-image {
-    width: 400px;
-    height: 300px;
+    width: 300px;
+    height: 400px;
     object-fit: cover;
+    border-radius: 10px;
 }
-/* 캐러셀 버튼 색상 */
+/* 캐러셀 버튼 */
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
+    display: none;
     background-color: black;
-    background-size: 100%, 100%;
+    background-size: 70%, 70%;
+    border-radius: 20px;
+}
+
+.carousel:hover .carousel-control-prev-icon,
+.carousel:hover .carousel-control-next-icon {
+    display: block;
+}
+
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+
+}
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+    background-color: dimgray;
+    background-size: 70%, 70%;
+    border-radius: 20px;
 }
 
 /* 제품 카드 */
