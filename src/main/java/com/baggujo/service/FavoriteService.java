@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class FavoriteService {
@@ -13,18 +15,27 @@ public class FavoriteService {
     @Autowired
     public FavoriteDAO favoriteDAO;
 
-    public boolean toggleFavorite(long memberId, long itemId) throws SQLException {
-        boolean result;
+    public Map<String, Object> toggleFavorite(long memberId, long itemId) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        boolean isFavorite;
 
         if (favoriteDAO.getFavoriteCount(memberId, itemId) > 0) {
             favoriteDAO.deleteFavorite(memberId, itemId);
-            result = false;
+            isFavorite = false;
         } else {
             favoriteDAO.insertFavorite(memberId, itemId);
-            result = true;
+            isFavorite = true;
         }
 
+        int totalFavorites = favoriteDAO.getTotalFavoriteCount(itemId);
+        result.put("isFavorite", isFavorite);
+        result.put("totalFavorites", totalFavorites);
+
         return result;
+    }
+
+    public int getTotalFavoriteCount(long itemId) throws SQLException {
+        return favoriteDAO.getTotalFavoriteCount(itemId);
     }
 
 }

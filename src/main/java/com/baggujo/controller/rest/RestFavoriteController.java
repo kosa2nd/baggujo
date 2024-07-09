@@ -9,12 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/favorite")
@@ -23,20 +21,29 @@ public class RestFavoriteController {
     @Autowired
     FavoriteService favoriteService;
 
-    @RequestMapping(value = "/toggle/{itemId}")
-    public ResponseEntity<Boolean> toggleFavorite(HttpServletRequest request, @PathVariable long itemId, @AuthenticationPrincipal AuthDTO authDTO) {
+    @PostMapping("/toggle/{itemId}")
+    public ResponseEntity<Map<String, Object>> toggleFavorite(HttpServletRequest request, @PathVariable long itemId, @AuthenticationPrincipal AuthDTO authDTO) {
 
         if (authDTO == null) {
-            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED); // 로그인되지 않은 경우 false 반환
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 로그인되지 않은 경우 false 반환
         }
 
         try {
             long memberId = authDTO.getId();
-            boolean result = favoriteService.toggleFavorite(memberId, itemId);
-            return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+            Map<String, Object> result = favoriteService.toggleFavorite(memberId, itemId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (SQLException e) {
-            return new ResponseEntity<Boolean>((Boolean) null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("/count/{itemId}")
+    public ResponseEntity<Integer> getTotalFavoriteCount(@PathVariable long itemId) {
+        try {
+            int totalFavorites = favoriteService.getTotalFavoriteCount(itemId);
+            return new ResponseEntity<>(totalFavorites, HttpStatus.OK);
+        } catch (SQLException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

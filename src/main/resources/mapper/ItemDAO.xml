@@ -86,4 +86,11 @@
         set status = #{itemStatus}
         WHERE id = #{itemId}
     </update>
+
+    <!-- 물품 상태 조회 -->
+    <select id="getItemStatusById" resultType="com.baggujo.dto.enums.ItemStatus">
+        select status
+        from item
+        where id = #{itemId}
+    </select>
 </mapper>

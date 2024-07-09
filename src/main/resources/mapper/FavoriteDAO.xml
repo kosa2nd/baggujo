@@ -9,6 +9,12 @@
         where member_id = #{memberId} and item_id = #{itemId}
     </select>
 
+    <select id="getTotalFavoriteCount" resultType="int">
+        select count(*)
+        from favorite
+        where ITEM_ID = #{itemId}
+    </select>
+
     <insert id="insertFavorite">
         insert into favorite (member_id, item_id)
         values (#{memberId}, #{itemId})
