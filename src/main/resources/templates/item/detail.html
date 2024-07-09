@@ -83,7 +83,7 @@
                         <span id="favorite-count-anonymous" th:text="${totalFavorites}">0</span>
                     </button>
                 </div>
-                <button class="btn btn-success fs-5">교환신청</button>
+                <button type="button" class="btn btn-success fs-5" th:onclick="|window.location.href='/item/request/${itemDetail.id}'|">교환신청</button>
             </div>
         </div>
     </div>

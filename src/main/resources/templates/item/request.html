@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바꾸조</title>
+    <link rel="icon" href="../../static/img/favicon.png" type="image/png">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@4.3.1/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-select@1.13.8/dist/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="../../static/css/reset.css?ver=1.0" />
+    <link rel="stylesheet" href="../../static/css/custom.css" />
+</head>
+<body>
+
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+
+<h2 class="margin-top">교환하고 싶은 물품을 골라주세요</h2>
+<div class="container">
+    <select class="my-image-selectpicker selectpicker" data-live-search="true">
+        <option value="" selected disabled>교환 물품 선택</option>
+        <option th:each="item : ${itemList}" th:data-thumbnail="@{'/images/' + ${item.itemImage}}" th:value="${item.itemId}" th:text="${item.itemTitle}">물품제목</option>
+    </select>
+</div>
+<button type="button" class="btn btn-success m-2">교환신청</button>
+
+<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.slim.min.js"></script>
+<script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/bootstrap-select@1.13.8/dist/js/bootstrap-select.min.js"></script>
+
+<script>
+    const BASE_URL = $('base[href]').attr('href') || '';
+
+    const $_SELECT_PICKER = $('.my-image-selectpicker');
+
+    $_SELECT_PICKER.find('option').each((idx, elem) => {
+        const $OPTION = $(elem);
+        const IMAGE_URL = $OPTION.attr('data-thumbnail');
+
+        if (IMAGE_URL) {
+            const content = `<div style="display: flex; align-items: center;">
+                                <img src="${BASE_URL + IMAGE_URL}" style="width: 16px; height: 16px; margin-right: 8px; object-fit: cover; border-radius: 2px;"/>
+                                ${$OPTION.text()}
+                             </div>`;
+            $OPTION.attr('data-content', content);
+        }
+    });
+
+    $_SELECT_PICKER.selectpicker({
+        iconBase: 'bi',
+        tickIcon: 'bi-check'
+    });
+</script>
+</body>
+</html>

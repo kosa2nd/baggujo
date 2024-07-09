@@ -15,6 +15,7 @@
         ]]>
     </insert>
 
+    <!-- 물품 상세 결과 -->
     <resultMap id="ItemDetailResultMap" type="com.baggujo.dto.ItemDetailDTO">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
@@ -32,6 +33,7 @@
         </collection>
     </resultMap>
 
+    <!-- 물품 상세 조회 -->
     <select id="getItemDetailById" parameterType="long" resultMap="ItemDetailResultMap">
         SELECT i.id, i.title, i.description, i.enable, i.upload_date as uploadDate, i.update_date as updateDate,
                i.status AS itemStatus, i.condition AS itemCondition,

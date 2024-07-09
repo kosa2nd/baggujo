@@ -3,6 +3,7 @@ package com.baggujo.service;
 import com.baggujo.dao.ItemDAO;
 import com.baggujo.dao.RequestDAO;
 import com.baggujo.dto.RequestInsertDTO;
+import com.baggujo.dto.RequestUserItemDTO;
 import com.baggujo.dto.enums.ItemStatus;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RequestService {
@@ -31,6 +34,10 @@ public class RequestService {
         requestDAO.insertRequest(requestInsertDTO);
     }
 
+    // 유저 물품 리스트 조회
+    public List<RequestUserItemDTO> getRequestUserItems(long memberId) {
+        return requestDAO.getUserItemList(memberId);
+    }
 
 
 }
