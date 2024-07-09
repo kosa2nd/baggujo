@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.RequestDAO">
+    <insert id="insertRequest" parameterType="com.baggujo.dto.RequestInsertDTO">
+        insert into request (
+        request_item_id,
+        response_item_id,
+        status)
+        values (
+        #{requestItemId},
+        #{responseItemId},
+        #{requestStatus}
+        )
+    </insert>
+
+    <select id="getRequestByMemberId" resultType="com.baggujo.dto.RequestDTO">
+        select
+            r.id,
+            r.request_date,
+
+            m1.id requestMemberId,
+            m1.nickname requestNickname,
+            i1.id requestItemId,
+            i1.title requestItemTitle,
+            ii1.s_name requestThumbnail,
+
+            m2.id responseMemberId,
+            m2.nickname responseNickname,
+            i2.id responseItemId,
+            i2.title responseItemTitle,
+            ii2.s_name responseThumbnail
+        from request r, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
+        where
+        <choose>
+            <when test="request == null">
+                (i1.member_id = #{memberId} or i2.member_id = #{memberId})
+            </when>
+            <when test="request">
+                i1.member_id = #{memberId}
+            </when>
+            <otherwise>
+                i2.member_id = #{memberId}
+            </otherwise>
+        </choose>
+            and r.request_item_id = i1.id
+            and i1.member_id = m1.id
+            and i1.id = ii1.item_id(+)
+            and (ii1.img_no = 1 or ii1.img_no is null)
+            and i1.member_id = m1.id
+
+            and r.response_item_id = i2.id
+            and i2.member_id = m2.id
+            and i2.id = ii2.item_id(+)
+            and (ii2.img_no = 1 or ii2.img_no is null)
+            and i2.member_id = m2.id
+
+        <if test="lastRequestId != 0">
+            <![CDATA[and r.id < #{lastRequestId}]]>
+        </if>
+            and r.status = 'WAITING'
+        order by r.request_date desc
+        fetch first #{offset} rows only
+    </select>
+</mapper>

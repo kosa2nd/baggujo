@@ -17,5 +17,6 @@ public interface ItemDAO {
     ItemDetailDTO getItemDetailById(long id);
     List<CategoryDTO> getCategories();
     List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset, ItemStatus itemStatus, int itemCategoryId, boolean exceptTraded, String keyword);
-
+    void updateItemStatus(long itemId, ItemStatus itemStatus);
+    ItemStatus getItemStatusById(long itemId);
 }
