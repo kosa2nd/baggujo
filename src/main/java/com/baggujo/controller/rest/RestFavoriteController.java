@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -38,12 +39,23 @@ public class RestFavoriteController {
     }
 
     @GetMapping("/count/{itemId}")
-    public ResponseEntity<Integer> getTotalFavoriteCount(@PathVariable long itemId) {
+    public ResponseEntity<Map<String, Object>> getTotalFavoriteCount(@PathVariable long itemId, @AuthenticationPrincipal AuthDTO authDTO) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        int totalFavorites = favoriteService.getTotalFavoriteCount(itemId);
+        result.put("totalFavorites", totalFavorites);
+
+        if (authDTO == null) {
+            result.put("isFavorite", false);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
         try {
-            int totalFavorites = favoriteService.getTotalFavoriteCount(itemId);
-            return new ResponseEntity<>(totalFavorites, HttpStatus.OK);
-        } catch (SQLException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            long memberId = authDTO.getId();
+            boolean isFavorite = favoriteService.isFavorite(memberId, itemId);
+            result.put("isFavorite", isFavorite);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

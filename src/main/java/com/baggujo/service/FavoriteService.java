@@ -38,4 +38,8 @@ public class FavoriteService {
         return favoriteDAO.getTotalFavoriteCount(itemId);
     }
 
+    public boolean isFavorite(long memberId, long itemId) throws SQLException {
+        return favoriteDAO.getFavoriteCount(memberId, itemId) > 0;
+    }
+
 }
