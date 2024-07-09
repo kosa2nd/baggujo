@@ -103,6 +103,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {
+        // 좋아요 버튼 클릭 시 처리
         $('#favorite-btn').click(function() {
             let itemId = [[${itemDetail.id}]];
             $.ajax({
@@ -125,17 +126,26 @@
             });
         });
 
-        // 페이지 로드 시 좋아요 개수 초기화
+        // 페이지 로드 시 좋아요 상태 및 개수 초기화
         let itemId = [[${itemDetail.id}]];
         $.ajax({
             url: '/favorite/count/' + itemId,
             method: 'GET',
             success: function(response) {
-                $('#favorite-count-logged-in').text(response);  // 로그인된 사용자용 count 업데이트
-                $('#favorite-count-anonymous').text(response);  // 비로그인 사용자용 count 업데이트
+                $('#favorite-count-logged-in').text(response.totalFavorites);  // 로그인된 사용자용 count 업데이트
+                $('#favorite-count-anonymous').text(response.totalFavorites);  // 비로그인 사용자용 count 업데이트
+
+                if (response.isFavorite !== undefined) {
+                    let icon = $('#favorite-icon');
+                    if (response.isFavorite) {
+                        icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                    } else {
+                        icon.removeClass('bi-heart-fill').addClass('bi-heart');
+                    }
+                }
             },
             error: function(xhr, status, error) {
-                console.error('좋아요 개수 불러오기 실패:', error);
+                console.error('좋아요 상태 및 개수 불러오기 실패:', error);
             }
         });
     });
