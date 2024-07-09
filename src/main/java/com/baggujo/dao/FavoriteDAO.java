@@ -9,4 +9,5 @@ public interface FavoriteDAO {
     int getFavoriteCount(long memberId, long itemId) throws SQLException;
     void insertFavorite(long memberId, long itemId) throws SQLException;
     void deleteFavorite(long memberId, long itemId) throws SQLException;
+    int getTotalFavoriteCount(long itemId) throws SQLException;
 }

@@ -72,7 +72,7 @@
                 <div class="d-flex mr-2" th:if="${#authentication?.principal != 'anonymousUser'}">
                     <button id="favorite-btn" class="d-flex btn btn-outline-danger align-items-center fs-5">
                         <i id="favorite-icon" class="bi bi-heart mr-2 fs-5" th:classappend="${isFavorite} ? 'bi-heart-fill' : 'bi-heart'"></i>
-                        <span>3</span>
+                        <span id="favorite-count-logged-in" th:text="${totalFavorites}">0</span>
                     </button>
                 </div>
 
@@ -80,7 +80,7 @@
                 <div class="d-flex mr-2" th:if="${#authentication?.principal == 'anonymousUser'}">
                     <button class="d-flex btn btn-outline-danger align-items-center fs-5" onclick="alert('로그인이 필요합니다.'); window.location.href='/member/login';">
                         <i class="bi bi-heart mr-2 fs-5"></i>
-                        <span>3</span>
+                        <span id="favorite-count-anonymous" th:text="${totalFavorites}">0</span>
                     </button>
                 </div>
                 <button class="btn btn-success fs-5">교환신청</button>
@@ -111,16 +111,32 @@
                 contentType: 'application/json',
                 success: function(response) {
                     let icon = $('#favorite-icon');
-                    if (response) {
+                    let count = $('#favorite-count-logged-in');  // 로그인된 사용자용 count 업데이트
+                    if (response.isFavorite) {
                         icon.removeClass('bi-heart').addClass('bi-heart-fill');
                     } else {
                         icon.removeClass('bi-heart-fill').addClass('bi-heart');
                     }
+                    count.text(response.totalFavorites);
                 },
                 error: function(xhr, status, error) {
                     console.error('좋아요 토글 실패:', error);
                 }
             });
+        });
+
+        // 페이지 로드 시 좋아요 개수 초기화
+        let itemId = [[${itemDetail.id}]];
+        $.ajax({
+            url: '/favorite/count/' + itemId,
+            method: 'GET',
+            success: function(response) {
+                $('#favorite-count-logged-in').text(response);  // 로그인된 사용자용 count 업데이트
+                $('#favorite-count-anonymous').text(response);  // 비로그인 사용자용 count 업데이트
+            },
+            error: function(xhr, status, error) {
+                console.error('좋아요 개수 불러오기 실패:', error);
+            }
         });
     });
 </script>
