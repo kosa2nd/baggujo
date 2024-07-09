@@ -17,5 +17,5 @@ public interface ItemDAO {
     ItemDetailDTO getItemDetailById(long id);
     List<CategoryDTO> getCategories();
     List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset, ItemStatus itemStatus, int itemCategoryId, boolean exceptTraded, String keyword);
-
+    void updateItemStatus(int itemId, ItemStatus itemStatus); //푸름님
 }
