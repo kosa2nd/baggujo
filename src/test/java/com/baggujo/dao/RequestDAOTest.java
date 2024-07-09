@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @SpringBootTest
@@ -16,17 +17,16 @@ public class RequestDAOTest {
     private RequestDAO requestDAO;
 
     @Test
-    public void 요청생성테스트() {
-        requestDAO.insertRequest(new RequestInsertDTO(121, 122, RequestStatus.WAITING));
+    public void 요청생성테스트() throws SQLException {
+        requestDAO.insertRequest(new RequestInsertDTO(161, 162));
     }
 
     @Test
-    public void 요청목록가져오기테스트() {
-        List<RequestDTO> dtos = requestDAO.getRequestByMemberId(1, 0, true, 12);
+    public void 요청목록가져오기테스트() throws SQLException {
+        List<RequestDTO> dtos = requestDAO.getRequestByMemberId(1, 0, null, 12);
         for (RequestDTO dto: dtos) {
             System.out.println(dto);
         }
-        //long memberId, long lastRequestId, boolean request, long offset)
     }
 
 }

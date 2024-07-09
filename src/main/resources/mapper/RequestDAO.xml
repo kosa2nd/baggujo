@@ -33,6 +33,9 @@
         from request r, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
         where
         <choose>
+            <when test="request == null">
+                (i1.member_id = #{memberId} or i2.member_id = #{memberId})
+            </when>
             <when test="request">
                 i1.member_id = #{memberId}
             </when>
