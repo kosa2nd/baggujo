@@ -16,5 +16,7 @@ public class MemberService {
     public MemberDTO findMemberByEmail(String email) throws SQLException, NullPointerException {
         return memberDAO.findMemberByEmail(email);
     }
-
+    public boolean getEmailDuplicated(String email) throws SQLException{
+        return memberDAO.getEmailDuplicated(email);
+    }
 }
