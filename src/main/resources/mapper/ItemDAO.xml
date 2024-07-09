@@ -80,4 +80,10 @@
             fetch first #{offset} rows only
     </select>
 
+    <!-- 교환 상태 변경 -->
+    <update id="updateItemStatus">
+        UPDATE item
+        set status = #{itemStatus}
+        WHERE id = #{itemId}
+    </update>
 </mapper>
