@@ -109,14 +109,14 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                    <select class="my-image-selectpicker selectpicker" data-live-search="true">
+                    <select id="user-item-select" class="my-image-selectpicker selectpicker" data-live-search="true">
                         <option value="" selected disabled>교환 물품 선택</option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-success">교환신청</button>
+                <button id="request-insert-btn" type="button" class="btn btn-success">교환신청</button>
             </div>
         </div>
     </div>
@@ -211,6 +211,36 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('물품 목록 불러오기 실패:', error);
+                }
+            });
+        });
+
+        // 교환 신청 버튼 클릭하여 교환 신청하기
+        $('#request-insert-btn').click(function() {
+            let itemId = [[${itemDetail.id}]];
+            let selectedItemId = $('#user-item-select').val();
+            let itemStatus = "[[${itemDetail.itemStatus}]]"; // 문자열로 지정
+
+            if (!selectedItemId) {
+                alert("교환할 물품을 선택해주세요.");
+                return;
+            }
+
+            $.ajax({
+                url: '/item/request',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    requestItemId: itemId,
+                    responseItemId: selectedItemId, // 물품목록에서 선택한 물품 id
+                    requestStatus: itemStatus
+                }),
+                success: function(response) {
+                    console.log(response, "교환 신청 성공");
+                    location.href = "/myTrade";
+                },
+                error: function(xhr, status, error) {
+                    console.error('교환 신청 실패:', error);
                 }
             });
         });
