@@ -1,9 +1,6 @@
 package com.baggujo.dao;
 
-import com.baggujo.dto.CategoryDTO;
-import com.baggujo.dto.ItemDetailDTO;
-import com.baggujo.dto.ItemInsertDTO;
-import com.baggujo.dto.ItemPreviewDTO;
+import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ItemStatus;
 import org.apache.ibatis.annotations.Mapper;
 

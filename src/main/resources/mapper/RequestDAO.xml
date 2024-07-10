@@ -69,4 +69,12 @@
             response_date = sysdate
         where id = #{requestId}
     </update>
+
+    <!-- 교환 신청 시 유저 물품 목록 조회 -->
+    <select id="getUserItemList" resultType="com.baggujo.dto.RequestUserItemDTO">
+        SELECT i.ID as itemId, i.TITLE as itemTitle,
+               (SELECT im.S_NAME FROM ITEM_IMAGE im WHERE im.ITEM_ID = i.ID AND ROWNUM = 1) as itemImage
+        FROM ITEM i
+        WHERE i.MEMBER_ID = #{memberId}
+    </select>
 </mapper>

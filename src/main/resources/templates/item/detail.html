@@ -8,9 +8,11 @@
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootswatch Litera theme -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.2.0/litera/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- bootstrap-select CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
     <link href="../../static/css/custom.css" rel="stylesheet">
 </head>
@@ -23,7 +25,7 @@
         <div id="carouselExampleIndicators" class="carousel slide w-50 mr-5" data-ride="carousel" data-interval="false">
             <ol class="carousel-indicators">
                 <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li th:each="itemImage, iterStat : ${itemDetail.itemImages}" th:if="${iterStat.index > 0}" th:data-target="${#carouselExampleIndicators}" th:data-slide-to="${iterStat.index}"></li>
+                <li th:each="itemImage, iterStat : ${itemDetail.itemImages}" th:if="${iterStat.index > 0}" data-target="#carouselExampleIndicators" th:data-slide-to="${iterStat.index}"></li>
             </ol>
             <div class="carousel-inner">
                 <div th:each="itemImage, iterStat : ${itemDetail.itemImages}" th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
@@ -39,7 +41,6 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-
 
         <div class="w-100 h-100 mt-3">
             <div class="mb-3">
@@ -83,24 +84,49 @@
                         <span id="favorite-count-anonymous" th:text="${totalFavorites}">0</span>
                     </button>
                 </div>
-                <button class="btn btn-success fs-5">교환신청</button>
+                <button type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
             </div>
         </div>
     </div>
 
     <hr class="w-80"/>
 
-
     <div class="w-80">
         <h4 class="pr-3 mb-4">물품 내용</h4>
         <p th:text="${itemDetail.description}">내용</p>
     </div>
-
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- 모달 -->
+<div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exchangeModalLabel">교환 신청</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <select class="my-image-selectpicker selectpicker" data-live-search="true">
+                        <option value="" selected disabled>교환 물품 선택</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-success">교환신청</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/bootstrap-select@1.13.8/dist/js/bootstrap-select.min.js"></script>
+
 <script>
     $(document).ready(function() {
         // 좋아요 버튼 클릭 시 처리
@@ -147,6 +173,46 @@
             error: function(xhr, status, error) {
                 console.error('좋아요 상태 및 개수 불러오기 실패:', error);
             }
+        });
+
+        // 모달이 열릴 때마다 물품 목록을 동적으로 불러오기
+        $('#exchangeModal').on('show.bs.modal', function () {
+            const selectPicker = $('.my-image-selectpicker');
+            $.ajax({
+                url: '/item/request', // AJAX 요청을 보낼 엔드포인트
+                method: 'GET',
+                success: function(data) {
+                    selectPicker.empty();
+                    selectPicker.append('<option value="" selected disabled>교환 물품 선택</option>');
+                    if (Array.isArray(data)) {
+                        data.forEach(function(item) {
+                            const option = `<option data-thumbnail="/images/${item.itemImage}" value="${item.itemId}">${item.itemTitle}</option>`;
+                            selectPicker.append(option);
+                        });
+
+                        // 옵션에 이미지 추가
+                        selectPicker.find('option').each(function() {
+                            const $option = $(this);
+                            const itemImage = $option.attr('data-thumbnail');
+                            if (itemImage) {
+                                const content = `<div style="display: flex; align-items: center;">
+                                        <img src="${itemImage}" style="width: 16px; height: 16px; margin-right: 8px; object-fit: cover; border-radius: 2px;"/>
+                                        ${$option.text()}
+                                     </div>`;
+                                $option.attr('data-content', content);
+                            }
+                        });
+
+                        // selectpicker를 다시 초기화하여 새로운 옵션을 반영
+                        selectPicker.selectpicker('refresh');
+                    } else {
+                        console.error('응답 데이터가 배열이 아닙니다:', data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('물품 목록 불러오기 실패:', error);
+                }
+            });
         });
     });
 </script>

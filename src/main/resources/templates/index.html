@@ -10,11 +10,9 @@
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootswatch Litera theme -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0"
-          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0" rel="stylesheet">
     <!-- Bootstrap Icons CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"
-          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
     <link href="../../static/css/custom.css?ver=1.0" rel="stylesheet">
 
@@ -75,7 +73,7 @@
                     }
 
                     response.items.forEach(function(item) {
-                        let itemHtml = '<div class="col-md-3 mb-4">'
+                        let itemHtml = '<div class="col-md-3 mb-4" onclick="window.location.href=\'/item/detail/' + item.id + '\'">'
                                         + '<div class="product-card border rounded-lg cursor p-3">'
                                             + '<div class="product-image">'
                                                 + '<img class="w-100 h-100 border rounded-lg my-2" src="/images/' + item.s_name + '" alt="제품이미지" />'
