@@ -63,6 +63,13 @@
         fetch first #{offset} rows only
     </select>
 
+    <update id="updateRequestStatus">
+        update request
+        set status = #{requestStatus},
+            response_date = sysdate
+        where id = #{requestId}
+    </update>
+
     <!-- 교환 신청 시 유저 물품 목록 조회 -->
     <select id="getUserItemList" resultType="com.baggujo.dto.RequestUserItemDTO">
         SELECT i.ID as itemId, i.TITLE as itemTitle,

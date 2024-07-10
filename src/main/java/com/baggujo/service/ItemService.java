@@ -62,7 +62,7 @@ public class ItemService {
                     multipartFiles[i].transferTo(savePath);
                     String thumbnailSaveName = folderPath + File.separator+ "s_"+uuid + "_" + originalName;
                     File thumbnailFile = new File(uploadPath + File.separator + thumbnailSaveName);
-                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
+                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 300, 300);
                     itemInsertDTOList.add(new ItemImageInsertDTO(saveName, thumbnailSaveName, i + 1, id));
                 } catch (Exception e) {
                     e.printStackTrace();

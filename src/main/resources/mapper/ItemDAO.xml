@@ -95,4 +95,16 @@
         from item
         where id = #{itemId}
     </select>
+
+    <!--- 물품 상태 변경(조회 아이디로 변경) -->
+    <update id="updateItemStatusByRequestId">
+        UPDATE item
+        set status = #{itemStatus}
+        WHERE id = (select request_item_id
+                    from request
+                    where id = #{requestId})
+        or id = (select response_item_id
+                from request
+                where id = #{requestId})
+    </update>
 </mapper>
