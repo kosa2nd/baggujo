@@ -36,7 +36,9 @@ public class RequestService {
 
     // 유저 물품 리스트 조회
     public List<RequestUserItemDTO> getRequestUserItems(long memberId) {
-        return requestDAO.getUserItemList(memberId);
+        List<RequestUserItemDTO> requestUserItemDTOs = new ArrayList<>();
+        requestUserItemDTOs = requestDAO.getUserItemList(memberId);
+        return requestUserItemDTOs;
     }
 
 
