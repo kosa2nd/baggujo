@@ -44,22 +44,28 @@ public class TradeService {
     public long acceptRequest(long requestId) throws SQLException {
         //물품 상태 변경
         if (itemDAO.updateItemStatusByRequestId(requestId, ItemStatus.TRADING) != 2 ) {
-            throw new SQLException("요청을 처리할 수 없습니다");
+            throw new SQLException("물품 상태 변경에 실패했습니다");
         }
 
         //요청 상태 변경
         if (requestDAO.updateRequestStatus(requestId, RequestStatus.ACCEPTED) != 1) {
-            throw new SQLException("요청을 처리할 수 없습니다");
+            throw new SQLException("요청 상태 변경에 실패했습니다");
         }
 
         //거래 생성
         TradeInsertDTO tradeInsertDTO = new TradeInsertDTO(requestId);
         if (tradeDAO.insertTradeByRequestId(tradeInsertDTO) != 1) {
-            throw new SQLException("요청을 처리할 수 없습니다");
+            throw new SQLException("거래 생성에 실패했습니다");
         }
 
         //거래 아이디 반환
         return tradeInsertDTO.getId();
+    }
+
+    public void rejectRequest(long requestId) throws SQLException {
+        if (requestDAO.updateRequestStatus(requestId, RequestStatus.REJECTED) != 1) {
+            throw new SQLException("요청 상태 변경에 실패했습니다");
+        }
     }
 
 

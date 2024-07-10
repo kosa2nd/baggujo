@@ -16,4 +16,9 @@ public class TradeServiceTest {
         long tradeIe = tradeService.acceptRequest(41);
         System.out.println("거래 번호 ================" + tradeIe);
     }
+
+    @Test
+    public void rejectRequestTest() throws SQLException {
+        tradeService.rejectRequest(41);
+    }
 }
