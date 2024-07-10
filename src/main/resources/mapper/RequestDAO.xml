@@ -62,4 +62,11 @@
         order by r.request_date desc
         fetch first #{offset} rows only
     </select>
+
+    <update id="updateRequestStatus">
+        update request
+        set status = #{requestStatus},
+            response_date = sysdate
+        where id = #{requestId}
+    </update>
 </mapper>
