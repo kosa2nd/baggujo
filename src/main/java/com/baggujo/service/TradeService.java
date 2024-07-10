@@ -36,6 +36,7 @@ public class TradeService {
         requestDAO.insertRequest(requestInsertDTO);
     }
 
+    //유저 물품 리스트 조회
     public List<RequestDTO> getAvailableRequestsByMemberId(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException {
         return requestDAO.getRequestByMemberId(memberId, lastRequestId, request, offset);
     }
