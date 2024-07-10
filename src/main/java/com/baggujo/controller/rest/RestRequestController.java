@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/item")
+@RequestMapping("/request")
 public class RestRequestController {
 
     @Autowired
@@ -27,4 +27,5 @@ public class RestRequestController {
         long memberId = authDTO.getId();
         return requestService.getRequestUserItems(memberId);
     }
+
 }

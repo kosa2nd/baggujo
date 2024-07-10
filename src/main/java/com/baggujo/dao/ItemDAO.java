@@ -17,4 +17,5 @@ public interface ItemDAO {
     int updateItemStatus(long itemId, ItemStatus itemStatus);
     ItemStatus getItemStatusById(long itemId);
     int updateItemStatusByRequestId(long requestId, ItemStatus itemStatus);
+    List<ItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteId, long memberId, int offset, ItemStatus itemStatus);
 }
