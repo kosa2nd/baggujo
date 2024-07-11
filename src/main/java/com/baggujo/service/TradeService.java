@@ -5,6 +5,7 @@ import com.baggujo.dao.RequestDAO;
 import com.baggujo.dao.TradeDAO;
 import com.baggujo.dto.RequestDTO;
 import com.baggujo.dto.RequestInsertDTO;
+import com.baggujo.dto.TradeDetailDTO;
 import com.baggujo.dto.TradeInsertDTO;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.dto.enums.RequestStatus;
@@ -68,6 +69,10 @@ public class TradeService {
         if (requestDAO.updateRequestStatus(requestId, RequestStatus.REJECTED) != 1) {
             throw new SQLException("요청 상태 변경에 실패했습니다");
         }
+    }
+
+    public TradeDetailDTO getTradeDetailByTradeId(long tradeId) {
+        return tradeDAO.getTradeDetailByTradeId(tradeId);
     }
 
 
