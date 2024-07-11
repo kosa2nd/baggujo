@@ -23,4 +23,18 @@
         from request r
         where r.id = #{requestId}
     </insert>
+
+    <select id="getTradeDetailByTradeId" resultType="com.baggujo.dto.TradeDetailDTO">
+        select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle
+        from trade t, member m1, member m2, item i1, item i2
+        where
+            t.request_item_id = i1.id
+            and
+            t.response_item_id = i2.id
+            and
+            i1.member_id = m1.id
+            and
+            i2.member_id = m2.id
+            and t.id = #{requestId}
+    </select>
 </mapper>
