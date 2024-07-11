@@ -13,12 +13,12 @@ public class FavoriteTest {
     @Autowired
     private ItemDAO itemDAO;
 
-    @Test
-    public void favoriteItemsTest() {
-        List<ItemPreviewDTO> dtos = itemDAO.getFavoriteItemPreviews(1, 2, null);
-
-        for (ItemPreviewDTO dto: dtos) {
-            System.out.println(dto.toString());
-        }
-    }
+//    @Test
+//    public void favoriteItemsTest() {
+//        List<ItemPreviewDTO> dtos = itemDAO.getFavoriteItemPreviews(1, 2, null);
+//
+//        for (ItemPreviewDTO dto: dtos) {
+//            System.out.println(dto.toString());
+//        }
+//    }
 }

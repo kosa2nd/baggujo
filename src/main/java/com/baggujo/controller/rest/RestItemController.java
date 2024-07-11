@@ -1,5 +1,7 @@
 package com.baggujo.controller.rest;
 
+import com.baggujo.dto.AuthDTO;
+import com.baggujo.dto.FavoriteItemPreviewDTO;
 import com.baggujo.dto.ItemPreviewDTO;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.service.ItemService;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -43,6 +46,34 @@ public class RestItemController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } catch (IndexOutOfBoundsException e) {
             return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/getfavorites")
+    public ResponseEntity<Map<String, Object>> getFavoriteItems(@RequestParam(defaultValue = "0") int lastFavoriteNo, @RequestParam(required = false) ItemStatus itemStatus, @AuthenticationPrincipal AuthDTO authDTO) {
+
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        List<FavoriteItemPreviewDTO> favoriteItemPreviewDTOs;
+        try {
+            favoriteItemPreviewDTOs = itemService.getFavoriteItemPreviews(lastFavoriteNo, authDTO.getId(), offset, itemStatus);
+            map.put("items", favoriteItemPreviewDTOs);
+            long favoriteNo = -1;
+
+            if (!favoriteItemPreviewDTOs.isEmpty()) {
+                favoriteNo = favoriteItemPreviewDTOs.get(favoriteItemPreviewDTOs.size() - 1).getFavoriteNo();
+            } else {
+                map.put("finished", true);
+            }
+
+            map.put("lastFavoriteNo", favoriteNo);
+        } catch (SQLException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK);

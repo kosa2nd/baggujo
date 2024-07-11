@@ -108,23 +108,23 @@
                 where id = #{requestId})
     </update>
 
-    <select id="getFavoriteItemPreviews" resultType="com.baggujo.dto.ItemPreviewDTO">
-        select a.id, a.title, a.s_name, a.upload_date, a.status, a.item_category_id, a.category, a. member_id, a.nickname from (
-            select rownum, i.id, i.title, ii.s_name, i.upload_date, i.status, i.item_category_id, ic.category, i.member_id, m.nickname
-            from item i, item_image ii, item_category ic, member m, favorite f
-            where i.item_category_id = ic.id
-                and i.id = ii.item_id(+)
-                and (ii.img_no = 1 or ii.img_no is null)
-                and i.member_id = m.id
-                and f.member_id = m.id
-                and f.member_id = #{memberId}
-            <if test="itemStatus != null">
-                and i.status = #{itemStatus}
-            </if>
-            <if test="lastFavoriteId != 0">
-                <![CDATA[and f.id < #{lastFavoriteId}]]>
-            </if>
-            order by f.add_date desc) a
-            fetch first #{offset} rows only
+    <select id="getFavoriteItemPreviews" resultType="com.baggujo.dto.FavoriteItemPreviewDTO">
+        select i.id, i.title, ii.s_name, i.upload_date, i.status, i.item_category_id, ic.category, i.member_id, m.nickname, f.no favoriteNo
+        from item i, item_image ii, item_category ic, member m, favorite f
+        where i.item_category_id = ic.id
+        and i.id = ii.item_id(+)
+        and (ii.img_no = 1 or ii.img_no is null)
+        and i.member_id = m.id
+        and f.item_id = i.id
+        and f.member_id = #{memberId}
+        <if test="itemStatus != null">
+            and i.status = #{itemStatus}
+        </if>
+        <if test="lastFavoriteNo != 0">
+            <![CDATA[and f.no < #{lastFavoriteNo}]]>
+        </if>
+        order by f.no desc
+        fetch first #{offset} rows only
     </select>
+
 </mapper>

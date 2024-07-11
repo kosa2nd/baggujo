@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ItemDAO {
@@ -17,5 +18,5 @@ public interface ItemDAO {
     int updateItemStatus(long itemId, ItemStatus itemStatus);
     ItemStatus getItemStatusById(long itemId);
     int updateItemStatusByRequestId(long requestId, ItemStatus itemStatus);
-    List<ItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteId, long memberId, int offset, ItemStatus itemStatus);
+    List<FavoriteItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteNo, long memberId, int offset, ItemStatus itemStatus) throws SQLException;
 }
