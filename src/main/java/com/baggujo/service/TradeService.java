@@ -75,5 +75,10 @@ public class TradeService {
         return tradeDAO.getTradeDetailByTradeId(tradeId);
     }
 
+    // 유저 거래중 리스트 조회
+    public List<TradeDetailDTO> getTradeList(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException {
+        return tradeDAO.getTradeListByMemberId(memberId, lastRequestId, request, offset);
+    }
+
 
 }

@@ -3,6 +3,7 @@ package com.baggujo.controller.rest;
 import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.RequestDTO;
 import com.baggujo.dto.RequestInsertDTO;
+import com.baggujo.dto.TradeDetailDTO;
 import com.baggujo.service.RequestService;
 import com.baggujo.service.TradeService;
 import org.apache.coyote.BadRequestException;
@@ -58,6 +59,39 @@ public class RestTradeController {
 
             if (!requestDTOS.isEmpty()) {
                 lastItemId = requestDTOS.get(requestDTOS.size() - 1).getId();
+            } else {
+                map.put("finished", true);
+            }
+
+            map.put("lastItemId", lastItemId);
+        } catch (SQLException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/tradeList")
+    public ResponseEntity<Map<String, Object>> getTradeList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+        Map<String, Object> map = new HashMap<>();
+        List<TradeDetailDTO> tradeDTOs;
+
+        if (authDTO == null) {
+            throw new BadRequestException("Invalid request");
+        }
+
+        long memberId = authDTO.getId();
+
+        try {
+            tradeDTOs = tradeService.getTradeList(memberId, lastRequestId, request, offset);
+            map.put("tradeList", tradeDTOs);
+
+            long lastItemId = -1;
+
+            if (!tradeDTOs.isEmpty()) {
+                lastItemId = tradeDTOs.get(tradeDTOs.size() - 1).getId();
             } else {
                 map.put("finished", true);
             }
