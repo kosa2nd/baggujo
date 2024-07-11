@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>바꾸조</title>
+    <link rel="icon" href="../../static/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="../../static/css/style.css"/>
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootswatch Litera theme -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0"
+          rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
+    <link href="../../static/css/custom.css" rel="stylesheet">
+</head>
+<body>
+<!-- 헤더 -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="border: 1px solid #ddd">
+    <div class="container-fluid">
+        <!-- 프로필 -->
+        <a class="navbar-brand" href="#">
+            <div class="profile d-flex h-auto">
+                <img src="C:\dev\kosaproject\images\2024\07\09\s_ff987dbf-89c7-4fd4-89a4-803471486c35_사진13.jpg">
+                <!-- 프로필 내용 -->
+                <div class="labelSort">
+                    <label class="itemName">물품이름</label>
+                    <div class="d-flex">
+                        <label class="userNickname mr-2">유저이름</label>
+                        <label class="itemStatus">교환상태</label>
+                    </div>
+                </div>
+
+            </div>
+        </a>
+
+        <!-- 홈버튼 -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                <img src="C:\Users\vnfam\Downloads\사진1.jpg">
+            </span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarColor04">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Home
+                        <span class="visually-hidden">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Separated link</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-sm-2" type="search" placeholder="Search">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- 메세지 공간 -->
+<div class="chatSpace container mt-3">
+    <div class="d-flex flex-column align-items-start">
+        <span class="rounded-pill bg-light p-2 ">상태는 괜찮은가요?</span>
+    </div>
+    <div class="d-flex flex-column align-items-end">
+        <span class="rounded-pill bg-light p-2 m1-auto">한두번 사용해서 상태는 괜찮습니다.</span>
+    </div>
+    <div class="d-flex flex-column align-items-start">
+        <span class="rounded-pill bg-light p-2 ">오늘 바로 교환 가능할까요?</span>
+        <span class="rounded-pill bg-light p-2 m1-auto">오늘 오후7시쯤에 어떠신가요?</span>
+    </div>
+    <div class="d-flex flex-column align-items-end">
+        <span class="rounded-pill bg-light p-2 m1-auto">시간 가능할 것 같아요.</span>
+        <span class="rounded-pill bg-light p-2 m1-auto">그때 봬요.</span>
+    </div>
+    <div class="d-flex flex-column align-items-start">
+        <span class="rounded-pill bg-light p-2 ">네~</span>
+    </div>
+</div>
+
+<!-- 메세지 전송 공간 -->
+<div class="fixed-bottom-input">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-light rounded-circle mr-3">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <input type="text" class="form-control mr-3" placeholder="메세지를 입력하세요...">
+            <button class="btn btn-secondary">보내기</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
