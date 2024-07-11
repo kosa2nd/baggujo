@@ -26,10 +26,10 @@
                 <img src="C:\dev\kosaproject\images\2024\07\09\s_ff987dbf-89c7-4fd4-89a4-803471486c35_사진13.jpg">
                 <!-- 프로필 내용 -->
                 <div class="labelSort">
-                    <label class="itemName">물품이름</label>
+                    <label class="itemName" th:text="${itemName}">물품이름</label>
                     <div class="d-flex">
-                        <label class="userNickname mr-2">유저이름</label>
-                        <label class="itemStatus">교환상태</label>
+                        <label class="userNickname mr-2" th:text="${nickName}">유저닉네임</label>
+                        <label class="itemStatus" th:text="${itemStatus}">교환상태</label>
                     </div>
                 </div>
 
@@ -101,7 +101,7 @@
 </div>
 
 <!-- 메세지 전송 공간 -->
-<div class="fixed-bottom-input">
+<div class="msgArea fixed-bottom-input">
     <div class="container">
         <div class="d-flex align-items-center">
             <button id="sendBtn" class="btn btn-light rounded-circle mr-3">
@@ -118,11 +118,36 @@
     <!-- 전송 버튼 클릭시 메세지 생성 -->
     function createMessage() {
 
+        let tradeId = ${tradeId};   //방이름
+        let memberId = [[${#authentication.principal?.id}]];   //유저이름
+
+        //stomp 클라이언트 생성
+        var sockJs = new SockJS("/ws-stomp");
+                var stomp = Stomp.over(sockJs);
+        //stomp 서버 연결
+        stomp.connect({}, function (){
+            console.log("STOMP 서버 연결 성공");
+
+        //채팅방 구독
+        stomp.subscribe("/sub/chat/room" + tradeId, function (chat) {
+            var content = JSON.parse(chat.body);
+            var writer = content.memberId;
+            var message = content.text;
+
+            var str = '<span class="rounded-pill bg-light p-2 ">' + text + ':</span>';
+
+            $("#msgArea").append(str);
+
+
+        });
     }
 
     $(document).ready(function() {
         $('#sendBtn').click(function(event) {
-            event.preventDefault();
+            stomp.send('/sub/chat/room', {}, JSON.stringify({
+                tradeId: tradeId, text: text}))
+                ;
+            }
         });
     });
 </script>
