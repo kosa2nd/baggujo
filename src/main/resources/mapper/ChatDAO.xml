@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.ChatDAO">
+    <!-- 채팅 생성 -->
+    <insert id="insertChat" parameterType="com.baggujo.dto.ChatInsertDTO">
+        INSERT INTO chat (send_date, text, chat_type, trade_id, member_id)
+        VALUES (#{sendDate}, #{text}, #{chatType}, #{tradeId}, #{memberId})
+    </insert>
+</mapper>
