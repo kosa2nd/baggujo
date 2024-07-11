@@ -27,6 +27,7 @@ public class TradeService {
     @Autowired
     TradeDAO tradeDAO;
 
+    // 요청 생성
     public void insertRequest(RequestInsertDTO requestInsertDTO) throws SQLException, BadRequestException {
         if (itemDAO.getItemStatusById(requestInsertDTO.getRequestItemId()) != ItemStatus.WAITING
             || itemDAO.getItemStatusById(requestInsertDTO.getResponseItemId()) != ItemStatus.WAITING) {
