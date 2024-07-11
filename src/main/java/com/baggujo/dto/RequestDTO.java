@@ -17,12 +17,12 @@ public class RequestDTO {
     private long requestMemberId;
     private String requestNickname;
     private long requestItemId;
-    private String requestTitle;
+    private String requestItemTitle;
     private String requestThumbnail;
 
     private long responseMemberId;
     private String responseNickname;
     private long responseItemId;
-    private String responseTitle;
+    private String responseItemTitle;
     private String responseThumbnail;
 }
