@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+      xmlns:sec="http://www.thymeleaf.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -26,7 +26,7 @@
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-link active" id="nav-waiting-tab" data-toggle="tab" href="#nav-waiting" role="tab" aria-controls="nav-waiting" aria-selected="true">대기중</a>
-                <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">진행중</a>
+                <a class="nav-link" id="nav-trading-tab" data-toggle="tab" href="#nav-trading" role="tab" aria-controls="nav-trading" aria-selected="false">진행중</a>
                 <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">진행완료</a>
             </div>
         </nav>
@@ -36,13 +36,18 @@
                 <option value="true">받은 요청</option>
                 <option value="false">보낸 요청</option>
             </select>
+            <select id="trade-filter" class="form-control">
+                <option value="">모든 거래</option>
+                <option value="true">받은 거래</option>
+                <option value="false">보낸 거래</option>
+            </select>
         </div>
         <div class="tab-content pt-2" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-waiting" role="tabpanel" aria-labelledby="nav-waiting-tab"></div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">profile</div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">contact</div>
+            <div class="tab-pane fade" id="nav-trading" role="tabpanel" aria-labelledby="nav-trading-tab"></div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
         </div>
-        <div id class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <button type="button" id="load-more" class="btn btn-primary m-3">더보기</button>
         </div>
     </div>
@@ -53,6 +58,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     let lastRequestId = 0;
+    let activeTab = 'waiting';
 
     function fetchRequests(append = false) {
         let requestFilter = $('#request-filter').val();
@@ -78,7 +84,7 @@
                             <p class="mr-2">응답자: ${request.requestNickname}</p>
                         </div>
 
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.responseItemId}'"">
+                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.responseItemId}'">
                             <img src="/images/${request.responseThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Response Thumbnail">
                             <h5 class="mr-2">${request.responseItemTitle}</h5>
                             <p class="mr-2">요청자: ${request.responseNickname}</p>
@@ -107,7 +113,61 @@
         });
     }
 
-    // 요청 필터 설정
+    function fetchTrades(append = false) {
+        let tradeFilter = $('#trade-filter').val();
+        let requestParam = tradeFilter === "" ? "" : `&request=${tradeFilter}`;
+
+        $.ajax({
+            url: `/item/tradeList?lastRequestId=${lastRequestId}${requestParam}`,
+            method: 'GET',
+            success: function(response) {
+                if (response.finished) {
+                    alert("마지막 페이지입니다");
+                    return;
+                }
+
+                let tradingContent = '';
+                response.tradeList.forEach(function(trade) {
+                    console.log(trade);
+
+                    tradingContent += `<div class="w-100 d-flex mb-5 justify-content-around">
+                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
+                            <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <h5 class="mr-2">${trade.requestTitle}</h5>
+                            <p class="mr-2">응답자: ${trade.requestNickname}</p>
+                        </div>
+
+                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
+                            <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <h5 class="mr-2">${trade.responseTitle}</h5>
+                            <p class="mr-2">요청자: ${trade.responseNickname}</p>
+                        </div>
+
+                        <div>
+                            <p>${trade.tradeStartDate}</p>
+                            <p>${trade.tradeEndDate}</p>
+                        </div>
+
+                         <div>
+                            <button type="button" class="btn btn-primary" onclick="location.href='trade/${trade.id}'">채팅하기</button>
+                         </div>
+                    </div>`;
+                });
+                if (append) {
+                    $('#nav-trading').append(tradingContent);
+                } else {
+                    $('#nav-trading').html(tradingContent);
+                }
+
+                lastRequestId = response.lastItemId;
+            },
+            error: function(xhr, status, error) {
+                alert("거래 내역을 불러올 수 없습니다.");
+                console.error('Error :', error);
+            }
+        });
+    }
+
     function setRequestFilter() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('request') === 'sent') {
@@ -115,50 +175,67 @@
         }
     }
 
-    // 탭 설정
     function setActiveTab() {
         const urlParams = new URLSearchParams(window.location.search);
         const tab = urlParams.get('tab');
         if (tab === 'progress') {
-            $('#nav-profile-tab').tab('show');
+            $('#nav-trading-tab').tab('show');
+            activeTab = 'trading';
         }
     }
 
-    // 탭 클릭 시 요청 데이터 가져오기
     $('#nav-waiting-tab').click(function() {
         lastRequestId = 0;
+        activeTab = 'waiting';
+        $('#request-filter').show();
+        $('#trade-filter').hide();
         fetchRequests();
     });
+    $('#nav-trading-tab').click(function() {
+        lastRequestId = 0;
+        activeTab = 'trading';
+        $('#request-filter').hide();
+        $('#trade-filter').show();
+        fetchTrades();
+    });
 
-    // 필터 변경 시 요청 데이터 가져오기
     $('#request-filter').change(function() {
         lastRequestId = 0;
         fetchRequests();
     });
-
-    // 더보기 버튼 클릭 시 요청 데이터 가져오기
-    $('#load-more').click(function() {
-        fetchRequests(true);
+    $('#trade-filter').change(function() {
+        lastRequestId = 0;
+        fetchTrades();
     });
 
-    // 페이지 로드 시 기본 탭 데이터 로드
+    $('#load-more').click(function() {
+        if (activeTab === 'waiting') {
+            fetchRequests(true);
+        } else if (activeTab === 'trading') {
+            fetchTrades(true);
+        }
+    });
+
     $(document).ready(function() {
         setRequestFilter();
         setActiveTab();
-        $('#nav-waiting-tab').click();
+        if (activeTab === 'waiting') {
+            $('#nav-waiting-tab').click();
+        } else if (activeTab === 'trading') {
+            $('#nav-trading-tab').click();
+        }
     });
 
-    // 요청 수락 버튼 클릭 시 거래 생성
     $(document).on('click', '#request-accept', function() {
-        let requestId = $(this).data('request-id'); // 클릭된 버튼에서 데이터 속성 가져오기
+        let requestId = $(this).data('request-id');
         $.ajax({
             url: `/item/accept?requestId=${requestId}`,
             method: 'POST',
             success: function(response) {
                 console.log('요청 수락 성공, 거래 아이디:', response.tradeId);
-                location.href = "/myTrade?tab=progress";
+                location.href = "trade/myTrade?tab=progress";
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.log('요청 수락 실패: ', error);
             }
         });

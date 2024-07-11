@@ -2,6 +2,7 @@ package com.baggujo.dao;
 
 import com.baggujo.dto.RequestDTO;
 import com.baggujo.dto.RequestInsertDTO;
+import com.baggujo.dto.TradeDetailDTO;
 import com.baggujo.dto.enums.RequestStatus;
 import com.baggujo.dto.RequestUserItemDTO;
 import org.apache.ibatis.annotations.Mapper;
