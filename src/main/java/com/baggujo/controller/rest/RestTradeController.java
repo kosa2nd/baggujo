@@ -71,4 +71,18 @@ public class RestTradeController {
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+    @PostMapping("/accept")
+    public ResponseEntity<Map<String, Object>> acceptRequest(@RequestParam long requestId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            long tradeId = tradeService.acceptRequest(requestId);
+            response.put("message", "Request accepted successfully");
+            response.put("tradeId", tradeId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }
