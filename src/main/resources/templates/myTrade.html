@@ -3,8 +3,7 @@
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="../../static/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
@@ -56,7 +55,6 @@
     let lastRequestId = 0;
 
     function fetchRequests(append = false) {
-
         let requestFilter = $('#request-filter').val();
         let requestParam = requestFilter === "" ? "" : `&request=${requestFilter}`;
 
@@ -64,7 +62,6 @@
             url: `/item/requestList?lastRequestId=${lastRequestId}${requestParam}`,
             method: 'GET',
             success: function(response) {
-
                 if (response.finished) {
                     alert("마지막 페이지입니다");
                     return;
@@ -89,8 +86,10 @@
 
                         <p>${request.requestDate}</p>
                          ${memberId === request.responseMemberId ? '<button type="button" class="btn btn-outline-danger">요청취소</button>'
-                        : '<div class="d-flex align-content-center"><button type="button" class="btn btn-outline-danger mr-2">요청거절</button><button type="button" class="btn btn-outline-primary">요청수락</button></div>'}
-
+                        : '<div class="d-flex align-content-center">' +
+                        '<button id="request-reject" type="button" class="btn btn-outline-danger mr-2">요청거절</button>' +
+                        '<button id="request-accept" type="button" class="btn btn-outline-primary" data-request-id="' + request.id + '">요청수락</button>' +
+                        '</div>'}
                     </div>`;
                 });
                 if (append) {
@@ -106,6 +105,23 @@
                 console.error('Error :', error);
             }
         });
+    }
+
+    // 요청 필터 설정
+    function setRequestFilter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('request') === 'sent') {
+            $('#request-filter').val('false');
+        }
+    }
+
+    // 탭 설정
+    function setActiveTab() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab === 'progress') {
+            $('#nav-profile-tab').tab('show');
+        }
     }
 
     // 탭 클릭 시 요청 데이터 가져오기
@@ -127,7 +143,25 @@
 
     // 페이지 로드 시 기본 탭 데이터 로드
     $(document).ready(function() {
+        setRequestFilter();
+        setActiveTab();
         $('#nav-waiting-tab').click();
+    });
+
+    // 요청 수락 버튼 클릭 시 거래 생성
+    $(document).on('click', '#request-accept', function() {
+        let requestId = $(this).data('request-id'); // 클릭된 버튼에서 데이터 속성 가져오기
+        $.ajax({
+            url: `/item/accept?requestId=${requestId}`,
+            method: 'POST',
+            success: function(response) {
+                console.log('요청 수락 성공, 거래 아이디:', response.tradeId);
+                location.href = "/myTrade?tab=progress";
+            },
+            error: function (xhr, status, error) {
+                console.log('요청 수락 실패: ', error);
+            }
+        });
     });
 </script>
 </body>
