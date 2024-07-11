@@ -12,20 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/request")
+@RequestMapping("/item")
 public class RestRequestController {
 
     @Autowired
     private RequestService requestService;
-
-    @GetMapping("/request")
-    public List<RequestUserItemDTO> getRequestItems(@AuthenticationPrincipal AuthDTO authDTO) {
-        if (authDTO == null) {
-            return null; // 로그인되지 않은 경우에 대한 처리
-        }
-
-        long memberId = authDTO.getId();
-        return requestService.getRequestUserItems(memberId);
-    }
 
 }

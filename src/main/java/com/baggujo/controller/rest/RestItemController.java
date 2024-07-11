@@ -3,8 +3,10 @@ package com.baggujo.controller.rest;
 import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.FavoriteItemPreviewDTO;
 import com.baggujo.dto.ItemPreviewDTO;
+import com.baggujo.dto.RequestUserItemDTO;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.service.ItemService;
+import com.baggujo.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ import java.util.Objects;
 public class RestItemController {
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private RequestService requestService;
     @Value("${com.baggujo.paging.offset}")
     private int offset;
 
@@ -77,6 +81,16 @@ public class RestItemController {
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/request")
+    public ResponseEntity<List<RequestUserItemDTO>> getRequestItems(@AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 로그인되지 않은 경우에 대한 처리
+        }
+
+        long memberId = authDTO.getId();
+        return new ResponseEntity<>(requestService.getRequestUserItems(memberId), HttpStatus.OK);
     }
 
 }
