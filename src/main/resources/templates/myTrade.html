@@ -64,10 +64,14 @@
             url: `/item/requestList?lastRequestId=${lastRequestId}${requestParam}`,
             method: 'GET',
             success: function(response) {
+
                 if (response.finished) {
                     alert("마지막 페이지입니다");
                     return;
                 }
+
+                let memberId = [[${#authentication.principal?.id}]];
+
                 let waitingContent = '';
                 response.requestList.forEach(function(request) {
                     waitingContent += `<div class="w-100 d-flex mb-5 justify-content-around">
@@ -84,6 +88,9 @@
                         </div>
 
                         <p>${request.requestDate}</p>
+                         ${memberId === request.responseMemberId ? '<button type="button" class="btn btn-outline-danger">요청취소</button>'
+                        : '<div class="d-flex align-content-center"><button type="button" class="btn btn-outline-danger mr-2">요청거절</button><button type="button" class="btn btn-outline-primary">요청수락</button></div>'}
+
                     </div>`;
                 });
                 if (append) {
