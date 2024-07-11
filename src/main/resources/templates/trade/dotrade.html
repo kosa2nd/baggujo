@@ -44,7 +44,7 @@
         </button>
 
 
-        <div class="collapse navbar-collapse" id="navbarColor04">
+        <div class="collapse navbar-collapse" id="msgArea">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">Home
@@ -104,51 +104,57 @@
 <div class="msgArea fixed-bottom-input">
     <div class="container">
         <div class="d-flex align-items-center">
-            <button id="sendBtn" class="btn btn-light rounded-circle mr-3">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-            <input type="text" class="form-control mr-3" placeholder="메세지를 입력하세요...">
-            <button class="btn btn-secondary">보내기</button>
+<!--            <button id="sendBtn" class="btn btn-light rounded-circle mr-3">-->
+<!--                <span class="glyphicon glyphicon-plus"></span>-->
+<!--            </button>-->
+            <input id='msg' type="text" class="form-control mr-3" placeholder="메세지를 입력하세요...">
+            <button class="btn btn-secondary" id="sendBtn">보내기</button>
         </div>
     </div>
 </div>
 </body>
 
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</html>
+
 <script>
-    <!-- 전송 버튼 클릭시 메세지 생성 -->
-    function createMessage() {
+    $(document).ready(function() {
 
-        let tradeId = ${tradeId};   //방이름
-        let memberId = [[${#authentication.principal?.id}]];   //유저이름
+        let tradeId = [[${tradeDetailDTO.id}]];
+        let memberId = [[${#authentication.principal?.id}]];
 
-        //stomp 클라이언트 생성
         var sockJs = new SockJS("/ws-stomp");
-                var stomp = Stomp.over(sockJs);
-        //stomp 서버 연결
-        stomp.connect({}, function (){
-            console.log("STOMP 서버 연결 성공");
+        var stomp = Stomp.over(sockJs);
+        alert("접속 시도 시작");
+        stomp.connect({}, function() {
+            alert('접속 성공');
 
-        //채팅방 구독
-        stomp.subscribe("/sub/chat/room" + tradeId, function (chat) {
-            var content = JSON.parse(chat.body);
-            var writer = content.memberId;
-            var message = content.text;
+            stomp.subscribe("/sub/chat/room" + [[${tradeDetailDTO.id}]], function (chat) {
+                alert('수신 성공');
+                var content = JSON.parse(chat.body);
+                var writer = content.memberId;
+                var text = content.text;
 
-            var str = '<span class="rounded-pill bg-light p-2 ">' + text + ':</span>';
+                alert(text);
 
-            $("#msgArea").append(str);
-
+                var str = '<span class="rounded-pill bg-light p-2 ">' + text + '</span>';
+                $("#msgArea").append(str);
+            });
 
         });
-    }
 
-    $(document).ready(function() {
-        $('#sendBtn').click(function(event) {
-            stomp.send('/sub/chat/room', {}, JSON.stringify({
-                tradeId: tradeId, text: text}))
-                ;
-            }
+        $('#sendBtn').on('click', function() {
+            alert($('#msg').val());
+
+            stomp.send('/pub/chat/message', {}, JSON.stringify({
+                tradeId : [[${tradeDetailDTO.id}]],
+                memberId : [[${#authentication.principal?.id}]],
+                text : $('#msg').val()
+            }));
         });
     });
 </script>
-</html>

@@ -18,6 +18,7 @@ public class RestChatController {
     // "pub/chat/message"
     @MessageMapping("/chat/message")
     public void send(ChatInsertDTO message) {
+        System.out.println("===================================rcv" + message.getTradeId());
         template.convertAndSend("/sub/chat/room" + message.getTradeId(), message);
     }
 
