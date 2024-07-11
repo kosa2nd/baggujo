@@ -7,11 +7,15 @@ import com.baggujo.service.RequestService;
 import com.baggujo.service.TradeService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/item")
@@ -37,7 +41,9 @@ public class RestTradeController {
     }
 
     @GetMapping("/requestList")
-    public List<RequestDTO> getRequestList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+    public ResponseEntity<Map<String, Object>> getRequestList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+        Map<String, Object> map = new HashMap<>();
+        List<RequestDTO> requestDTOS;
         if (authDTO == null) {
             throw new BadRequestException("Invalid request");
         }
@@ -45,9 +51,24 @@ public class RestTradeController {
         long memberId = authDTO.getId();
 
         try {
-            return requestService.getRequests(memberId, lastRequestId, request, offset);
+            requestDTOS = requestService.getRequestList(memberId, lastRequestId, request, offset);
+            map.put("requestList", requestDTOS);
+
+            long lastItemId = -1;
+
+            if (!requestDTOS.isEmpty()) {
+                lastItemId = requestDTOS.get(requestDTOS.size() - 1).getId();
+            } else {
+                map.put("finished", true);
+            }
+
+            map.put("lastItemId", lastItemId);
         } catch (SQLException e) {
             throw new BadRequestException(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }

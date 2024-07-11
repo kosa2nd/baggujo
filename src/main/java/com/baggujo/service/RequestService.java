@@ -1,7 +1,6 @@
 package com.baggujo.service;
 
 import com.baggujo.dao.RequestDAO;
-import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.RequestDTO;
 import com.baggujo.dto.RequestUserItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class RequestService {
     }
 
     // 유저 요청 리스트 조회
-    public List<RequestDTO> getRequests(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException {
+    public List<RequestDTO> getRequestList(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException {
         List<RequestDTO> requestDTOs = requestDAO.getRequestByMemberId(memberId, lastRequestId, request, offset);
         System.out.println("Retrieved requests: " + requestDTOs); // 로깅 추가
         return requestDTOs;
