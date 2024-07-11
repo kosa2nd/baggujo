@@ -101,4 +101,8 @@ public class ItemService {
     public List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset, ItemStatus itemStatus, int itemCategoryId, boolean noTraded, String keyword) throws SQLException {
         return itemDAO.getItemPreviews(lastItemId, offset, itemStatus, itemCategoryId, noTraded, keyword);
     }
+
+    public List<FavoriteItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteNo, long memberId, int offset, ItemStatus itemStatus) throws SQLException{
+        return itemDAO.getFavoriteItemPreviews(lastFavoriteNo, memberId, offset, itemStatus);
+    }
 }

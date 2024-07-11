@@ -81,4 +81,9 @@ public class ItemController {
         return "item/detail";
     }
 
+    @GetMapping("/myfavorite")
+    public String getMyFavoriteItems(@AuthenticationPrincipal AuthDTO authDTO, Model model) {
+        return "item/myfavorite.html";
+    }
+
 }
