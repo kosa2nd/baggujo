@@ -16,10 +16,7 @@ public class ChatInsertDTO {
     private long memberId;
     @NotNull
     private long tradeId;
-    @NotNull
-    private LocalDate send_date;
     private String text;
-    @Null
     private MultipartFile image;
     @NotNull
     private ChatType chatType;

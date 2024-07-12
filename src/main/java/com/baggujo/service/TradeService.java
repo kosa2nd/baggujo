@@ -3,10 +3,7 @@ package com.baggujo.service;
 import com.baggujo.dao.ItemDAO;
 import com.baggujo.dao.RequestDAO;
 import com.baggujo.dao.TradeDAO;
-import com.baggujo.dto.RequestDTO;
-import com.baggujo.dto.RequestInsertDTO;
-import com.baggujo.dto.TradeDetailDTO;
-import com.baggujo.dto.TradeInsertDTO;
+import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.dto.enums.RequestStatus;
 import org.apache.coyote.BadRequestException;
@@ -71,7 +68,7 @@ public class TradeService {
         }
     }
 
-    public TradeDetailDTO getTradeDetailByTradeId(long tradeId) {
+    public TradeInfoDTO getTradeDetailByTradeId(long tradeId) {
         return tradeDAO.getTradeDetailByTradeId(tradeId);
     }
 

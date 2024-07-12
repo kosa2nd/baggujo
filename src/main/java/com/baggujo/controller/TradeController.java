@@ -2,6 +2,7 @@ package com.baggujo.controller;
 
 import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.TradeDetailDTO;
+import com.baggujo.dto.TradeInfoDTO;
 import com.baggujo.service.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,29 +26,25 @@ public class TradeController {
 
     @GetMapping("/{tradeId}")
     public String doTrade(@PathVariable long tradeId, Model model, @AuthenticationPrincipal AuthDTO authDTO) {
-        System.out.println("매핑 성공===============================");
-
 
         if (authDTO == null) {
             return "redirect:/member/login";
         }
 
-        TradeDetailDTO tradeDetailDTO;
+        TradeInfoDTO tradeInfoDTO;
         try {
-            tradeDetailDTO = tradeService.getTradeDetailByTradeId(tradeId);
+            tradeInfoDTO = tradeService.getTradeDetailByTradeId(tradeId);
 
             long memberId = authDTO.getId();
-            if (memberId != tradeDetailDTO.getRequestMemberId() && memberId != tradeDetailDTO.getResponseMemberId()) {
-                System.out.println("no participant====================");
+            if (memberId != tradeInfoDTO.getRequestMemberId() && memberId != tradeInfoDTO.getResponseMemberId()) {
                 return "redirect:/";
             }
 
         } catch (NullPointerException e) {
-            System.out.println("null=====================");
             return "redirect:/";
         }
 
-        model.addAttribute("tradeDetailDTO", tradeDetailDTO);
+        model.addAttribute("tradeInfoDTO", tradeInfoDTO);
         return "/trade/dotrade";
     }
 

@@ -44,7 +44,7 @@
         </button>
 
 
-        <div class="collapse navbar-collapse" id="msgArea">
+        <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">Home
@@ -80,24 +80,7 @@
 </nav>
 
 <!-- 메세지 공간 -->
-<div class="chatSpace container mt-3">
-    <div class="d-flex flex-column align-items-start">
-        <span class="rounded-pill bg-light p-2 ">상태는 괜찮은가요?</span>
-    </div>
-    <div class="d-flex flex-column align-items-end">
-        <span class="rounded-pill bg-light p-2 m1-auto">한두번 사용해서 상태는 괜찮습니다.</span>
-    </div>
-    <div class="d-flex flex-column align-items-start">
-        <span class="rounded-pill bg-light p-2 ">오늘 바로 교환 가능할까요?</span>
-        <span class="rounded-pill bg-light p-2 m1-auto">오늘 오후7시쯤에 어떠신가요?</span>
-    </div>
-    <div class="d-flex flex-column align-items-end">
-        <span class="rounded-pill bg-light p-2 m1-auto">시간 가능할 것 같아요.</span>
-        <span class="rounded-pill bg-light p-2 m1-auto">그때 봬요.</span>
-    </div>
-    <div class="d-flex flex-column align-items-start">
-        <span class="rounded-pill bg-light p-2 ">네~</span>
-    </div>
+<div class="chatSpace container mt-3" id="msgArea">
 </div>
 
 <!-- 메세지 전송 공간 -->
@@ -124,37 +107,32 @@
 <script>
     $(document).ready(function() {
 
-        let tradeId = [[${tradeDetailDTO.id}]];
-        let memberId = [[${#authentication.principal?.id}]];
+        let tradeId = [[${tradeInfoDTO.id}]];
+        let memberId = [[${#authentication.principal.id}]];
 
         var sockJs = new SockJS("/ws-stomp");
         var stomp = Stomp.over(sockJs);
-        alert("접속 시도 시작");
-        stomp.connect({}, function() {
-            alert('접속 성공');
 
-            stomp.subscribe("/sub/chat/room" + [[${tradeDetailDTO.id}]], function (chat) {
-                alert('수신 성공');
+        stomp.connect({}, function() {
+            stomp.subscribe("/sub/chat/room" + [[${tradeInfoDTO.id}]], function (chat) {
                 var content = JSON.parse(chat.body);
                 var writer = content.memberId;
                 var text = content.text;
 
-                alert(text);
-
                 var str = '<span class="rounded-pill bg-light p-2 ">' + text + '</span>';
+
                 $("#msgArea").append(str);
             });
 
         });
 
         $('#sendBtn').on('click', function() {
-            alert($('#msg').val());
-
             stomp.send('/pub/chat/message', {}, JSON.stringify({
-                tradeId : [[${tradeDetailDTO.id}]],
+                tradeId : [[${tradeInfoDTO.id}]],
                 memberId : [[${#authentication.principal?.id}]],
                 text : $('#msg').val()
             }));
         });
+
     });
 </script>

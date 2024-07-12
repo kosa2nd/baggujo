@@ -237,7 +237,7 @@
                 }),
                 success: function(response) {
                     console.log(response, "교환 신청 성공");
-                    location.href = "trade/myTrade?request=sent";
+                    location.href = "/trade/myTrade?request=sent";
                 },
                 error: function(xhr, status, error) {
                     console.error('교환 신청 실패:', error);

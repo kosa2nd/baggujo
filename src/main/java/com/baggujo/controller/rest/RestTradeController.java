@@ -119,4 +119,17 @@ public class RestTradeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PostMapping("/reject")
+    public ResponseEntity<Map<String, Object>> rejectRequest(@RequestParam long requestId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            tradeService.rejectRequest(requestId);
+            response.put("message", "Request rejected successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }

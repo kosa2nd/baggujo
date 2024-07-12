@@ -1,6 +1,7 @@
 package com.baggujo.dao;
 
 import com.baggujo.dto.TradeDetailDTO;
+import com.baggujo.dto.TradeInfoDTO;
 import com.baggujo.dto.TradeInsertDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface TradeDAO {
 
     int insertTradeByRequestId(TradeInsertDTO tradeInsertDTO);
-    TradeDetailDTO getTradeDetailByTradeId(long tradeId);
+    TradeInfoDTO getTradeDetailByTradeId(long tradeId);
     List<TradeDetailDTO> getTradeListByMemberId(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException;
 
 }
