@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum RequestStatus {
-    WAITING("응답 대기중"), ACCEPTED("수락"), REJECTED("거절");
+    WAITING("응답 대기중"), ACCEPTED("수락"), REJECTED("거절"), CANCELED("취소");
 
     private String kor;
 

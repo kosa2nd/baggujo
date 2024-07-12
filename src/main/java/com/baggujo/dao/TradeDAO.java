@@ -14,5 +14,5 @@ public interface TradeDAO {
     int insertTradeByRequestId(TradeInsertDTO tradeInsertDTO);
     TradeInfoDTO getTradeDetailByTradeId(long tradeId);
     List<TradeDetailDTO> getTradeListByMemberId(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException;
-
+    List<TradeDetailDTO> getTradeSucceedListByMemberId(long memberId, long lastRequestId, Boolean request, long offset);
 }

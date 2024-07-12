@@ -68,6 +68,12 @@ public class TradeService {
         }
     }
 
+    public void cancelRequest(long requestId) throws SQLException {
+        if (requestDAO.updateRequestStatus(requestId, RequestStatus.CANCELED) != 1) {
+            throw new SQLException("요청 상태 변경에 실패했습니다.");
+        }
+    }
+
     public TradeInfoDTO getTradeDetailByTradeId(long tradeId) {
         return tradeDAO.getTradeDetailByTradeId(tradeId);
     }
@@ -77,5 +83,9 @@ public class TradeService {
         return tradeDAO.getTradeListByMemberId(memberId, lastRequestId, request, offset);
     }
 
+    // 유저 거래완료 리스트 조회
+    public List<TradeDetailDTO> getTradeSucceedList(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException {
+        return tradeDAO.getTradeSucceedListByMemberId(memberId, lastRequestId, request, offset);
+    }
 
 }

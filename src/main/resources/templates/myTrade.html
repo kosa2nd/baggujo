@@ -27,7 +27,7 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-link active" id="nav-waiting-tab" data-toggle="tab" href="#nav-waiting" role="tab" aria-controls="nav-waiting" aria-selected="true">대기중</a>
                 <a class="nav-link" id="nav-trading-tab" data-toggle="tab" href="#nav-trading" role="tab" aria-controls="nav-trading" aria-selected="false">진행중</a>
-                <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">진행완료</a>
+                <a class="nav-link" id="nav-succeed-tab" data-toggle="tab" href="#nav-succeed" role="tab" aria-controls="nav-succeed" aria-selected="false">진행완료</a>
             </div>
         </nav>
         <div class="pt-2">
@@ -41,11 +41,16 @@
                 <option value="true">받은 거래</option>
                 <option value="false">보낸 거래</option>
             </select>
+            <select id="succeed-filter" class="form-control">
+                <option value="">모든 거래</option>
+                <option value="true">받은 거래</option>
+                <option value="false">보낸 거래</option>
+            </select>
         </div>
         <div class="tab-content pt-2" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-waiting" role="tabpanel" aria-labelledby="nav-waiting-tab"></div>
             <div class="tab-pane fade" id="nav-trading" role="tabpanel" aria-labelledby="nav-trading-tab"></div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
+            <div class="tab-pane fade" id="nav-succeed" role="tabpanel" aria-labelledby="nav-succeed-tab"></div>
         </div>
         <div class="d-flex justify-content-center">
             <button type="button" id="load-more" class="btn btn-primary m-3">더보기</button>
@@ -56,26 +61,37 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
     let lastRequestId = 0;
     let activeTab = 'waiting';
+    let isLoadMore = false;
 
     function fetchRequests(append = false) {
         let requestFilter = $('#request-filter').val();
         let requestParam = requestFilter === "" ? "" : `&request=${requestFilter}`;
 
+        if (!append) {
+            $('#nav-waiting').html(''); // 기존 데이터를 지움
+        }
+
         $.ajax({
             url: `/item/requestList?lastRequestId=${lastRequestId}${requestParam}`,
             method: 'GET',
             success: function(response) {
-                if (response.finished) {
+                if (response.finished && isLoadMore) {
                     alert("마지막 페이지입니다");
+                    isLoadMore = false;
+                    return;
+                }
+
+                if (!append && response.requestList == null) {
                     return;
                 }
 
                 let memberId = [[${#authentication.principal?.id}]];
-
                 let waitingContent = '';
+
                 response.requestList.forEach(function(request) {
                     waitingContent += `<div class="w-100 d-flex mb-5 justify-content-around" id="'request-' + request.id'">
                         <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.requestItemId}'">
@@ -90,8 +106,8 @@
                             <p class="mr-2">요청자: ${request.responseNickname}</p>
                         </div>
 
-                        <p>${request.requestDate}</p>
-                         ${memberId === request.responseMemberId ? '<button type="button" class="btn btn-outline-danger">요청취소</button>'
+                        <p>요청 날짜 : ${request.requestDate}</p>
+                         ${memberId === request.responseMemberId ? '<button id="request-cancel" type="button" class="btn btn-outline-danger" data-request-id="' + request.id + '">요청취소</button>'
                         : '<div class="d-flex align-content-center">' +
                         '<button id="request-reject" type="button" class="btn btn-outline-danger mr-2" data-request-id="' + request.id + '">요청거절</button>' +
                         '<button id="request-accept" type="button" class="btn btn-outline-primary" data-request-id="' + request.id + '">요청수락</button>' +
@@ -117,12 +133,21 @@
         let tradeFilter = $('#trade-filter').val();
         let requestParam = tradeFilter === "" ? "" : `&request=${tradeFilter}`;
 
+        if (!append) {
+            $('#nav-trading').html(''); // 기존 데이터를 지움
+        }
+
         $.ajax({
             url: `/item/tradeList?lastRequestId=${lastRequestId}${requestParam}`,
             method: 'GET',
             success: function(response) {
-                if (response.finished) {
+                if (response.finished && isLoadMore) {
                     alert("마지막 페이지입니다");
+                    isLoadMore = false;
+                    return;
+                }
+
+                if (!append && response.tradeList == null) {
                     return;
                 }
 
@@ -144,8 +169,7 @@
                         </div>
 
                         <div>
-                            <p>${trade.tradeStartDate}</p>
-                            <p>${trade.tradeEndDate}</p>
+                            <p>거래 시작 날짜 : ${trade.tradeStartDate}</p>
                         </div>
 
                          <div>
@@ -163,6 +187,65 @@
             },
             error: function(xhr, status, error) {
                 alert("거래 내역을 불러올 수 없습니다.");
+                console.error('Error :', error);
+            }
+        });
+    }
+
+    function fetchSucceedTrades(append = false) {
+        let succeedFilter = $('#succeed-filter').val();
+        let requestParam = succeedFilter === "" ? "" : `&request=${succeedFilter}`;
+
+        if (!append) {
+            $('#nav-succeed').html(''); // 기존 데이터를 지움
+        }
+
+        $.ajax({
+            url: `/item/succeedList?lastRequestId=${lastRequestId}${requestParam}`,
+            method: 'GET',
+            success: function(response) {
+                if (response.finished && isLoadMore) {
+                    alert("마지막 페이지입니다");
+                    isLoadMore = false;
+                    return;
+                }
+
+                if (!append && response.tradeSucceedList == null) {
+                    return;
+                }
+
+                let succeedContent = '';
+                response.tradeSucceedList.forEach(function(trade) {
+                    console.log(trade);
+
+                    succeedContent += `<div class="w-100 d-flex mb-5 justify-content-around">
+                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
+                            <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <h5 class="mr-2">${trade.requestTitle}</h5>
+                            <p class="mr-2">응답자: ${trade.requestNickname}</p>
+                        </div>
+
+                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
+                            <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <h5 class="mr-2">${trade.responseTitle}</h5>
+                            <p class="mr-2">요청자: ${trade.responseNickname}</p>
+                        </div>
+
+                        <div>
+                            <p>거래 종료 날짜 : ${trade.tradeEndDate}</p>
+                        </div>
+                    </div>`;
+                });
+                if (append) {
+                    $('#nav-succeed').append(succeedContent);
+                } else {
+                    $('#nav-succeed').html(succeedContent);
+                }
+
+                lastRequestId = response.lastItemId;
+            },
+            error: function(xhr, status, error) {
+                alert("거래완료 내역을 불러올 수 없습니다.");
                 console.error('Error :', error);
             }
         });
@@ -189,6 +272,7 @@
         activeTab = 'waiting';
         $('#request-filter').show();
         $('#trade-filter').hide();
+        $('#succeed-filter').hide();
         fetchRequests();
     });
     $('#nav-trading-tab').click(function() {
@@ -196,23 +280,42 @@
         activeTab = 'trading';
         $('#request-filter').hide();
         $('#trade-filter').show();
+        $('#succeed-filter').hide();
         fetchTrades();
+    });
+    $('#nav-succeed-tab').click(function() {
+        lastRequestId = 0;
+        activeTab = 'succeed';
+        $('#request-filter').hide();
+        $('#trade-filter').hide();
+        $('#succeed-filter').show();
+        fetchSucceedTrades();
     });
 
     $('#request-filter').change(function() {
         lastRequestId = 0;
+        isLoadMore = false;
         fetchRequests();
     });
     $('#trade-filter').change(function() {
         lastRequestId = 0;
+        isLoadMore = false;
         fetchTrades();
+    });
+    $('#succeed-filter').change(function() {
+        lastRequestId = 0;
+        isLoadMore = false;
+        fetchSucceedTrades();
     });
 
     $('#load-more').click(function() {
+        isLoadMore = true;
         if (activeTab === 'waiting') {
             fetchRequests(true);
         } else if (activeTab === 'trading') {
             fetchTrades(true);
+        } else if (activeTab === 'succeed') {
+            fetchSucceedTrades(true);
         }
     });
 
@@ -223,6 +326,8 @@
             $('#nav-waiting-tab').click();
         } else if (activeTab === 'trading') {
             $('#nav-trading-tab').click();
+        } else if (activeTab === 'succeed') {
+            $('#nav-succeed-tab').click();
         }
     });
 
@@ -252,11 +357,30 @@
                 method: 'POST',
                 success: function(response) {
                     console.log('요청 거절 성공, 거래 아이디:', response.tradeId);
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     console.log('요청 수락 실패: ', error);
                 }
             });
+        }
+    });
+
+    $(document).on('click', '#request-cancel', function () {
+        if (confirm("요청을 취소하시겠습니까?")){
+            let requestId = $(this).data('request-id');
+
+            $.ajax({
+                url: `/item/cancel?requestId=${requestId}`,
+                method: 'POST',
+                success: function (response) {
+                    console.log('요청 취소 성공, 거래 아이디: ', response.tradeId);
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.log('요청 취소 실패: ', error);
+                }
+            })
         }
     });
 </script>

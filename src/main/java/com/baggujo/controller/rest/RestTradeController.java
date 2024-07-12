@@ -106,6 +106,39 @@ public class RestTradeController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @GetMapping("/succeedList")
+    public ResponseEntity<Map<String, Object>> getTradeSucceedList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+        Map<String, Object> map = new HashMap<>();
+        List<TradeDetailDTO> tradeDTOs;
+
+        if (authDTO == null) {
+            throw new BadRequestException("Invalid request");
+        }
+
+        long memberId = authDTO.getId();
+
+        try {
+            tradeDTOs = tradeService.getTradeSucceedList(memberId, lastRequestId, request, offset);
+            map.put("tradeSucceedList", tradeDTOs);
+
+            long lastItemId = -1;
+
+            if (!tradeDTOs.isEmpty()) {
+                lastItemId = tradeDTOs.get(tradeDTOs.size() - 1).getId();
+            } else {
+                map.put("finished", true);
+            }
+
+            map.put("lastItemId", lastItemId);
+        } catch (SQLException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     @PostMapping("/accept")
     public ResponseEntity<Map<String, Object>> acceptRequest(@RequestParam long requestId) {
         Map<String, Object> response = new HashMap<>();
@@ -126,6 +159,19 @@ public class RestTradeController {
         try {
             tradeService.rejectRequest(requestId);
             response.put("message", "Request rejected successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<Map<String, Object>> cancelRequest(@RequestParam long requestId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            tradeService.cancelRequest(requestId);
+            response.put("message", "Request cancelled successfully");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("error", e.getMessage());

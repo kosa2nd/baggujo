@@ -86,4 +86,53 @@
         order by t.start_date desc
         fetch first #{offset} rows only
     </select>
+
+    <select id="getTradeSucceedListByMemberId" resultType="com.baggujo.dto.TradeDetailDTO">
+        select
+        t.id,
+        t.start_date tradeStartDate,
+        t.end_date tradeEndDate,
+
+        m1.id requestMemberId,
+        m1.nickname requestNickname,
+        i1.id requestItemId,
+        i1.title requestItemTitle,
+        ii1.s_name requestThumbnail,
+
+        m2.id responseMemberId,
+        m2.nickname responseNickname,
+        i2.id responseItemId,
+        i2.title responseItemTitle,
+        ii2.s_name responseThumbnail
+        from trade t, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
+        where
+        <choose>
+            <when test="request == null">
+                (i1.member_id = #{memberId} or i2.member_id = #{memberId})
+            </when>
+            <when test="request">
+                i1.member_id = #{memberId}
+            </when>
+            <otherwise>
+                i2.member_id = #{memberId}
+            </otherwise>
+        </choose>
+        and t.request_item_id = i1.id
+        and i1.member_id = m1.id
+        and i1.id = ii1.item_id(+)
+        and (ii1.img_no = 1 or ii1.img_no is null)
+        and i1.member_id = m1.id
+
+        and t.response_item_id = i2.id
+        and i2.member_id = m2.id
+        and i2.id = ii2.item_id(+)
+        and (ii2.img_no = 1 or ii2.img_no is null)
+        and i2.member_id = m2.id
+        <if test="lastRequestId != 0">
+            <![CDATA[and r.id < #{lastRequestId}]]>
+        </if>
+        and t.status = 'SUCCEED'
+        order by t.start_date desc
+        fetch first #{offset} rows only
+    </select>
 </mapper>
