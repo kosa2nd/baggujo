@@ -1,29 +1,21 @@
 package com.baggujo.controller;
 
 import com.baggujo.dto.*;
-import com.baggujo.dto.enums.ItemCondition;
+import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.security.dto.MemberAuthDTO;
 import com.baggujo.service.FavoriteService;
 import com.baggujo.service.ItemService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -73,7 +65,6 @@ public class ItemController {
         }
     }
 
-
     @GetMapping("/detail/{id}")
     public String getItemDetail(@PathVariable("id") long id, @AuthenticationPrincipal MemberAuthDTO memberAuthDTO, Model model) throws SQLException {
         ItemDetailDTO itemDetail = itemService.getItemDetailById(id);
@@ -83,7 +74,14 @@ public class ItemController {
 
     @GetMapping("/myfavorite")
     public String getMyFavoriteItems(@AuthenticationPrincipal AuthDTO authDTO, Model model) {
-        return "item/myfavorite.html";
+        return "item/myfavorite";
     }
 
+    @GetMapping("/myitems")
+    public String getMyItems(@AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return "/member/login";
+        }
+        return "item/myitems";
+    }
 }

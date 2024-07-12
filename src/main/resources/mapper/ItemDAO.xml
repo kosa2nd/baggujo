@@ -127,4 +127,25 @@
         fetch first #{offset} rows only
     </select>
 
+    <!--- 내가 작성한 글목록 조회 -->
+    <select id="getMyItems" resultType="com.baggujo.dto.ItemPreviewDTO">
+        select * from (
+        select i.id, i.title, ii.s_name, i.upload_date uploadDate, i.status, i.item_category_id itemCategoryId,
+        ic.category, i.member_id, m.nickname
+        from item i, item_image ii, item_category ic, member m
+        where i.item_category_id = ic.id
+        and i.id = ii.item_id(+)
+        and (ii.img_no = 1 or ii.img_no is null)
+        and i.member_id = m.id
+        and i.member_id = #{memberId}
+        <if test="itemStatus != null">
+            and i.status = #{itemStatus}
+        </if>
+        <if test="lastItemId != 0">
+            <![CDATA[and i.id < #{lastItemId}]]>
+        </if>
+        order by i.upload_date desc)
+        fetch first #{offset} rows only
+    </select>
+
 </mapper>

@@ -105,4 +105,8 @@ public class ItemService {
     public List<FavoriteItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteNo, long memberId, int offset, ItemStatus itemStatus) throws SQLException{
         return itemDAO.getFavoriteItemPreviews(lastFavoriteNo, memberId, offset, itemStatus);
     }
+
+    public List<ItemPreviewDTO> getMyItems(long memberId, long lastItemId, ItemStatus itemStatus, int offset) throws SQLException{
+        return itemDAO.getMyItems(memberId, lastItemId, itemStatus, offset);
+    }
 }
