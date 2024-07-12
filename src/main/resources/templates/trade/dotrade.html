@@ -17,8 +17,11 @@
     <link href="../../static/css/custom.css" rel="stylesheet">
 </head>
 <body>
+
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+
 <!-- 헤더 -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary" style="border: 1px solid #ddd">
+<nav class="margin-top navbar navbar-expand-lg bg-body-tertiary" style="border: 1px solid #ddd">
     <div class="container-fluid">
         <!-- 프로필 -->
         <a class="navbar-brand" href="#">
@@ -36,12 +39,12 @@
             </div>
         </a>
 
-        <!-- 홈버튼 -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon">
-                <img src="C:\Users\vnfam\Downloads\사진1.jpg">
-            </span>
-        </button>
+<!--        &lt;!&ndash; 홈버튼 &ndash;&gt;-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--            <span class="navbar-toggler-icon">-->
+<!--                <img src="C:\Users\vnfam\Downloads\사진1.jpg">-->
+<!--            </span>-->
+<!--        </button>-->
 
 
         <div class="collapse navbar-collapse">
@@ -110,16 +113,16 @@
         let tradeId = [[${tradeInfoDTO.id}]];
         let memberId = [[${#authentication.principal.id}]];
 
-        var sockJs = new SockJS("/ws-stomp");
-        var stomp = Stomp.over(sockJs);
+        let sockJs = new SockJS("/ws-stomp");
+        let stomp = Stomp.over(sockJs);
 
         stomp.connect({}, function() {
             stomp.subscribe("/sub/chat/room" + [[${tradeInfoDTO.id}]], function (chat) {
-                var content = JSON.parse(chat.body);
-                var writer = content.memberId;
-                var text = content.text;
+                let content = JSON.parse(chat.body);
+                let writer = content.memberId;
+                let text = content.text;
 
-                var str = '<span class="rounded-pill bg-light p-2 ">' + text + '</span>';
+                let str = '<span class="rounded-pill bg-light p-2 ">' + text + '</span>';
 
                 $("#msgArea").append(str);
             });

@@ -4,7 +4,7 @@
 <mapper namespace="com.baggujo.dao.ChatDAO">
     <!-- 채팅 생성 -->
     <insert id="insertChat" parameterType="com.baggujo.dto.ChatInsertDTO">
-        INSERT INTO chat (send_date, text, chat_type, trade_id, member_id)
-        VALUES (#{sendDate}, #{text}, #{chatType}, #{tradeId}, #{memberId})
+        INSERT INTO chat (text, chat_type, trade_id, member_id)
+        VALUES (#{text}, #{chatType}, #{tradeId}, #{memberId})
     </insert>
 </mapper>

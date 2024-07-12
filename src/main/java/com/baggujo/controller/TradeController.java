@@ -19,7 +19,10 @@ public class TradeController {
     private TradeService tradeService;
 
     @GetMapping("/myTrade")
-    public String myTrade(Model model) {
+    public String myTrade(@AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return "redirect:/member/login";
+        }
 
         return "/myTrade";
     }
