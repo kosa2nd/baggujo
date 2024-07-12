@@ -91,6 +91,10 @@
 <!--                <span class="glyphicon glyphicon-plus"></span>-->
 <!--            </button>-->
             <input id='msg' type="text" class="form-control mr-3" placeholder="메세지를 입력하세요...">
+            <form id="upload-file-form" hidden>
+                <input type="file" accept="image/jpeg,image/png, image/gif" onchange="uploadFile()"/>
+                <button type="button" id="" onclick='uploadFile();'>업로드</button>
+            </form>
             <button class="btn btn-secondary" id="sendBtn">보내기</button>
         </div>
     </div>
@@ -130,7 +134,8 @@
             stomp.send('/pub/chat/message', {}, JSON.stringify({
                 tradeId : [[${tradeInfoDTO.id}]],
                 memberId : [[${#authentication.principal?.id}]],
-                text : $('#msg').val()
+                text : $('#msg').val(),
+                chatType : 'TEXT'
             }));
         });
 
