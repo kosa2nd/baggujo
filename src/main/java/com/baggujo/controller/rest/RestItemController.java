@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -92,5 +93,33 @@ public class RestItemController {
         long memberId = authDTO.getId();
         return new ResponseEntity<>(requestService.getRequestUserItems(memberId), HttpStatus.OK);
     }
+
+    @GetMapping("/getmyitems")
+    public ResponseEntity<Map<String, Object>> getMyItems(@AuthenticationPrincipal AuthDTO authDTO, @RequestParam(required = false, defaultValue = "0") long lastItemId, @RequestParam(required = false) ItemStatus itemStatus, @RequestParam(defaultValue = "12") int offset) {
+
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        List<ItemPreviewDTO> itemPreviewDTOS;
+        try {
+            itemPreviewDTOS = itemService.getMyItems(authDTO.getId(), lastItemId, itemStatus, offset);
+            map.put("items", itemPreviewDTOS);
+
+            long itemId = -1;
+            if (!itemPreviewDTOS.isEmpty()) {
+                itemId = itemPreviewDTOS.get(itemPreviewDTOS.size() - 1).getId();
+            } else {
+                map.put("finished", true);
+            }
+
+            map.put("lastItemId", itemId);
+        } catch (SQLException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
 
 }

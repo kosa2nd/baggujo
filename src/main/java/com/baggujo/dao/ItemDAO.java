@@ -19,4 +19,5 @@ public interface ItemDAO {
     ItemStatus getItemStatusById(long itemId);
     int updateItemStatusByRequestId(long requestId, ItemStatus itemStatus);
     List<FavoriteItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteNo, long memberId, int offset, ItemStatus itemStatus) throws SQLException;
+    List<ItemPreviewDTO> getMyItems(long memberId, long lastItemId, ItemStatus itemStatus, int offset) throws SQLException;
 }
