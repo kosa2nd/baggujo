@@ -70,25 +70,30 @@
 
             <div class="d-flex w-100 justify-between mt-5">
                 <!-- 로그인된 사용자에게만 보이는 좋아요 버튼 (anonymousUser는 인증되지 않은 사용자) -->
-                <div class="d-flex mr-2 justify-contents-between" th:if="${#authentication?.principal != 'anonymousUser'}">
-                    <button id="favorite-btn" class="d-flex btn btn-outline-danger align-items-center fs-5 mr-2">
-                        <i id="favorite-icon" class="bi bi-heart mr-2 fs-5" th:classappend="${isFavorite} ? 'bi-heart-fill' : 'bi-heart'"></i>
-                        <span id="favorite-count-logged-in" th:text="${totalFavorites}">0</span>
-                    </button>
-                    <div class="d-flex align-items-center">
-                        <button th:if="${#authentication.principal?.id == itemDetail.memberId}" type="button" class="btn btn-secondary mr-2">수정</button>
-                        <button th:if="${#authentication.principal?.id == itemDetail.memberId}" type="button" class="btn btn-danger">삭제</button>
+                <th:block sec:authorize="isAuthenticated()">
+                    <div class="d-flex mr-2 justify-contents-between" th:if="${#authentication.principal != 'anonymousUser'}">
+                        <button id="favorite-btn" class="d-flex btn btn-outline-danger align-items-center fs-5 mr-2">
+                            <i id="favorite-icon" class="bi bi-heart mr-2 fs-5" th:classappend="${isFavorite} ? 'bi-heart-fill' : 'bi-heart'"></i>
+                            <span id="favorite-count-logged-in" th:text="${totalFavorites}">0</span>
+                        </button>
+                        <div th:if="${#authentication.principal != 'anonymousUser'}" class="d-flex align-items-center">
+                            <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-secondary mr-2">수정</button>
+                            <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-danger">삭제</button>
+                        </div>
                     </div>
-                </div>
+                </th:block>
 
                 <!-- 비로그인 사용자에게만 보이는 로그인 유도 버튼 -->
-                <div class="d-flex mr-2" th:if="${#authentication?.principal == 'anonymousUser'}">
+                <div class="d-flex mr-2" th:if="${#authentication.principal == 'anonymousUser'}">
                     <button class="d-flex btn btn-outline-danger align-items-center fs-5" onclick="alert('로그인이 필요합니다.'); window.location.href='/member/login';">
                         <i class="bi bi-heart mr-2 fs-5"></i>
                         <span id="favorite-count-anonymous" th:text="${totalFavorites}">0</span>
                     </button>
                 </div>
-                <button th:if="${#authentication?.principal?.id != itemDetail.memberId}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
+
+                <th:block sec:authorize="isAuthenticated()">
+                    <button th:if="${#authentication.principal.id != itemDetail.memberId}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
+                </th:block>
             </div>
         </div>
     </div>
