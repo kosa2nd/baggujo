@@ -1,6 +1,7 @@
 package com.baggujo.controller.rest;
 
 import com.baggujo.dto.ChatInsertDTO;
+import com.baggujo.dto.enums.ChatType;
 import com.baggujo.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,14 +23,14 @@ public class RestChatController {
     // stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMappiong 경로가 병합됨
     @MessageMapping("/chat/message")
     public void send(ChatInsertDTO message) throws SQLException {
-        System.out.println("===================================rcv" + message.getTradeId());
-        template.convertAndSend("/sub/chat/room" + message.getTradeId(), message);
-
-        // message 데이터베이스에 저장
+        // chatType == TEXT 인 경우에만 저장
         try {
-            chatService.insertChat(message);
-        } catch (Exception e) {
-            throw new SQLException();
+            if(message.getChatType() == ChatType.TEXT) {
+                chatService.insertChat(message);
+                template.convertAndSend("/sub/chat/room" + message.getTradeId(), message);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
     }

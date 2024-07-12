@@ -9,6 +9,6 @@ import java.util.List;
 @Mapper
 public interface ChatDAO {
 
-    void insertChat(ChatInsertDTO chatDTO) throws SQLException;
+    int insertChat(ChatInsertDTO chatDTO) throws SQLException;
     List<ChatInsertDTO> getChat(long id);
 }

@@ -14,6 +14,8 @@ public class ChatService {
 
     // 채팅 생성
     public void insertChat(ChatInsertDTO chatInsertDTO) throws SQLException {
-        chatDAO.insertChat(chatInsertDTO);
+        if (chatDAO.insertChat(chatInsertDTO) != 1) {
+            throw new SQLException();
+        }
     }
 }
