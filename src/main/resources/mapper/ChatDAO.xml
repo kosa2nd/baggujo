@@ -4,7 +4,22 @@
 <mapper namespace="com.baggujo.dao.ChatDAO">
     <!-- 채팅 생성 -->
     <insert id="insertChat" parameterType="com.baggujo.dto.ChatInsertDTO">
-        INSERT INTO chat (text, chat_type, trade_id, member_id)
-        VALUES (#{text}, #{chatType}, #{tradeId}, #{memberId})
+        INSERT INTO chat (
+        <if test="chatType.name() == 'IMAGE'">
+            img_name, img_s_name
+        </if>
+        <if test="chatType.name() == 'TEXT'">
+            text
+        </if>
+        , chat_type, trade_id, member_id
+        )
+        VALUES (
+        <if test="chatType.name() == 'IMAGE'">
+            #{imgName}, #{imgSName}
+        </if>
+        <if test="chatType.name() == 'TEXT'">
+            #{text}
+        </if>
+        , #{chatType}, #{tradeId}, #{memberId})
     </insert>
 </mapper>

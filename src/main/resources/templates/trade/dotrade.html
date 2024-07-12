@@ -90,15 +90,13 @@
 <div class="msgArea fixed-bottom-input">
     <div class="container">
         <div class="d-flex align-items-center">
-<!--            <button id="sendBtn" class="btn btn-light rounded-circle mr-3">-->
-<!--                <span class="glyphicon glyphicon-plus"></span>-->
-<!--            </button>-->
             <input id='msg' type="text" class="form-control mr-3" placeholder="메세지를 입력하세요...">
-            <form id="upload-file-form" hidden>
-                <input type="file" accept="image/jpeg,image/png, image/gif" onchange="uploadFile()"/>
-                <button type="button" id="" onclick='uploadFile();'>업로드</button>
+            <form id="upload-file-form" enctype="multipart/form-data" hidden>
+                <input type="file" accept="image/jpeg,image/png, image/gif" id='inputFile' name="image" onchange="fileGo()"/>
+                <input type="submit" id="fileSendBtn">
             </form>
             <button class="btn btn-secondary" id="sendBtn">보내기</button>
+            <button class="btn btn-secondary" id="sendImgBtn">이미지</button>
         </div>
     </div>
 </div>
@@ -124,9 +122,15 @@
             stomp.subscribe("/sub/chat/room" + [[${tradeInfoDTO.id}]], function (chat) {
                 let content = JSON.parse(chat.body);
                 let writer = content.memberId;
-                let text = content.text;
+                let chatType = content.chatType;
 
-                let str = '<span class="rounded-pill bg-light p-2 ">' + text + '</span>';
+                let str = '';
+                alert('chat' + content.chatType)
+                if (chatType == 'TEXT') {
+                    str = '<span class="rounded-pill bg-light p-2 ">' + content.text + '</span>';
+                } else if (chatType == 'IMAGE') {
+                    str = '<img class="w-100 h-100 border rounded-lg my-2" src="/chatImages/' + content.imgSName + '" alt="제품이미지" />'
+                }
 
                 $("#msgArea").append(str);
             });
@@ -141,6 +145,36 @@
                 chatType : 'TEXT'
             }));
         });
+
+        $('#sendImgBtn').on('click', function() {
+            alert("이미지 클릭됨");
+            let input = document.getElementById("inputFile");
+            input.click();
+        });
+
+        fileGo = function() {
+            $.ajax({
+                    url: "/chat/imageUpload",
+                    type: "post",
+                    data: new FormData($("#upload-file-form")[0]),
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (data) {
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({
+                            tradeId : [[${tradeInfoDTO.id}]],
+                            memberId : [[${#authentication.principal?.id}]],
+                            imgName : data.imgName,
+                            imgSName : data.imgSName,
+                            chatType : 'IMAGE'
+                        }));
+                    },
+                    error: function () {
+                        alert("실패");
+                    }
+                });
+        }
 
     });
 </script>
