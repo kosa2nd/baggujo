@@ -36,7 +36,7 @@ public class TradeController {
 
         TradeInfoDTO tradeInfoDTO;
         try {
-            tradeInfoDTO = tradeService.getTradeDetailByTradeId(tradeId);
+            tradeInfoDTO = tradeService.getTradeInfoByTradeId(tradeId);
 
             long memberId = authDTO.getId();
             if (memberId != tradeInfoDTO.getRequestMemberId() && memberId != tradeInfoDTO.getResponseMemberId()) {

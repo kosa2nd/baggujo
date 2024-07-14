@@ -39,14 +39,6 @@
             </div>
         </a>
 
-<!--        &lt;!&ndash; 홈버튼 &ndash;&gt;-->
-<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--            <span class="navbar-toggler-icon">-->
-<!--                <img src="C:\Users\vnfam\Downloads\사진1.jpg">-->
-<!--            </span>-->
-<!--        </button>-->
-
-
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -99,6 +91,11 @@
             <button class="btn btn-secondary" id="sendImgBtn">이미지</button>
         </div>
     </div>
+    <div id="sendDecisionBox">
+        <button id="acceptButton"></button>
+        <button id="rejectButton"></button>
+        <button id="noneButton"></button>
+    </div>
 </div>
 </body>
 
@@ -125,7 +122,6 @@
                 let chatType = content.chatType;
 
                 let str = '';
-                alert('chat' + content.chatType)
                 if (chatType == 'TEXT') {
                     str = '<span class="rounded-pill bg-light p-2 ">' + content.text + '</span>';
                 } else if (chatType == 'IMAGE') {
@@ -147,7 +143,6 @@
         });
 
         $('#sendImgBtn').on('click', function() {
-            alert("이미지 클릭됨");
             let input = document.getElementById("inputFile");
             input.click();
         });
@@ -174,7 +169,19 @@
                         alert("실패");
                     }
                 });
-        }
+        };
+
+        $('#acceptButton').on('click', function() {
+
+        });
+
+        $('#rejectButton').on('click', function() {
+
+        });
+
+        $('#noneButton').on('click', function() {
+
+        });
 
     });
 </script>

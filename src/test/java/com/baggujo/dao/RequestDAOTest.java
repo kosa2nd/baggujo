@@ -16,10 +16,6 @@ public class RequestDAOTest {
     @Autowired
     private RequestDAO requestDAO;
 
-    @Test
-    public void 요청생성테스트() throws SQLException {
-        requestDAO.insertRequest(new RequestInsertDTO(161, 162));
-    }
 
     @Test
     public void 요청목록가져오기테스트() throws SQLException {

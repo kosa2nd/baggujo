@@ -1,7 +1,6 @@
 package com.baggujo.controller.rest;
 
 import com.baggujo.dto.ChatInsertDTO;
-import com.baggujo.dto.ImageUploadDTO;
 import com.baggujo.dto.UploadedChatImageDTO;
 import com.baggujo.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
