@@ -92,9 +92,9 @@
         </div>
     </div>
     <div id="sendDecisionBox">
-        <button id="acceptButton"></button>
-        <button id="rejectButton"></button>
-        <button id="noneButton"></button>
+        <button id="acceptButton">거래 완료 신청</button>
+        <button id="rejectButton">거래 취소 신청</button>
+        <button id="noneButton">요청 취소</button>
     </div>
 </div>
 </body>
@@ -171,16 +171,56 @@
                 });
         };
 
-        $('#acceptButton').on('click', function() {
+        sendDecision = function(decision, resultText) {
+            alert([[${#authentication.principal?.id}]]);
+            $.ajax({
+                    url: "/item/decision",
+                    method: "POST",
+                    data: {
+                        "memberId" : [[${#authentication.principal?.id}]],
+                        "tradeId" : [[${tradeInfoDTO.id}]],
+                        "tradeDecision" : decision
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({
+                            tradeId : [[${tradeInfoDTO.id}]],
+                            memberId : [[${#authentication.principal?.id}]],
+                            text : resultText,
+                            chatType : 'TEXT'
+                        }));
 
+                        if (data.tradeStatus != 'TRADING') {
+                            let resText = data.tradeStatus == 'SUCCEED' ? '거래가 완료되었습니다' : '거래가 취소되었습니다';
+                            stomp.send('/pub/chat/message', {}, JSON.stringify({
+                                tradeId : [[${tradeInfoDTO.id}]],
+                                memberId : [[${#authentication.principal?.id}]],
+                                text : resText,
+                                chatType : 'TEXT'
+                            }));
+
+                            alert(resText);
+                        }
+
+                        return data;
+                    },
+                    error: function () {
+                        alert("실패");
+                    }
+            });
+
+        }
+
+        $('#acceptButton').on('click', function() {
+            sendDecision('ACCEPT', '거래 완료를 요청했어요');
         });
 
         $('#rejectButton').on('click', function() {
-
+            sendDecision('REJECT', '거래 취소를 요청했어요');
         });
 
         $('#noneButton').on('click', function() {
-
+            sendDecision('NONE', '요청을 취소했어요');
         });
 
     });

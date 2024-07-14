@@ -1,13 +1,18 @@
 package com.baggujo.controller.rest;
 
-import com.baggujo.dto.ChatInsertDTO;
-import com.baggujo.dto.UploadedChatImageDTO;
+import com.baggujo.dto.*;
+import com.baggujo.dto.enums.ChatType;
+import com.baggujo.dto.enums.TradeDecision;
 import com.baggujo.service.ChatService;
+import com.baggujo.service.TradeService;
+import jakarta.validation.constraints.NotNull;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +26,8 @@ public class RestChatController {
     private SimpMessagingTemplate template; // 특정 Broker로 메시지 전달
     @Autowired
     private ChatService chatService;
+    @Autowired
+    private TradeService tradeService;
 
     // Client가 send할 수 있는 경로
     // stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMappiong 경로가 병합됨
@@ -51,4 +58,5 @@ public class RestChatController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 }
