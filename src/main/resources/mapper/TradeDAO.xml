@@ -25,7 +25,7 @@
     </insert>
 
     <select id="getTradeInfoByTradeId" resultType="com.baggujo.dto.TradeInfoDTO">
-        select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle
+        select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle, t.status
         from trade t, member m1, member m2, item i1, item i2
         where
             t.request_item_id = i1.id
@@ -156,7 +156,7 @@
 
     <update id="updateTradeStatusByTradeId">
         update trade
-        set status = #{tradeStatus}
+        set status = #{tradeStatus}, end_date = sysdate
         where id = #{tradeId}
     </update>
 
