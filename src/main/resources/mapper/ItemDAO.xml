@@ -79,6 +79,7 @@
             <if test="keyword != null">
                 and i.title like '%' || #{keyword} || '%'
             </if>
+                and i.enable = 1
             order by i.upload_date desc)
             fetch first #{offset} rows only
     </select>
@@ -124,6 +125,7 @@
         <if test="lastFavoriteNo != 0">
             <![CDATA[and f.no < #{lastFavoriteNo}]]>
         </if>
+            and i.enable = 1
         order by f.no desc
         fetch first #{offset} rows only
     </select>
@@ -145,6 +147,7 @@
         <if test="lastItemId != 0">
             <![CDATA[and i.id < #{lastItemId}]]>
         </if>
+            and i.enable = 1
         order by i.upload_date desc)
         fetch first #{offset} rows only
     </select>

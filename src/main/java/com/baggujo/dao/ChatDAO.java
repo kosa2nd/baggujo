@@ -10,5 +10,5 @@ import java.util.List;
 public interface ChatDAO {
 
     int insertChat(ChatInsertDTO chatDTO) throws SQLException;
-    List<ChatInsertDTO> getChat(long id);
+    List<ChatInsertDTO> getChat(long tradeId) throws SQLException;
 }

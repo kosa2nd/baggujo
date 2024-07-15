@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.SQLException;
+import java.util.List;
+
 @Controller
 @RequestMapping("/trade")
 public class TradeController {
@@ -52,7 +55,16 @@ public class TradeController {
             return "redirect:/";
         }
 
-        model.addAttribute("chats", chatService.getChat(tradeId));
+        List<ChatInsertDTO> dtos;
+        try {
+            dtos = chatService.getChat(tradeId);
+            model.addAttribute("chats", chatService.getChat(tradeId));
+            for (ChatInsertDTO chat: dtos) {
+                System.out.println(chat);
+            }
+        } catch (SQLException e) {
+            System.out.println("--------------------!!!!");
+        }
         model.addAttribute("tradeInfoDTO", tradeInfoDTO);
         return "/trade/dotrade";
     }

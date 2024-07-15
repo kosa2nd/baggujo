@@ -86,7 +86,7 @@ public class ChatService {
         }
     }
 
-    public List<ChatInsertDTO> getChat(long tradeId) {
+    public List<ChatInsertDTO> getChat(long tradeId) throws SQLException{
         return chatDAO.getChat(tradeId);
     }
 
