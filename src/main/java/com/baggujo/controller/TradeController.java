@@ -1,6 +1,7 @@
 package com.baggujo.controller;
 
 import com.baggujo.dto.*;
+import com.baggujo.service.ChatService;
 import com.baggujo.service.TradeService;
 import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TradeController {
     @Autowired
     private TradeService tradeService;
+    @Autowired
+    private ChatService chatService;
 
     @GetMapping("/myTrade")
     public String myTrade(@AuthenticationPrincipal AuthDTO authDTO) {
@@ -49,6 +52,7 @@ public class TradeController {
             return "redirect:/";
         }
 
+        model.addAttribute("chats", chatService.getChat(tradeId));
         model.addAttribute("tradeInfoDTO", tradeInfoDTO);
         return "/trade/dotrade";
     }

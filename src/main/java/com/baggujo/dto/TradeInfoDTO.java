@@ -1,5 +1,6 @@
 package com.baggujo.dto;
 
+import com.baggujo.dto.enums.TradeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,6 @@ public class TradeInfoDTO {
     private String responseNickname;
     private long responseItemId;
     private String responseTitle;
+
+    private TradeStatus status;
 }

@@ -85,4 +85,9 @@ public class ChatService {
             throw new FileNotFoundException("잘못된 파일입니다");
         }
     }
+
+    public List<ChatInsertDTO> getChat(long tradeId) {
+        return chatDAO.getChat(tradeId);
+    }
+
 }

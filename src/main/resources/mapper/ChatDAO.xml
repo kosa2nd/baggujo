@@ -8,7 +8,7 @@
         <if test="chatType.name() == 'IMAGE'">
             img_name, img_s_name
         </if>
-        <if test="chatType.name() == 'TEXT'">
+        <if test="chatType.name() == 'TEXT' or chatType.name() == 'TRADE_END'">
             text
         </if>
         , chat_type, trade_id, member_id
@@ -17,9 +17,16 @@
         <if test="chatType.name() == 'IMAGE'">
             #{imgName}, #{imgSName}
         </if>
-        <if test="chatType.name() == 'TEXT'">
+        <if test="chatType.name() == 'TEXT' or chatType.name() == 'TRADE_END'">
             #{text}
         </if>
         , #{chatType}, #{tradeId}, #{memberId})
     </insert>
+
+    <select id="getChat" resultType="com.baggujo.dto.ChatInsertDTO">
+        select member_id, trade_id, text, img_name, img_s_name, chat_type
+        from chat
+        where trade_id = #{id}
+        order by send_date
+    </select>
 </mapper>

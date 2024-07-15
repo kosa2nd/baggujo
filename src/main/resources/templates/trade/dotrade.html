@@ -35,7 +35,6 @@
                         <label class="itemStatus" th:text="${itemStatus}">교환상태</label>
                     </div>
                 </div>
-
             </div>
         </a>
 
@@ -106,122 +105,133 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </html>
 
-<script>
-    $(document).ready(function() {
+<th:block th:if='${tradeInfoDTO.status == "TRADING"}'>
+    <script>
+        $(document).ready(function() {
 
-        let tradeId = [[${tradeInfoDTO.id}]];
-        let memberId = [[${#authentication.principal.id}]];
+            let tradeId = [[${tradeInfoDTO.id}]];
+            let memberId = [[${#authentication.principal.id}]];
 
-        let sockJs = new SockJS("/ws-stomp");
-        let stomp = Stomp.over(sockJs);
+            let sockJs = new SockJS("/ws-stomp");
+            let stomp = Stomp.over(sockJs);
 
-        stomp.connect({}, function() {
-            stomp.subscribe("/sub/chat/room" + [[${tradeInfoDTO.id}]], function (chat) {
-                let content = JSON.parse(chat.body);
-                let writer = content.memberId;
-                let chatType = content.chatType;
+            stomp.connect({}, function() {
+                stomp.subscribe("/sub/chat/room" + [[${tradeInfoDTO.id}]], function (chat) {
+                    let content = JSON.parse(chat.body);
+                    let writer = content.memberId;
+                    let chatType = content.chatType;
 
-                let str = '';
-                if (chatType == 'TEXT') {
-                    str = '<span class="rounded-pill bg-light p-2 ">' + content.text + '</span>';
-                } else if (chatType == 'IMAGE') {
-                    str = '<img class="w-100 h-100 border rounded-lg my-2" src="/chatImages/' + content.imgSName + '" alt="제품이미지" />'
-                }
+                    let str = '';
+                    if (chatType == 'TEXT') {
+                        str = '<span class="rounded-pill bg-light p-2 ">' + content.text + '</span>';
+                    } else if (chatType == 'IMAGE') {
+                        str = '<img class="w-100 h-100 border rounded-lg my-2" src="/chatImages/' + content.imgSName + '" alt="제품이미지" />'
+                    } else if (chatType == 'TRADE_END') {
+                        str = '<span class="rounded-pill bg-light p-2 ">' + content.text + '</span>';
 
-                $("#msgArea").append(str);
+                        alert(content.text);
+                        $('#sendDecisionBox').remove();
+                        $('#sendBtn').attr("disabled", true);
+                        $('#sendImgBtn').attr("disabled", true);
+                        $('#msg').attr("disabled", true);
+                        $('#file').attr("disabled", true);
+                        $('#submit').attr("disabled", true);
+                    }
+
+                    $("#msgArea").append(str);
+                });
+
             });
 
-        });
+            $('#sendBtn').on('click', function() {
+                stomp.send('/pub/chat/message', {}, JSON.stringify({
+                    tradeId : [[${tradeInfoDTO.id}]],
+                    memberId : [[${#authentication.principal?.id}]],
+                    text : $('#msg').val(),
+                    chatType : 'TEXT'
+                }));
+            });
 
-        $('#sendBtn').on('click', function() {
-            stomp.send('/pub/chat/message', {}, JSON.stringify({
-                tradeId : [[${tradeInfoDTO.id}]],
-                memberId : [[${#authentication.principal?.id}]],
-                text : $('#msg').val(),
-                chatType : 'TEXT'
-            }));
-        });
+            $('#sendImgBtn').on('click', function() {
+                let input = document.getElementById("inputFile");
+                input.click();
+            });
 
-        $('#sendImgBtn').on('click', function() {
-            let input = document.getElementById("inputFile");
-            input.click();
-        });
-
-        fileGo = function() {
-            $.ajax({
-                    url: "/chat/imageUpload",
-                    type: "post",
-                    data: new FormData($("#upload-file-form")[0]),
-                    enctype: 'multipart/form-data',
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    success: function (data) {
-                        stomp.send('/pub/chat/message', {}, JSON.stringify({
-                            tradeId : [[${tradeInfoDTO.id}]],
-                            memberId : [[${#authentication.principal?.id}]],
-                            imgName : data.imgName,
-                            imgSName : data.imgSName,
-                            chatType : 'IMAGE'
-                        }));
-                    },
-                    error: function () {
-                        alert("실패");
-                    }
-                });
-        };
-
-        sendDecision = function(decision, resultText) {
-            alert([[${#authentication.principal?.id}]]);
-            $.ajax({
-                    url: "/item/decision",
-                    method: "POST",
-                    data: {
-                        "memberId" : [[${#authentication.principal?.id}]],
-                        "tradeId" : [[${tradeInfoDTO.id}]],
-                        "tradeDecision" : decision
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        stomp.send('/pub/chat/message', {}, JSON.stringify({
-                            tradeId : [[${tradeInfoDTO.id}]],
-                            memberId : [[${#authentication.principal?.id}]],
-                            text : resultText,
-                            chatType : 'TEXT'
-                        }));
-
-                        if (data.tradeStatus != 'TRADING') {
-                            let resText = data.tradeStatus == 'SUCCEED' ? '거래가 완료되었습니다' : '거래가 취소되었습니다';
+            fileGo = function() {
+                $.ajax({
+                        url: "/chat/imageUpload",
+                        type: "post",
+                        data: new FormData($("#upload-file-form")[0]),
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (data) {
                             stomp.send('/pub/chat/message', {}, JSON.stringify({
                                 tradeId : [[${tradeInfoDTO.id}]],
                                 memberId : [[${#authentication.principal?.id}]],
-                                text : resText,
+                                imgName : data.imgName,
+                                imgSName : data.imgSName,
+                                chatType : 'IMAGE'
+                            }));
+                        },
+                        error: function () {
+                            alert("실패");
+                        }
+                    });
+            };
+
+            sendDecision = function(decision, resultText) {
+                alert([[${#authentication.principal?.id}]]);
+                $.ajax({
+                        url: "/item/decision",
+                        method: "POST",
+                        data: {
+                            "memberId" : [[${#authentication.principal?.id}]],
+                            "tradeId" : [[${tradeInfoDTO.id}]],
+                            "tradeDecision" : decision
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            stomp.send('/pub/chat/message', {}, JSON.stringify({
+                                tradeId : [[${tradeInfoDTO.id}]],
+                                memberId : [[${#authentication.principal?.id}]],
+                                text : resultText,
                                 chatType : 'TEXT'
                             }));
 
-                            alert(resText);
-                        }
+                            if (data.tradeStatus != 'TRADING') {
+                                let resText = data.tradeStatus == 'SUCCEED' ? '거래가 완료되었습니다' : '거래가 취소되었습니다';
+                                stomp.send('/pub/chat/message', {}, JSON.stringify({
+                                    tradeId : [[${tradeInfoDTO.id}]],
+                                    memberId : [[${#authentication.principal?.id}]],
+                                    text : resText,
+                                    chatType : 'TRADE_END'
+                                }));
+                            }
 
-                        return data;
-                    },
-                    error: function () {
-                        alert("실패");
-                    }
+                            return data;
+                        },
+                        error: function () {
+                            alert("실패");
+                        }
+                });
+
+            }
+
+            $('#acceptButton').on('click', function() {
+                sendDecision('ACCEPT', '거래 완료를 요청했어요');
             });
 
-        }
+            $('#rejectButton').on('click', function() {
+                sendDecision('REJECT', '거래 취소를 요청했어요');
+            });
 
-        $('#acceptButton').on('click', function() {
-            sendDecision('ACCEPT', '거래 완료를 요청했어요');
+            $('#noneButton').on('click', function() {
+                sendDecision('NONE', '요청을 취소했어요');
+            });
+
         });
+    </script>
+</th:block>
 
-        $('#rejectButton').on('click', function() {
-            sendDecision('REJECT', '거래 취소를 요청했어요');
-        });
-
-        $('#noneButton').on('click', function() {
-            sendDecision('NONE', '요청을 취소했어요');
-        });
-
-    });
-</script>
