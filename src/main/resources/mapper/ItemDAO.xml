@@ -148,4 +148,13 @@
         fetch first #{offset} rows only
     </select>
 
+    <!-- 물품 수정 -->
+    <update id="updateItem" parameterType="map">
+        <![CDATA[
+        UPDATE item
+        SET title = #{item.title}, description = #{item.description}, status = #{item.itemStatus},
+            condition = #{item.itemCondition}, item_category_id = #{item.itemCategoryId}, member_id = #{item.memberId}
+        WHERE id = #{id}
+        ]]>
+    </update>
 </mapper>

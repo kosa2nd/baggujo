@@ -1,9 +1,6 @@
 package com.baggujo.controller.rest;
 
-import com.baggujo.dto.AuthDTO;
-import com.baggujo.dto.FavoriteItemPreviewDTO;
-import com.baggujo.dto.ItemPreviewDTO;
-import com.baggujo.dto.RequestUserItemDTO;
+import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.service.ItemService;
 import com.baggujo.service.RequestService;
@@ -13,13 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/item")
@@ -121,5 +119,46 @@ public class RestItemController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable("id") long id, @Validated @ModelAttribute ItemInsertDTO itemInsertDTO, BindingResult bindingResult) {
+        Map<String, Object> response = new HashMap<>();
 
+        if (bindingResult.hasErrors()) {
+            StringBuilder sb = new StringBuilder();
+            boolean missingValue = false;
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                sb.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("\n");
+                if (Objects.requireNonNull(error.getDefaultMessage()).contains("null")) {
+                    missingValue = true;
+                }
+            }
+            if (missingValue) {
+                sb.insert(0, "모든 값을 입력해주세요. \n");
+            }
+            response.put("errorMessage", sb.toString());
+            response.put("categories", itemService.getCategories());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            if (itemInsertDTO.getFiles() != null && itemInsertDTO.getFiles().length > 0) {
+                boolean hasNonEmptyFile = Arrays.stream(itemInsertDTO.getFiles())
+                        .anyMatch(file -> !file.isEmpty());
+                if (hasNonEmptyFile) {
+                    itemService.updateItem(id, itemInsertDTO);
+                } else {
+                    itemService.updateItemWithoutImages(id, itemInsertDTO);
+                }
+            } else {
+                itemService.updateItemWithoutImages(id, itemInsertDTO);
+            }
+            response.put("redirectUrl", "/item/detail/" + id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("errorMessage", "게시글 수정 중 오류가 발생했습니다.");
+            response.put("categories", itemService.getCategories());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

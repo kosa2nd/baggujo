@@ -11,4 +11,5 @@ import java.util.Map;
 @Mapper
 public interface ItemImageDAO {
     int insertItemImages(Map<String, Object>map) throws SQLException;
+    int deleteItemImages(long id);
 }

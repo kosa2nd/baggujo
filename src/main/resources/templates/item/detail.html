@@ -77,7 +77,7 @@
                             <span id="favorite-count-logged-in" th:text="${totalFavorites}">0</span>
                         </button>
                         <div th:if="${#authentication.principal != 'anonymousUser'}" class="d-flex align-items-center">
-                            <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-secondary mr-2">수정</button>
+                            <button th:if="${#authentication.principal.id == itemDetail.memberId}" th:onclick="|location.href='/item/update/${itemDetail.id}'|" type="button" class="btn btn-secondary mr-2">수정</button>
                             <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-danger">삭제</button>
                         </div>
                     </div>

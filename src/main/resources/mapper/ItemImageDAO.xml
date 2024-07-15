@@ -18,4 +18,9 @@
         ) A
     </insert>
 
+    <!-- 물품 이미지 삭제 -->
+    <delete id="deleteItemImages" parameterType="long">
+        delete from item_image where item_id = #{id}
+    </delete>
+
 </mapper>

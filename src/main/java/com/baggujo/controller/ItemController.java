@@ -1,7 +1,6 @@
 package com.baggujo.controller;
 
 import com.baggujo.dto.*;
-import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.security.dto.MemberAuthDTO;
 import com.baggujo.service.FavoriteService;
 import com.baggujo.service.ItemService;
@@ -35,7 +34,11 @@ public class ItemController {
     }
 
     @PostMapping("/insert")
-    public String submitPost(@Validated @ModelAttribute ItemInsertDTO itemInsertDTO, BindingResult bindingResult, Model model) {
+    public String submitPost(@Validated @ModelAttribute ItemInsertDTO itemInsertDTO, @AuthenticationPrincipal AuthDTO authDTO,BindingResult bindingResult, Model model) {
+        if(authDTO == null) {
+            return "redirect:/member/login";
+        }
+
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             boolean missingValue = false;
@@ -63,6 +66,18 @@ public class ItemController {
             model.addAttribute("errorMessage", "게시글 등록 중 오류가 발생했습니다.");
             return "item/insert";
         }
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") long id, Model model, @AuthenticationPrincipal AuthDTO authDTO) throws SQLException {
+        if (authDTO == null) {
+            return "redirect:/member/login";
+        }
+
+        ItemDetailDTO itemDetail = itemService.getItemDetailById(id);
+        model.addAttribute("itemDetail", itemDetail);
+        model.addAttribute("categories", itemService.getCategories());
+        return "item/update";
     }
 
     @GetMapping("/detail/{id}")
