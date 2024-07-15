@@ -211,6 +211,20 @@
     align-items: flex-start;
 }
 .chatSpace {
+    padding-top: 150px;
     overflow-y: auto;
-    height: calc(100vh - 110px);
+    height: calc(100vh - 65px);
+}
+
+.profile-header {
+    position: fixed;
+    top: 75px;
+    z-index: 50;
+    border: 1px solid #ddd;
+    background-color: #fff;
+
+}
+
+.profile .itemName {
+    font-weight: 700;
 }
