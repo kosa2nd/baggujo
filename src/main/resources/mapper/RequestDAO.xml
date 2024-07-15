@@ -76,5 +76,23 @@
                (SELECT im.S_NAME FROM ITEM_IMAGE im WHERE im.ITEM_ID = i.ID AND ROWNUM = 1) as itemImage
         FROM ITEM i
         WHERE i.MEMBER_ID = #{memberId}
+        AND
+        STATUS = 'WAITING'
     </select>
+
+    <!--상대가 교환을 수락시, 해당 물품들과 관련된 다른 요청들은 자동으로 취소됨 -->
+    <update id="cancelOther">
+        update request
+        set status = 'CANCELED'
+        where
+        (
+            request_item_id = (select request_item_id from request where id = #{requestId})
+            or request_item_id = (select response_item_id from request where id = #{requestId})
+            or response_item_id = (select request_item_id from request where id = #{requestId})
+            or response_item_id = (select response_item_id from request where id = #{requestId})
+        )
+        and status = 'WAITING'
+        and id != #{requestId}
+    </update>
+
 </mapper>

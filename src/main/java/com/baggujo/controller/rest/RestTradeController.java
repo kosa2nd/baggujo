@@ -1,12 +1,11 @@
 package com.baggujo.controller.rest;
 
-import com.baggujo.dto.AuthDTO;
-import com.baggujo.dto.RequestDTO;
-import com.baggujo.dto.RequestInsertDTO;
-import com.baggujo.dto.TradeDetailDTO;
+import com.baggujo.dto.*;
+import com.baggujo.dto.enums.TradeDecision;
 import com.baggujo.service.RequestService;
 import com.baggujo.service.TradeService;
 import org.apache.coyote.BadRequestException;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -176,6 +175,20 @@ public class RestTradeController {
         } catch (Exception e) {
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/decision")
+    public ResponseEntity<TradeDecisionResultDTO> decision(@RequestParam long memberId, @RequestParam long tradeId, @RequestParam TradeDecision tradeDecision, @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null || authDTO.getId() != memberId) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            TradeDecisionResultDTO tradeDecisionResultDTO = tradeService.sendDecision(authDTO.getId(), tradeId, tradeDecision);
+            return new ResponseEntity<>(tradeDecisionResultDTO, HttpStatus.OK);
+        } catch (InternalException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

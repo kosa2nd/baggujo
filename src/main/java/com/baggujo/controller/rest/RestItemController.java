@@ -1,6 +1,11 @@
 package com.baggujo.controller.rest;
 
 import com.baggujo.dto.*;
+import com.baggujo.dao.ItemDAO;
+import com.baggujo.dto.AuthDTO;
+import com.baggujo.dto.FavoriteItemPreviewDTO;
+import com.baggujo.dto.ItemPreviewDTO;
+import com.baggujo.dto.RequestUserItemDTO;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.service.ItemService;
 import com.baggujo.service.RequestService;
@@ -13,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -117,6 +123,20 @@ public class RestItemController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @PostMapping("/deletemyitems")
+    public ResponseEntity<String> deleteItem(@RequestParam long memberId, @RequestParam long itemId,
+                                             @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            itemService.deleteItem(memberId, itemId);
+            return new ResponseEntity<String>("succeess", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/update/{id}")

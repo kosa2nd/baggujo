@@ -24,7 +24,7 @@
         where r.id = #{requestId}
     </insert>
 
-    <select id="getTradeDetailByTradeId" resultType="com.baggujo.dto.TradeInfoDTO">
+    <select id="getTradeInfoByTradeId" resultType="com.baggujo.dto.TradeInfoDTO">
         select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle
         from trade t, member m1, member m2, item i1, item i2
         where
@@ -135,4 +135,29 @@
         order by t.start_date desc
         fetch first #{offset} rows only
     </select>
+
+    <update id="updateRequestDecision">
+        update trade
+        set request_decision = #{tradeDecision}
+        where id = #{tradeId}
+    </update>
+
+    <update id="updateResponseDecision">
+        update trade
+        set response_decision = #{tradeDecision}
+        where id = #{tradeId}
+    </update>
+
+    <select id="getTradeDecisionResultByTradeId" resultType="com.baggujo.dto.TradeDecisionResultDTO">
+        select request_decision, response_decision, status
+        from trade
+        where id = #{tradeId}
+    </select>
+
+    <update id="updateTradeStatusByTradeId">
+        update trade
+        set status = #{tradeStatus}
+        where id = #{tradeId}
+    </update>
+
 </mapper>

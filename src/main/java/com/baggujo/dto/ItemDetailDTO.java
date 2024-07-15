@@ -29,6 +29,7 @@ public class ItemDetailDTO {
     private long memberId;
     private String nickname;
     private List<String> itemImages;
+    private int enable;
 
     public String getFormattedUploadDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

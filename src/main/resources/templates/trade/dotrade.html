@@ -39,14 +39,6 @@
             </div>
         </a>
 
-<!--        &lt;!&ndash; 홈버튼 &ndash;&gt;-->
-<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--            <span class="navbar-toggler-icon">-->
-<!--                <img src="C:\Users\vnfam\Downloads\사진1.jpg">-->
-<!--            </span>-->
-<!--        </button>-->
-
-
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -99,6 +91,11 @@
             <button class="btn btn-secondary" id="sendImgBtn">이미지</button>
         </div>
     </div>
+    <div id="sendDecisionBox">
+        <button id="acceptButton">거래 완료 신청</button>
+        <button id="rejectButton">거래 취소 신청</button>
+        <button id="noneButton">요청 취소</button>
+    </div>
 </div>
 </body>
 
@@ -125,7 +122,6 @@
                 let chatType = content.chatType;
 
                 let str = '';
-                alert('chat' + content.chatType)
                 if (chatType == 'TEXT') {
                     str = '<span class="rounded-pill bg-light p-2 ">' + content.text + '</span>';
                 } else if (chatType == 'IMAGE') {
@@ -147,7 +143,6 @@
         });
 
         $('#sendImgBtn').on('click', function() {
-            alert("이미지 클릭됨");
             let input = document.getElementById("inputFile");
             input.click();
         });
@@ -174,7 +169,59 @@
                         alert("실패");
                     }
                 });
+        };
+
+        sendDecision = function(decision, resultText) {
+            alert([[${#authentication.principal?.id}]]);
+            $.ajax({
+                    url: "/item/decision",
+                    method: "POST",
+                    data: {
+                        "memberId" : [[${#authentication.principal?.id}]],
+                        "tradeId" : [[${tradeInfoDTO.id}]],
+                        "tradeDecision" : decision
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({
+                            tradeId : [[${tradeInfoDTO.id}]],
+                            memberId : [[${#authentication.principal?.id}]],
+                            text : resultText,
+                            chatType : 'TEXT'
+                        }));
+
+                        if (data.tradeStatus != 'TRADING') {
+                            let resText = data.tradeStatus == 'SUCCEED' ? '거래가 완료되었습니다' : '거래가 취소되었습니다';
+                            stomp.send('/pub/chat/message', {}, JSON.stringify({
+                                tradeId : [[${tradeInfoDTO.id}]],
+                                memberId : [[${#authentication.principal?.id}]],
+                                text : resText,
+                                chatType : 'TEXT'
+                            }));
+
+                            alert(resText);
+                        }
+
+                        return data;
+                    },
+                    error: function () {
+                        alert("실패");
+                    }
+            });
+
         }
+
+        $('#acceptButton').on('click', function() {
+            sendDecision('ACCEPT', '거래 완료를 요청했어요');
+        });
+
+        $('#rejectButton').on('click', function() {
+            sendDecision('REJECT', '거래 취소를 요청했어요');
+        });
+
+        $('#noneButton').on('click', function() {
+            sendDecision('NONE', '요청을 취소했어요');
+        });
 
     });
 </script>

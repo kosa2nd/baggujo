@@ -3,6 +3,7 @@ package com.baggujo.controller.rest;
 import com.baggujo.dto.ChatInsertDTO;
 import com.baggujo.dto.UploadedChatImageDTO;
 import com.baggujo.service.ChatService;
+import com.baggujo.service.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ public class RestChatController {
     private SimpMessagingTemplate template; // 특정 Broker로 메시지 전달
     @Autowired
     private ChatService chatService;
+    @Autowired
+    private TradeService tradeService;
 
     // Client가 send할 수 있는 경로
     // stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMappiong 경로가 병합됨
