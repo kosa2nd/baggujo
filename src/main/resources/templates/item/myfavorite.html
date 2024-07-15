@@ -33,9 +33,11 @@
     <div class="row" id="cards">
     </div>
 </div>
-<div id="more">
-    <input type="text" id="lastFavoriteNo" value="0" hidden>
-    <a href="javascript:getItems()">더보기</a>
+<div id="more" class="d-flex justify-content-center">
+    <button type="button" id="load-more" class="btn btn-primary m-3">
+        <input type="text" id="lastFavoriteNo" value="0" hidden>
+        <a href="javascript:getItems()">더보기</a>
+    </button>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
