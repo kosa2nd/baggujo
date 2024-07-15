@@ -78,6 +78,7 @@
         WHERE i.MEMBER_ID = #{memberId}
         AND
         STATUS = 'WAITING'
+        AND i.enable = 1
     </select>
 
     <!--상대가 교환을 수락시, 해당 물품들과 관련된 다른 요청들은 자동으로 취소됨 -->

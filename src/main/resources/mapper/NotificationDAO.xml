@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.NotificationDAO">
+    <insert id="insertNotification">
+        insert into notification (
+            member_id, text, link, is_chat
+        <if test="isChat == true">
+            , trade_id
+        </if>
+        )
+        values (
+            #{memberId}, #{text}, #{link}, #{isChat}
+        <if test="isChat == true">
+            , #{tradeId}
+        </if>
+        )
+    </insert>
+</mapper>

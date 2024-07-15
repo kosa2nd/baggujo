@@ -240,8 +240,8 @@
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    requestItemId: itemId,
-                    responseItemId: selectedItemId, // 물품목록에서 선택한 물품 id
+                    requestItemId: selectedItemId,
+                    responseItemId: itemId, // 물품목록에서 선택한 물품 id
                     requestStatus: itemStatus
                 }),
                 success: function(response) {

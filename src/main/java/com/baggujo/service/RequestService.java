@@ -1,5 +1,6 @@
 package com.baggujo.service;
 
+import com.baggujo.dao.NotificationDAO;
 import com.baggujo.dao.RequestDAO;
 import com.baggujo.dto.RequestDTO;
 import com.baggujo.dto.RequestUserItemDTO;
@@ -15,7 +16,9 @@ import java.util.List;
 public class RequestService {
 
     @Autowired
-    RequestDAO requestDAO;
+    private RequestDAO requestDAO;
+    @Autowired
+    private NotificationDAO notificationDAO;
 
     // 유저 물품 리스트 조회
     public List<RequestUserItemDTO> getRequestUserItems(long memberId) {
