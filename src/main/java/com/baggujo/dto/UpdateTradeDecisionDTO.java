@@ -1,9 +1,11 @@
 package com.baggujo.dto;
 
 import com.baggujo.dto.enums.TradeDecision;
+import lombok.Data;
 
-public class sendTradeDecisionDTO {
+@Data
+public class UpdateTradeDecisionDTO {
     private long memberId;
     private long tradeId;
-    private TradeDecision TradeDecision;
+    private TradeDecision tradeDecision;
 }

@@ -332,7 +332,7 @@
     });
 
     $(document).on('click', '#request-accept', function() {
-        if (confirm("요청을 수락하시겠습니까?")){
+        if (confirm("요청을 수락하시겠습니까? 해당 물품과 관련된 다른 요청은 취소됩니다.")){
             let requestId = $(this).data('request-id');
             $.ajax({
                 url: `/item/accept?requestId=${requestId}`,

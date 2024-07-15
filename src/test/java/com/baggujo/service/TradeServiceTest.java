@@ -1,5 +1,7 @@
 package com.baggujo.service;
 
+import com.baggujo.dto.TradeDecisionResultDTO;
+import com.baggujo.dto.enums.TradeDecision;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,5 +22,16 @@ public class TradeServiceTest {
     @Test
     public void rejectRequestTest() throws SQLException {
         tradeService.rejectRequest(41);
+    }
+
+    @Test
+    public void sendTradeDecisionTest() throws Exception {
+        long myId = 1L;
+        long yourId = 2L;
+        long tradeId = 41L;
+
+        TradeDecisionResultDTO dto1 = tradeService.sendDecision(yourId, tradeId, TradeDecision.REJECT);
+        TradeDecisionResultDTO dto2 = tradeService.sendDecision(myId, tradeId, TradeDecision.REJECT);
+        System.out.println(dto1);
     }
 }
