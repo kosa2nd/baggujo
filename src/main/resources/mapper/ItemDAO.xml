@@ -20,6 +20,7 @@
         <result property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="description" column="description"/>
+        <result property="enable" column="enable"/>
         <result property="uploadDate" column="uploadDate"/>
         <result property="updateDate" column="updateDate"/>
         <result property="itemStatus" column="itemStatus"/>
@@ -148,4 +149,12 @@
         fetch first #{offset} rows only
     </select>
 
+    <!-- 내가 작성한 글 삭제 -->
+    <update id="deleteItem">
+        update item
+        set enable = 0
+        where member_id = #{memberId}
+            and id = #{itemId}
+            and status = 'WAITING'
+    </update>
 </mapper>

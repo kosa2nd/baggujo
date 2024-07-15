@@ -6,6 +6,7 @@ import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ItemStatus;
 import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.util.ThumbnailatorUtils;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -108,5 +109,18 @@ public class ItemService {
 
     public List<ItemPreviewDTO> getMyItems(long memberId, long lastItemId, ItemStatus itemStatus, int offset) throws SQLException{
         return itemDAO.getMyItems(memberId, lastItemId, itemStatus, offset);
+    }
+
+    public void deleteItem(long memberId, long itemId) throws InternalException {
+        try {
+            int result = itemDAO.deleteItem(memberId, itemId);
+            System.out.println(result + "----------------");
+
+            if (result != 1) {
+                throw new InternalException("삭제할 수 없습니다.");
+            }
+        } catch (SQLException e) {
+            throw new InternalException("SQL에러." + e);
+        }
     }
 }

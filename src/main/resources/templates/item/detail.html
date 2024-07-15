@@ -78,7 +78,7 @@
                         </button>
                         <div th:if="${#authentication.principal != 'anonymousUser'}" class="d-flex align-items-center">
                             <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-secondary mr-2">수정</button>
-                            <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-danger">삭제</button>
+                            <button th:if="${#authentication.principal.id == itemDetail.memberId}" type="button" class="btn btn-danger" id="delete-btn">삭제</button>
                         </div>
                     </div>
                 </th:block>
@@ -250,6 +250,24 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('교환 신청 실패:', error);
+                }
+            });
+        });
+
+        //삭제 버튼 클릭하여 글 삭제하기
+        $('#delete-btn').click(function() {
+            let itemId = [[${itemDetail.id}]];
+            let memberId = [[${itemDetail.memberId}]];
+            alert("memberId: " + memberId + ", itemId: " + itemId);
+            $.ajax({
+                url: '/item/deletemyitems',
+                method: 'POST',
+                data: {memberId: memberId, itemId: itemId},
+                success: function(response) {
+                    history.back();
+                },
+                error: function(xhr, status, error) {
+                    console.error('삭제 요청 실패:', error);
                 }
             });
         });

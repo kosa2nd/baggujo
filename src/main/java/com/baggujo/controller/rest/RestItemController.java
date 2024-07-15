@@ -1,5 +1,6 @@
 package com.baggujo.controller.rest;
 
+import com.baggujo.dao.ItemDAO;
 import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.FavoriteItemPreviewDTO;
 import com.baggujo.dto.ItemPreviewDTO;
@@ -121,5 +122,17 @@ public class RestItemController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-
+    @PostMapping("/deletemyitems")
+    public ResponseEntity<String> deleteItem(@RequestParam long memberId, @RequestParam long itemId,
+                                             @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            itemService.deleteItem(memberId, itemId);
+            return new ResponseEntity<String>("succeess", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
