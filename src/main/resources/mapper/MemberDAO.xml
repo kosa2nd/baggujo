@@ -15,4 +15,10 @@
         where email = #{email}
     </select>
 
+    <select id="getMemberIdByItemId" resultType="long">
+        select m.id
+        from member m, item i
+        where m.id = i.member_id
+        and i.id = #{itemId}
+    </select>
 </mapper>

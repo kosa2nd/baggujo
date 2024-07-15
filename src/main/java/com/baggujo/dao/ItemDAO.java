@@ -23,4 +23,5 @@ public interface ItemDAO {
     List<ItemPreviewDTO> getMyItems(long memberId, long lastItemId, ItemStatus itemStatus, int offset) throws SQLException;
     int deleteItem(long memberId, long itemId) throws SQLException;
     int updateItem(@Param("id") long id, @Param("item") ItemInsertDTO itemInsertDTO) throws SQLException;
+    ItemNotiDTO getItemNoti(long itemId);
 }
