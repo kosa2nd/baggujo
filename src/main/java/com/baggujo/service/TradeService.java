@@ -1,8 +1,6 @@
 package com.baggujo.service;
 
-import com.baggujo.dao.ItemDAO;
-import com.baggujo.dao.RequestDAO;
-import com.baggujo.dao.TradeDAO;
+import com.baggujo.dao.*;
 import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ItemStatus;
 import com.baggujo.dto.enums.RequestStatus;
@@ -28,13 +26,23 @@ public class TradeService {
     ItemDAO itemDAO;
     @Autowired
     TradeDAO tradeDAO;
+    @Autowired
+    NotificationDAO notificationDAO;
+    @Autowired
+    MemberDAO memberDAO;
 
     // 요청 생성
+    @Transactional
     public void insertRequest(RequestInsertDTO requestInsertDTO) throws SQLException, BadRequestException {
         if (itemDAO.getItemStatusById(requestInsertDTO.getRequestItemId()) != ItemStatus.WAITING
             || itemDAO.getItemStatusById(requestInsertDTO.getResponseItemId()) != ItemStatus.WAITING) {
             throw new BadRequestException("거래를 요청할 수 없습니다");
         }
+
+        //상대방에게 알림 생성
+        ItemNotiDTO itemNotiDTO = itemDAO.getItemNoti(requestInsertDTO.getResponseItemId());
+        notificationDAO.insertNotification(new NotificationInsertDTO(itemNotiDTO.getMemberId(),
+                "'" + itemNotiDTO.getTitle() + "/'에 대한 새로운 거래 요청이 있어요","/trade/myTrade"));
 
         requestDAO.insertRequest(requestInsertDTO);
     }

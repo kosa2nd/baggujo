@@ -170,4 +170,11 @@
         WHERE id = #{id}
         ]]>
     </update>
+
+    <select id="getItemNoti" resultType="com.baggujo.dto.ItemNotiDTO">
+        select i.title, m.id, m.nickname
+        from item i, member m
+        where i.member_id = m.id
+        and i.id = #{itemId}
+    </select>
 </mapper>
