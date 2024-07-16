@@ -87,6 +87,67 @@
         </div>
     </div>
 
+    <!-- 모달 -->
+<!--    <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="modal-header">-->
+<!--                    <h5 class="modal-title" id="exchangeModalLabel">배송조회</h5>-->
+<!--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                        <span aria-hidden="true">&times;</span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+<!--                    <div class="container">-->
+<!--                        <select id="delivery-code&#45;&#45;select" class="my-image-selectpicker selectpicker" data-live-search="true">-->
+<!--                            <option value="" selected disabled>택배사 선택</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
+<!--                    <button id="request-insert-btn" type="button" class="btn btn-success">택배조회</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- 모달 -->
+    <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deliveryModalLabel">배송조회</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="https://info.sweettracker.co.kr/tracking/5" method="post">
+                        <div class="form-group" hidden="true">
+                            <label for="t_key">API key</label>
+                            <input type="text" class="form-control" id="t_key" name="t_key" value="rF2oGHDAwE5BEgjdXnO81Q" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>택배사: </label>
+                            <select id="delivery-code-select" class="deliveryCompany-selectpicker selectpicker" data-live-search="true" name="t_code">
+                                <option value="" selected disabled>택배사 선택</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="t_invoice">운송장 번호</label>
+                            <input type="text" class="form-control" name="t_invoice" id="t_invoice" placeholder="운송장 번호">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="delivery-select-btn" type="submit" class="btn btn-success">택배조회</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 메세지 전송 공간 -->
     <div class="msgArea w-90 fixed-bottom bg-white px-1">
         <div class="btn-group dropup d-flex align-items-center">
@@ -100,7 +161,7 @@
                            onchange="fileGo()"/>
                     <input type="submit" id="fileSendBtn">
                 </form>
-                <button class="dropdown-item py-2" id="waybillButton">배송 조회</button>
+                <button class="dropdown-item py-2" id="waybillButton" data-toggle="modal" data-target="#deliveryModal">배송 조회</button>
                 <button class="dropdown-item py-2" id="sendImgBtn">이미지 전송</button>
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item py-2" id="acceptButton">거래 완료 신청</button>
@@ -276,6 +337,41 @@
 
         $('#noneButton').on('click', function () {
             sendDecision('NONE', '요청을 취소했어요');
+        });
+
+        // 모달이 열릴 때마다 택배사 목록을 동적으로 불러오기
+        $('#deliveryModal').on('show.bs.modal', function () {
+            let myKey = 'rF2oGHDAwE5BEgjdXnO81Q';
+            const selectPicker = $('.deliveryCompany-selectpicker');
+            $.ajax({
+                url: 'http://info.sweettracker.co.kr/api/v1/companylist?t_key=' + myKey,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    let CompanyArray = data.Company;
+                    selectPicker.empty();
+                    selectPicker.append('<option value="" selected disabled>택배사 선택</option>');
+                        data.Company.forEach(function(delivery) {
+                        const option = `<option value="${delivery.Code}">${delivery.Name}</option>`;
+                        selectPicker.append(option);
+                });
+                },
+                error: function(xhr, code, error) {
+                    console.error('택배사 목록 불러오기 실패:', error);
+                }
+            });
+        });
+
+        //택배사 조회 버튼 클릭시 운송장 조회 화면으로 이동
+        $('#delivery-select-btn').click(function() {
+            let t_code = $('#delivery-code-select option:selected').attr('value');
+            let t_invoice = $('#t_invoice').val(); // .attr('value') 대신 .val() 사용
+
+            let myKey = 'rF2oGHDAwE5BEgjdXnO81Q';
+            let baseUrl = 'http://info.sweettracker.co.kr/tracking/5';
+            let url = `${baseUrl}?t_key=${myKey}&t_code=${t_code}&t_invoice=${t_invoice}`;
+
+            window.open(url)
         });
     });
 </script>
