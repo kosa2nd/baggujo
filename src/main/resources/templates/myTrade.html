@@ -33,24 +33,66 @@
         <div class="pt-2">
             <select id="request-filter" class="form-control">
                 <option value="">모든 요청</option>
-                <option value="true">받은 요청</option>
-                <option value="false">보낸 요청</option>
+                <option value="false">받은 요청</option>
+                <option value="true">보낸 요청</option>
             </select>
             <select id="trade-filter" class="form-control">
                 <option value="">모든 거래</option>
-                <option value="true">받은 거래</option>
-                <option value="false">보낸 거래</option>
+                <option value="false">받은 거래</option>
+                <option value="true">보낸 거래</option>
             </select>
             <select id="succeed-filter" class="form-control">
                 <option value="">모든 거래</option>
-                <option value="true">받은 거래</option>
-                <option value="false">보낸 거래</option>
+                <option value="false">받은 거래</option>
+                <option value="true">보낸 거래</option>
             </select>
         </div>
         <div class="tab-content pt-2" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-waiting" role="tabpanel" aria-labelledby="nav-waiting-tab"></div>
-            <div class="tab-pane fade" id="nav-trading" role="tabpanel" aria-labelledby="nav-trading-tab"></div>
-            <div class="tab-pane fade" id="nav-succeed" role="tabpanel" aria-labelledby="nav-succeed-tab"></div>
+            <div class="tab-pane fade show active" id="nav-waiting" role="tabpanel" aria-labelledby="nav-waiting-tab">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>요청 물품</th>
+                        <th>요청자</th>
+                        <th>응답 물품</th>
+                        <th>응답자</th>
+                        <th>요청 날짜</th>
+                        <th>작업</th>
+                    </tr>
+                    </thead>
+                    <tbody id="waiting-content"></tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="nav-trading" role="tabpanel" aria-labelledby="nav-trading-tab">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>요청 물품</th>
+                        <th>요청자</th>
+                        <th>응답 물품</th>
+                        <th>응답자</th>
+                        <th>거래 시작 날짜</th>
+                        <th>작업</th>
+                    </tr>
+                    </thead>
+                    <tbody id="trading-content"></tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="nav-succeed" role="tabpanel" aria-labelledby="nav-succeed-tab">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>요청 물품</th>
+                        <th>요청자</th>
+                        <th>응답 물품</th>
+                        <th>응답자</th>
+                        <th>거래 시작 날짜</th>
+                        <th>거래 완료 날짜</th>
+                    </tr>
+                    </thead>
+                    <tbody id="succeed-content"></tbody>
+                </table>
+            </div>
         </div>
         <div class="d-flex justify-content-center">
             <button type="button" id="load-more" class="btn btn-primary m-3">더보기</button>
@@ -72,7 +114,7 @@
         let requestParam = requestFilter === "" ? "" : `&request=${requestFilter}`;
 
         if (!append) {
-            $('#nav-waiting').html(''); // 기존 데이터를 지움
+            $('#waiting-content').html(''); // 기존 데이터를 지움
         }
 
         $.ajax({
@@ -93,31 +135,33 @@
                 let waitingContent = '';
 
                 response.requestList.forEach(function(request) {
-                    waitingContent += `<div class="w-100 d-flex mb-5 justify-content-around" id="'request-' + request.id'">
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.requestItemId}'">
+                    waitingContent += `<tr id="request-${request.id}">
+                        <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.requestItemId}'">
                             <img src="/images/${request.requestThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Request Thumbnail">
-                            <h5 class="mr-2">${request.requestItemTitle}</h5>
-                            <p class="mr-2">요청자: ${request.requestNickname}</p>
-                        </div>
-
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.responseItemId}'">
+                            <div class="pl-2 align-content-center">
+                                <h5 class="mr-2">${request.requestItemTitle}</h5>
+                            </div>
+                        </td>
+                        <td>${request.requestNickname}</td>
+                        <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.responseItemId}'">
                             <img src="/images/${request.responseThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Response Thumbnail">
-                            <h5 class="mr-2">${request.responseItemTitle}</h5>
-                            <p class="mr-2">응답자: ${request.responseNickname}</p>
-                        </div>
-
-                        <p>요청 날짜 : ${request.requestDate}</p>
-                         ${memberId === request.requestMemberId ? '<button id="request-cancel" type="button" class="btn btn-outline-danger" data-request-id="' + request.id + '">요청취소</button>'
+                            <div class="pl-2">
+                                <h5 class="mr-2">${request.responseItemTitle}</h5>
+                            </div>
+                        </td>
+                        <td>${request.responseNickname}</td>
+                        <td>${request.requestDate}</td>
+                        <td>${memberId === request.requestMemberId ? '<button id="request-cancel" type="button" class="btn btn-outline-danger" data-request-id="' + request.id + '">요청취소</button>'
                         : '<div class="d-flex align-content-center">' +
                         '<button id="request-reject" type="button" class="btn btn-outline-danger mr-2" data-request-id="' + request.id + '">요청거절</button>' +
                         '<button id="request-accept" type="button" class="btn btn-outline-primary" data-request-id="' + request.id + '">요청수락</button>' +
-                        '</div>'}
-                    </div>`;
+                        '</div>'}</td>
+                    </tr>`;
                 });
                 if (append) {
-                    $('#nav-waiting').append(waitingContent);
+                    $('#waiting-content').append(waitingContent);
                 } else {
-                    $('#nav-waiting').html(waitingContent);
+                    $('#waiting-content').html(waitingContent);
                 }
 
                 lastRequestId = response.lastItemId;
@@ -134,7 +178,7 @@
         let requestParam = tradeFilter === "" ? "" : `&request=${tradeFilter}`;
 
         if (!append) {
-            $('#nav-trading').html(''); // 기존 데이터를 지움
+            $('#trading-content').html(''); // 기존 데이터를 지움
         }
 
         $.ajax({
@@ -155,32 +199,31 @@
                 response.tradeList.forEach(function(trade) {
                     console.log(trade);
 
-                    tradingContent += `<div class="w-100 d-flex mb-5 justify-content-around">
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
+                    tradingContent += `<tr>
+                        <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
                             <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
-                            <h5 class="mr-2">${trade.requestTitle}</h5>
-                            <p class="mr-2">응답자: ${trade.requestNickname}</p>
-                        </div>
-
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
+                            <div class="pl-2 align-content-center">
+                                <h5 class="mr-2">${trade.requestTitle}</h5>
+                            </div>
+                        </td>
+                        <td>${trade.requestNickname}</td>
+                        <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
                             <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
-                            <h5 class="mr-2">${trade.responseTitle}</h5>
-                            <p class="mr-2">요청자: ${trade.responseNickname}</p>
-                        </div>
-
-                        <div>
-                            <p>거래 시작 날짜 : ${trade.tradeStartDate}</p>
-                        </div>
-
-                         <div>
+                            <div class="pl-2 align-content-center">
+                                <h5 class="mr-2">${trade.responseTitle}</h5>
+                            </div>
+                        </td>
+                        <td>${trade.responseNickname}</td>
+                        <td>${trade.tradeStartDate}</td>
+                        <td>
                             <button type="button" class="btn btn-primary" onclick="location.href='/trade/${trade.id}'">채팅하기</button>
-                         </div>
-                    </div>`;
+                        </td>
+                    </tr>`;
                 });
                 if (append) {
-                    $('#nav-trading').append(tradingContent);
+                    $('#trading-content').append(tradingContent);
                 } else {
-                    $('#nav-trading').html(tradingContent);
+                    $('#trading-content').html(tradingContent);
                 }
 
                 lastRequestId = response.lastItemId;
@@ -197,7 +240,7 @@
         let requestParam = succeedFilter === "" ? "" : `&request=${succeedFilter}`;
 
         if (!append) {
-            $('#nav-succeed').html(''); // 기존 데이터를 지움
+            $('#succeed-content').html(''); // 기존 데이터를 지움
         }
 
         $.ajax({
@@ -218,28 +261,29 @@
                 response.tradeSucceedList.forEach(function(trade) {
                     console.log(trade);
 
-                    succeedContent += `<div class="w-100 d-flex mb-5 justify-content-around">
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
+                    succeedContent += `<tr>
+                        <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
                             <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
-                            <h5 class="mr-2">${trade.requestTitle}</h5>
-                            <p class="mr-2">응답자: ${trade.requestNickname}</p>
-                        </div>
-
-                        <div class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
+                            <div class="pl-2 align-content-center">
+                                <h5 class="mr-2">${trade.requestTitle}</h5>
+                            </div>
+                        </td>
+                        <td>${trade.requestNickname}</td>
+                        <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
                             <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
-                            <h5 class="mr-2">${trade.responseTitle}</h5>
-                            <p class="mr-2">요청자: ${trade.responseNickname}</p>
-                        </div>
-
-                        <div>
-                            <p>거래 종료 날짜 : ${trade.tradeEndDate}</p>
-                        </div>
-                    </div>`;
+                            <div class="pl-2 align-content-center">
+                                <h5 class="mr-2">${trade.responseTitle}</h5>
+                            </div>
+                        </td>
+                        <td>${trade.responseNickname}</td>
+                        <td>${trade.tradeStartDate}</td>
+                        <td>${trade.tradeEndDate}</td>
+                    </tr>`;
                 });
                 if (append) {
-                    $('#nav-succeed').append(succeedContent);
+                    $('#succeed-content').append(succeedContent);
                 } else {
-                    $('#nav-succeed').html(succeedContent);
+                    $('#succeed-content').html(succeedContent);
                 }
 
                 lastRequestId = response.lastItemId;
@@ -254,7 +298,7 @@
     function setRequestFilter() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('request') === 'sent') {
-            $('#request-filter').val('false');
+            $('#request-filter').val('true');
         }
     }
 

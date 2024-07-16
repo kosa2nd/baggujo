@@ -242,3 +242,14 @@
     margin: 0;
     font-weight: 700;
 }
+
+/* 헤더 */
+.nav-nickname {
+    font-weight: 700;
+}
+
+/* 거래내역 테이블 */
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+}
