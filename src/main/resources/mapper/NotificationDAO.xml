@@ -64,4 +64,15 @@
         and status != 'DELETED'
     </update>
 
+    <select id="getNotifications" resultType="com.baggujo.dto.NotificationDetailDTO">
+        select id, notified_date, status, text, link, is_chat, tradeId
+        from notification
+        where member_id = #{memberId}
+        <if test="lastItemId != 0">
+            <![CDATA[and id < #{lastNotificationId}]]>
+        </if>
+            and status != 'DELETED'
+        order by notified_date desc
+        fetch first #{offset} rows only
+    </select>
 </mapper>
