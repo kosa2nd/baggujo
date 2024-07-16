@@ -33,7 +33,7 @@
                     <div class="flex-column justify-content-between align-items-center pl-2">
                         <p class="itemName pb-2" th:text="${tradeInfoDTO.responseTitle}">물품이름</p>
                         <div class="d-flex justify-content-between">
-                            <p class="userNickname mb-0" th:text="${tradeInfoDTO.responseNickname}">유저닉네임</p>
+                            <p class="userNickname mb-0" style="font-size: 14px;" th:text="${tradeInfoDTO.responseNickname}">유저닉네임</p>
                             <p class="itemStatus mb-0" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                     <div class="flex-column justify-content-between align-items-center pl-2">
                         <p class="itemName pb-2" th:text="${tradeInfoDTO.requestTitle}">물품이름</p>
                         <div class="d-flex justify-content-between">
-                            <p class="userNickname mb-0" th:text="${tradeInfoDTO.requestNickname}">유저닉네임</p>
+                            <p class="userNickname mb-0" style="font-size: 14px;" th:text="${tradeInfoDTO.requestNickname}">유저닉네임</p>
                             <p class="itemStatus mb-0" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
                         </div>
                     </div>
@@ -66,51 +66,26 @@
         <div th:each="chat: ${chats}"
              th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message-wrapper sent' : 'chat-message-wrapper received'">
             <div class="d-flex align-items-end">
-                <p th:if="${chat.memberId == #authentication.principal.id}" class="chat-time sent"
+                <p th:if="${chat.chatType.name().equals('TEXT') && chat.memberId == #authentication.principal.id}" class="chat-time sent"
                    th:text="${chat.getFormattedSendDate()}">21:49</p>
                 <p th:if="${chat.chatType.name().equals('TEXT')}" th:text="${chat.text}"
                    th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent text' : 'chat-message received text'"></p>
-                <p th:if="${chat.memberId != #authentication.principal.id}" class="chat-time received"
+                <p th:if="${chat.chatType.name().equals('TEXT') && chat.memberId != #authentication.principal.id}" class="chat-time received"
                    th:text="${chat.getFormattedSendDate()}">21:49</p>
             </div>
             <p th:if="${chat.chatType.name().equals('TRADE_END')}" th:text="${chat.text}"
                th:classappend="chat-message-end"></p>
             <div class="d-flex align-items-end">
-                <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId == #authentication.principal.id}"
-                   class="chat-time sent" th:text="${chat.getFormattedSendDate()}">21:49</p>
+                <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId == #authentication.principal.id}" class="chat-time sent"
+                   th:text="${chat.getFormattedSendDate()}"></p>
                 <img th:if="${chat.chatType.name().equals('IMAGE')}" th:src="'/chatImages/' + ${chat.imgSName}"
                      alt="chat image"
                      th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent image' : 'chat-message received image'"/>
-                <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId != #authentication.principal.id}"
-                   class="chat-time received" th:text="${chat.getFormattedSendDate()}">21:49</p>
+                <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId != #authentication.principal.id}" class="chat-time received"
+                   th:text="${chat.getFormattedSendDate()}"></p>
             </div>
         </div>
     </div>
-
-    <!-- 모달 -->
-<!--    <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">-->
-<!--        <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h5 class="modal-title" id="exchangeModalLabel">배송조회</h5>-->
-<!--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                        <span aria-hidden="true">&times;</span>-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <div class="container">-->
-<!--                        <select id="delivery-code&#45;&#45;select" class="my-image-selectpicker selectpicker" data-live-search="true">-->
-<!--                            <option value="" selected disabled>택배사 선택</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
-<!--                    <button id="request-insert-btn" type="button" class="btn btn-success">택배조회</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 
     <!-- 모달 -->
     <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">
@@ -290,8 +265,14 @@
                     str += '<p class="chat-message text ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + content.text + '</p></div>';
                 } else if (chatType == 'IMAGE') {
                     str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '">';
-                    str += '<p class="chat-time ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + time + '</p>';
-                    str += '<img class="chat-message image ' + (content.memberId == memberId ? 'sent' : 'received') + '" src="/chatImages/' + content.imgSName + '" alt="chat image" /></div>';
+                    if (content.memberId == memberId) {
+                        str += '<p class="chat-time sent">' + time + '</p>';
+                        str += '<img class="chat-message sent image" src="/chatImages/' + content.imgSName + '" alt="chat image" />';
+                    } else {
+                        str += '<img class="chat-message received image" src="/chatImages/' + content.imgSName + '" alt="chat image" />';
+                        str += '<p class="chat-time received">' + time + '</p>';
+                    }
+                    str += '</div>';
                 } else if (chatType == 'TRADE_END') {
                     str = '<div class="chat-message-wrapper"><p class="chat-message chat-message-end">' + content.text + '</p></div>';
 
@@ -351,10 +332,10 @@
                     let CompanyArray = data.Company;
                     selectPicker.empty();
                     selectPicker.append('<option value="" selected disabled>택배사 선택</option>');
-                        data.Company.forEach(function(delivery) {
+                    CompanyArray.forEach(function(delivery) {
                         const option = `<option value="${delivery.Code}">${delivery.Name}</option>`;
                         selectPicker.append(option);
-                });
+                    });
                 },
                 error: function(xhr, code, error) {
                     console.error('택배사 목록 불러오기 실패:', error);

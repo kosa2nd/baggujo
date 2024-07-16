@@ -183,11 +183,6 @@
 .chat-message.text {
     background-color: #f8f9fa;
 }
-.chat-message.image {
-    margin-left: 0;
-    margin-right: 0;
-    background-color: transparent;
-}
 .chat-message-end {
     background-color: #f8d7da;
 }
@@ -209,19 +204,23 @@
 }
 .chat-message-wrapper.sent {
     align-items: flex-end;
+    justify-content: flex-end;
 }
 .chat-message-wrapper.received {
     align-items: flex-start;
+    justify-content: flex-start;
 }
 .chat-time {
     font-size: 0.8rem;
     color: #6c757d;
 }
 .chat-time.sent {
+    margin-left: auto;
     margin-right: 8px;
 }
 .chat-time.received {
     margin-left: 8px;
+    margin-right: auto;
 }
 .chatSpace {
     padding-top: 150px;
