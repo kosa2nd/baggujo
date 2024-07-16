@@ -26,4 +26,5 @@ public interface TradeDAO {
     int updateTradeStatusByTradeId(long tradeId, TradeStatus tradeStatus);
 
     long getOtherMemberId(long memberId, long tradeId);
+
 }

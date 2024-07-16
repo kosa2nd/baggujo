@@ -252,8 +252,10 @@
             });
         }
 
-        stomp.connect({}, function () {
-            stomp.subscribe("/sub/chat/room" + tradeId, function (chat) {
+        stomp.connect({}, function() {
+            removeChatNoti([[${#authentication.principal.id}]], [[${tradeInfoDTO.id}]]);
+
+            stomp.subscribe("/sub/chat/room" + tradeId, function(chat) {
                 let content = JSON.parse(chat.body);
                 let chatType = content.chatType;
                 let time = new Date(content.sendDate).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
@@ -286,6 +288,7 @@
                 }
 
                 $("#msgArea").append(str);
+                removeChatNoti([[${#authentication.principal.id}]], [[${tradeInfoDTO.id}]]);
                 scrollToBottom();
             });
 
@@ -319,6 +322,24 @@
         $('#noneButton').on('click', function () {
             sendDecision('NONE', '요청을 취소했어요');
         });
+
+        removeChatNoti = function(memberId, tradeId) {
+            $.ajax({
+                url: "/notification/removeAllChat",
+                method: "POST",
+                data: {
+                    "memberId": memberId,
+                    "tradeId": tradeId,
+                },
+                dataType: 'json',
+                success: function (data) {
+                },
+                error: function () {
+                    alert("실패");
+                }
+            });
+        };
+
 
         // 모달이 열릴 때마다 택배사 목록을 동적으로 불러오기
         $('#deliveryModal').on('show.bs.modal', function () {

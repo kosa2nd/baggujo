@@ -52,7 +52,7 @@
         update notification
         set status = #{notificationStatus}
         where id = #{notificationId}
-        where status != 'DELETED'
+        and status != 'DELETED'
     </update>
 
     <!-- 거래번호에 맞는 알림 상태 변경 (채팅 알림 처리용) -->
@@ -64,4 +64,11 @@
         and status != 'DELETED'
     </update>
 
+    <select id="getNotifications" resultType="com.baggujo.dto.NotificationDetailDTO">
+        select id, notified_date, status, text, link, is_chat, trade_id
+        from notification
+        where member_id = #{memberId}
+        and status != 'DELETED'
+        order by notified_date desc
+    </select>
 </mapper>

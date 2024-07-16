@@ -76,7 +76,9 @@ public class TradeService {
             throw new SQLException("거래 생성에 실패했습니다");
         }
 
-        TradeInfoDTO tradeInfoDTO = tradeDAO.getTradeInfoByTradeId(tradeInsertDTO.getId());
+        System.out.println("=!!!!+!+!+!++!+!+!++!=!+=!+=1+!+!" + tradeInsertDTO.getId());
+
+        TradeInfoDTO tradeInfoDTO = tradeDAO.getTradeInfoByTradeId(tradeInsertDTO.getId()); //지금 null인 상황
         ItemNotiDTO requestNotiDTO = itemDAO.getItemNoti(tradeInfoDTO.getRequestItemId());
         notificationDAO.insertNotification(new NotificationInsertDTO(tradeInfoDTO.getRequestMemberId(),
                         "'" + tradeInfoDTO.getResponseTitle() + "'로 보낸 요청이 수락돼 거래를 할 수 있어요","/trade/" + tradeInfoDTO.getId()));
@@ -107,7 +109,8 @@ public class TradeService {
     }
 
     public TradeInfoDTO getTradeInfoByTradeId(long tradeId) {
-        return tradeDAO.getTradeInfoByTradeId(tradeId);
+        TradeInfoDTO tradeInfoDTO = tradeDAO.getTradeInfoByTradeId(tradeId);
+        return tradeInfoDTO;
     }
 
     // 유저 거래중 리스트 조회
