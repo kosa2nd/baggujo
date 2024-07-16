@@ -24,26 +24,34 @@
     <nav class="profile-header w-100 navbar navbar-expand-lg bg-body-tertiary" style="border: 1px solid #ddd">
         <div class="container-fluid">
             <!-- 프로필 -->
-            <div class="profile d-flex h-auto">
+            <div class="profile d-flex h-auto cursor" onclick="location.href='/item/detail/${tradeInfoDTO.responseItemId}'">
                 <!-- 프로필 내용 -->
-                <div class="labelSort">
-                    <p class="itemName" th:text="${tradeInfoDTO.responseTitle}">물품이름</p>
-                    <div class="d-flex">
-                        <p class="userNickname mr-2" th:text="${tradeInfoDTO.responseNickname}">유저닉네임</p>
-                        <p class="itemStatus" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
+                <div class="labelSort d-flex align-items-center">
+                    <img th:src="@{/images/}+${tradeInfoDTO.responseThumbnail}" style="width: 55px; height: 55px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.05);" alt="Response Thumbnail">
+                    <div class="flex-column justify-content-between align-items-center pl-2">
+                        <p class="itemName pb-2" th:text="${tradeInfoDTO.responseTitle}">물품이름</p>
+                        <div class="d-flex justify-content-between">
+                            <p class="userNickname mb-0" th:text="${tradeInfoDTO.responseNickname}">유저닉네임</p>
+                            <p class="itemStatus mb-0" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
             <!-- 프로필 -->
-            <div class="profile d-flex h-auto">
+            <div class="profile d-flex h-auto cursor" onclick="location.href='/item/detail/${tradeInfoDTO.requestItemId}'">
                 <!-- 프로필 내용 -->
-                <div class="labelSort">
-                    <p class="itemName" th:text="${tradeInfoDTO.requestTitle}">물품이름</p>
-                    <div class="d-flex">
-                        <p class="userNickname mr-2" th:text="${tradeInfoDTO.requestNickname}">유저닉네임</p>
-                        <p class="itemStatus" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
+                <div class="labelSort d-flex align-items-center">
+                    <img th:src="@{/images/}+${tradeInfoDTO.requestThumbnail}" style="width: 55px; height: 55px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.05);" alt="Response Thumbnail">
+                    <div class="flex-column justify-content-between align-items-center pl-2">
+                        <p class="itemName pb-2" th:text="${tradeInfoDTO.requestTitle}">물품이름</p>
+                        <div class="d-flex justify-content-between">
+                            <p class="userNickname mb-0" th:text="${tradeInfoDTO.requestNickname}">유저닉네임</p>
+                            <p class="itemStatus mb-0" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -72,20 +80,17 @@
                     <input type="file" accept="image/jpeg,image/png, image/gif" id='inputFile' name="image" onchange="fileGo()"/>
                     <input type="submit" id="fileSendBtn">
                 </form>
-                <button class="dropdown-item py-1" id="sendImgBtn">이미지 전송</button>
-                <button class="dropdown-item py-1" id="acceptButton">거래 완료 신청</button>
-                <button class="dropdown-item py-1" id="rejectButton">거래 취소 신청</button>
-                <button class="dropdown-item py-1" id="noneButton">요청 취소</button>
+                <button class="dropdown-item py-2" id="waybillButton">배송 조회</button>
+                <button class="dropdown-item py-2" id="sendImgBtn">이미지 전송</button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item py-2" id="acceptButton">거래 완료 신청</button>
+                <button class="dropdown-item py-2" id="rejectButton">거래 취소 신청</button>
+                <button class="dropdown-item py-2" id="noneButton">요청 취소</button>
             </div>
 
             <div class="d-flex w-100 align-items-center mr-2">
                 <input id='msg' type="text" class="form-control mr-3" placeholder="메세지를 입력하세요">
-<!--                <form id="upload-file-form" enctype="multipart/form-data" hidden>-->
-<!--                    <input type="file" accept="image/jpeg,image/png, image/gif" id='inputFile' name="image" onchange="fileGo()"/>-->
-<!--                    <input type="submit" id="fileSendBtn">-->
-<!--                </form>-->
                 <button class="btn btn-secondary" id="sendBtn">전송</button>
-<!--                <button class="btn btn-secondary mr-3" id="sendImgBtn">이미지</button>-->
             </div>
         </div>
     </div>

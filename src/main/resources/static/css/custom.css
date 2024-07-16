@@ -226,5 +226,6 @@
 }
 
 .profile .itemName {
+    margin: 0;
     font-weight: 700;
 }

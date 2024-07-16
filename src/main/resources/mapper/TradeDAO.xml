@@ -25,17 +25,20 @@
     </insert>
 
     <select id="getTradeInfoByTradeId" resultType="com.baggujo.dto.TradeInfoDTO">
-        select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle, t.status
-        from trade t, member m1, member m2, item i1, item i2
+        select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, ii1.s_name requestThumbnail,
+               m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle, ii2.s_name responseThumbnail, t.status
+        from trade t, member m1, member m2, item i1, item i2, item_image ii1, item_image ii2
         where
             t.request_item_id = i1.id
-            and
+          and
             t.response_item_id = i2.id
-            and
+          and
             i1.member_id = m1.id
-            and
+          and
             i2.member_id = m2.id
-            and t.id = #{requestId}
+          and ii1.item_id = i1.id
+          and ii2.item_id = i2.id
+          and t.id = #{requestId}
     </select>
 
     <select id="getTradeListByMemberId" resultType="com.baggujo.dto.TradeDetailDTO">
