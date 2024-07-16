@@ -85,14 +85,16 @@
 
                 <!-- 비로그인 사용자에게만 보이는 로그인 유도 버튼 -->
                 <div class="d-flex mr-2" th:if="${#authentication.principal == 'anonymousUser'}">
-                    <button class="d-flex btn btn-outline-danger align-items-center fs-5" onclick="alert('로그인이 필요합니다.'); window.location.href='/member/login';">
+                    <button class="d-flex btn btn-outline-danger align-items-center fs-5 mr-2" onclick="alert('로그인이 필요합니다.'); window.location.href='/member/login';">
                         <i class="bi bi-heart mr-2 fs-5"></i>
                         <span id="favorite-count-anonymous" th:text="${totalFavorites}">0</span>
                     </button>
+                    <button id="exchange-btn2" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
                 </div>
 
+                <!-- 교환 신청 버튼 -->
                 <th:block sec:authorize="isAuthenticated()">
-                    <button th:if="${#authentication.principal.id != itemDetail.memberId}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
+                    <button id="exchange-btn" th:if="${(#authentication.principal.id != itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
                 </th:block>
             </div>
         </div>
@@ -188,7 +190,7 @@
         $('#exchangeModal').on('show.bs.modal', function () {
             const selectPicker = $('.my-image-selectpicker');
             $.ajax({
-                url: '/item/request', // AJAX 요청을 보낼 엔드포인트
+                url: '/item/request',
                 method: 'GET',
                 success: function(data) {
                     selectPicker.empty();
@@ -271,6 +273,21 @@
                 }
             });
         });
+
+        // 교환 신청 버튼 클릭 시 로그인 확인
+        $('#exchange-btn2').click(function() {
+            const isLoggedIn = [[${#authentication.principal != 'anonymousUser'}]];
+
+            if (!isLoggedIn) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/member/login';
+            }
+        });
+
+        // 이미지가 하나일 경우 캐러셀의 이전 및 다음 버튼 숨기기
+        if ($('.carousel-item').length === 1) {
+            $('.carousel-control-prev, .carousel-control-next, .carousel-indicators').hide();
+        }
     });
 </script>
 </body>

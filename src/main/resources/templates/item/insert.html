@@ -3,8 +3,8 @@
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바꾸조</title>
     <link rel="icon" href="../../static/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -16,7 +16,6 @@
     <link href="../../static/css/custom.css" rel="stylesheet">
 
     <title>바꾸조</title>
-
     <script th:inline="javascript">
         /*<![CDATA[*/
         /* 유효성 검사 실패 시 경고창을 띄우는 스크립트 */
@@ -30,46 +29,46 @@
 <body>
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 
-<div class="margin-top">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                  <div class="card-header">
-                        <h4 class="card-title">게시글 작성</h4>
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/item/insert}" th:method="post" th:object="${itemInsertDTO}" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label for="files">파일 업로드</label>
-                                <input type="file" class="form-control" id="files" name="files" multiple="multiple">
-                            </div>
-                            <div class="form-group">
-                                <label for="title">제목</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="description">내용</label>
-                                <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">사용감</label>
-                                <select class="form-control" id="condition" th:name="itemCondition" required>
-                                    <option th:each="conditionValue : ${T(com.baggujo.dto.enums.ItemCondition).values()}" th:value="${conditionValue}" th:text="${conditionValue.kor}"></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="itemCategoryId">카테고리</label>
-                                <select class="form-control" id="itemCategoryId" name="itemCategoryId" required>
-                                    <option value="" disabled selected>카테고리 선택</option>
-                                    <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
-                                </select>
-                            </div>
-                            <input type="text" name="memberId" th:value="${#authentication.principal.id}" hidden>
-                            <input type="text" name="itemStatus" th:value="${T(com.baggujo.dto.enums.ItemStatus).WAITING}" hidden>
-                            <button type="submit" class="btn btn-primary">등록</button>
-                        </form>
-                    </div>
+<div class="container margin-top">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">교환글 작성</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/item/insert}" th:method="post" th:object="${itemInsertDTO}" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div id="preview-container" class="mb-2 d-flex"></div>
+                            <label for="files">파일 업로드</label>
+                            <input type="file" class="form-control border-none" id="files" name="files" onchange="readURL(this);" multiple="multiple">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">제목</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">내용</label>
+                            <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemCategoryId">카테고리</label>
+                            <select class="form-control" id="itemCategoryId" name="itemCategoryId" required>
+                                <option value="" disabled selected>카테고리 선택</option>
+                                <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">사용감</label>
+                            <select class="form-control" id="condition" th:name="itemCondition" required>
+                                <option th:each="conditionValue : ${T(com.baggujo.dto.enums.ItemCondition).values()}" th:value="${conditionValue}" th:text="${conditionValue.kor}"></option>
+                            </select>
+                        </div>
+                        <input type="text" name="memberId" th:value="${#authentication.principal.id}" hidden>
+                        <input type="text" name="itemStatus" th:value="${T(com.baggujo.dto.enums.ItemStatus).WAITING}" hidden>
+                        <hr/>
+                        <button type="submit" class="btn btn-primary w-100">등록</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -78,5 +77,27 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function readURL(input) {
+        if (input.files) {
+            let previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = '';
+            Array.from(input.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        let img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.width = '100px';
+                        img.style.height = '100px';
+                        img.style.objectFit = 'cover';
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }
+</script>
 </body>
 </html>
