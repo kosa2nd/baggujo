@@ -70,6 +70,13 @@
             let keyword = $('#keyword').val();
             window.location.href='/?keyword=' + keyword;
         };
+
+        $('#keyword').on('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Enter 키로 인한 기본 폼 제출 방지
+                search();
+            }
+        });
     </script>
 </th:block>
 

@@ -24,10 +24,12 @@
     <nav class="profile-header w-100 navbar navbar-expand-lg bg-body-tertiary" style="border: 1px solid #ddd">
         <div class="container-fluid">
             <!-- 프로필 -->
-            <div class="profile d-flex h-auto cursor" onclick="location.href='/item/detail/${tradeInfoDTO.responseItemId}'">
+            <div class="profile d-flex h-auto cursor" th:onclick="'location.href=\'/item/detail/' + ${tradeInfoDTO.responseItemId} + '\''">
                 <!-- 프로필 내용 -->
                 <div class="labelSort d-flex align-items-center">
-                    <img th:src="@{/images/}+${tradeInfoDTO.responseThumbnail}" style="width: 55px; height: 55px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.05);" alt="Response Thumbnail">
+                    <img th:src="@{/images/}+${tradeInfoDTO.responseThumbnail}"
+                         style="width: 55px; height: 55px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.05);"
+                         alt="Response Thumbnail">
                     <div class="flex-column justify-content-between align-items-center pl-2">
                         <p class="itemName pb-2" th:text="${tradeInfoDTO.responseTitle}">물품이름</p>
                         <div class="d-flex justify-content-between">
@@ -40,10 +42,12 @@
             </div>
 
             <!-- 프로필 -->
-            <div class="profile d-flex h-auto cursor" onclick="location.href='/item/detail/${tradeInfoDTO.requestItemId}'">
+            <div class="profile d-flex h-auto cursor" th:onclick="'location.href=\'/item/detail/' + ${tradeInfoDTO.requestItemId} + '\''">
                 <!-- 프로필 내용 -->
                 <div class="labelSort d-flex align-items-center">
-                    <img th:src="@{/images/}+${tradeInfoDTO.requestThumbnail}" style="width: 55px; height: 55px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.05);" alt="Response Thumbnail">
+                    <img th:src="@{/images/}+${tradeInfoDTO.requestThumbnail}"
+                         style="width: 55px; height: 55px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.05);"
+                         alt="Response Thumbnail">
                     <div class="flex-column justify-content-between align-items-center pl-2">
                         <p class="itemName pb-2" th:text="${tradeInfoDTO.requestTitle}">물품이름</p>
                         <div class="d-flex justify-content-between">
@@ -59,25 +63,41 @@
 
     <!-- 메세지가 출력될 공간 -->
     <div class="chatSpace container mt-3 flex-column pb-1" id="msgArea">
-        <div th:each="chat: ${chats}" th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message-wrapper sent' : 'chat-message-wrapper received'">
-            <p th:if="${chat.chatType.name().equals('TEXT')}" th:text="${chat.text}"
-               th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent text' : 'chat-message received text'"></p>
+        <div th:each="chat: ${chats}"
+             th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message-wrapper sent' : 'chat-message-wrapper received'">
+            <div class="d-flex align-items-end">
+                <p th:if="${chat.memberId == #authentication.principal.id}" class="chat-time sent"
+                   th:text="${chat.getFormattedSendDate()}">21:49</p>
+                <p th:if="${chat.chatType.name().equals('TEXT')}" th:text="${chat.text}"
+                   th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent text' : 'chat-message received text'"></p>
+                <p th:if="${chat.memberId != #authentication.principal.id}" class="chat-time received"
+                   th:text="${chat.getFormattedSendDate()}">21:49</p>
+            </div>
             <p th:if="${chat.chatType.name().equals('TRADE_END')}" th:text="${chat.text}"
                th:classappend="chat-message-end"></p>
-            <img th:if="${chat.chatType.name().equals('IMAGE')}" th:src="'/chatImages/' + ${chat.imgSName}" alt="chat image"
-                 th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent image' : 'chat-message received image'"/>
+            <div class="d-flex align-items-end">
+                <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId == #authentication.principal.id}"
+                   class="chat-time sent" th:text="${chat.getFormattedSendDate()}">21:49</p>
+                <img th:if="${chat.chatType.name().equals('IMAGE')}" th:src="'/chatImages/' + ${chat.imgSName}"
+                     alt="chat image"
+                     th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent image' : 'chat-message received image'"/>
+                <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId != #authentication.principal.id}"
+                   class="chat-time received" th:text="${chat.getFormattedSendDate()}">21:49</p>
+            </div>
         </div>
     </div>
 
     <!-- 메세지 전송 공간 -->
     <div class="msgArea w-90 fixed-bottom bg-white px-1">
         <div class="btn-group dropup d-flex align-items-center">
-            <button type="button" class="btn dropdown-toggle no-outline" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn dropdown-toggle no-outline" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
                 <i class="bi bi-plus-lg fs-5"></i>
             </button>
             <div class="dropdown-menu dropup-menu">
                 <form id="upload-file-form" enctype="multipart/form-data" hidden>
-                    <input type="file" accept="image/jpeg,image/png, image/gif" id='inputFile' name="image" onchange="fileGo()"/>
+                    <input type="file" accept="image/jpeg,image/png, image/gif" id='inputFile' name="image"
+                           onchange="fileGo()"/>
                     <input type="submit" id="fileSendBtn">
                 </form>
                 <button class="dropdown-item py-2" id="waybillButton">배송 조회</button>
@@ -96,14 +116,20 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         let tradeId = [[${tradeInfoDTO.id}]];
         let memberId = [[${#authentication.principal.id}]];
 
@@ -190,16 +216,21 @@
             });
         }
 
-        stomp.connect({}, function() {
-            stomp.subscribe("/sub/chat/room" + tradeId, function(chat) {
+        stomp.connect({}, function () {
+            stomp.subscribe("/sub/chat/room" + tradeId, function (chat) {
                 let content = JSON.parse(chat.body);
                 let chatType = content.chatType;
+                let time = new Date(content.sendDate).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
                 let str = '';
                 if (chatType == 'TEXT') {
-                    str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '"><p class="chat-message text ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + content.text + '</p></div>';
+                    str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '">';
+                    str += '<p class="chat-time ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + time + '</p>';
+                    str += '<p class="chat-message text ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + content.text + '</p></div>';
                 } else if (chatType == 'IMAGE') {
-                    str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '"><img class="chat-message image ' + (content.memberId == memberId ? 'sent' : 'received') + '" src="/chatImages/' + content.imgSName + '" alt="chat image" /></div>';
+                    str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '">';
+                    str += '<p class="chat-time ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + time + '</p>';
+                    str += '<img class="chat-message image ' + (content.memberId == memberId ? 'sent' : 'received') + '" src="/chatImages/' + content.imgSName + '" alt="chat image" /></div>';
                 } else if (chatType == 'TRADE_END') {
                     str = '<div class="chat-message-wrapper"><p class="chat-message chat-message-end">' + content.text + '</p></div>';
 
@@ -219,31 +250,31 @@
             scrollToBottom();
         });
 
-        $('#sendBtn').on('click', function() {
+        $('#sendBtn').on('click', function () {
             sendMessage();
         });
 
-        $('#msg').on('keypress', function(e) {
+        $('#msg').on('keypress', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault(); // Enter 키로 인한 기본 폼 제출 방지
                 sendMessage();
             }
         });
 
-        $('#sendImgBtn').on('click', function() {
+        $('#sendImgBtn').on('click', function () {
             let input = document.getElementById("inputFile");
             input.click();
         });
 
-        $('#acceptButton').on('click', function() {
+        $('#acceptButton').on('click', function () {
             sendDecision('ACCEPT', '거래 완료를 요청했어요');
         });
 
-        $('#rejectButton').on('click', function() {
+        $('#rejectButton').on('click', function () {
             sendDecision('REJECT', '거래 취소를 요청했어요');
         });
 
-        $('#noneButton').on('click', function() {
+        $('#noneButton').on('click', function () {
             sendDecision('NONE', '요청을 취소했어요');
         });
     });

@@ -24,7 +24,7 @@
     </insert>
 
     <select id="getChat" resultType="com.baggujo.dto.ChatInsertDTO">
-        select member_id, trade_id, text, img_name, img_s_name, chat_type
+        select member_id, trade_id, text, img_name, img_s_name, chat_type, send_date
         from chat
         where trade_id = #{tradeId}
         order by send_date
