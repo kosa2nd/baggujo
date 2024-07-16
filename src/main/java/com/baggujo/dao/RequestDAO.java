@@ -16,4 +16,5 @@ public interface RequestDAO {
     int updateRequestStatus(long requestId, RequestStatus requestStatus);
     RequestItemsDTO getRequestItemsByRequestId(long requestId);
     void cancelOther(long requestId) throws SQLException;
+    RequestInfoDTO getRequestInfoByRequestId(long requestId) throws SQLException;
 }

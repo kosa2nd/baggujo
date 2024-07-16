@@ -96,4 +96,15 @@
         and id != #{requestId}
     </update>
 
+    <select id="getRequestInfoByRequestId" resultType="com.baggujo.dto.RequestInfoDTO">
+        select
+            m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle,
+            m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle
+        from request r, item i1, member m1, item i2, member m2
+        where r.id = #{requestId}
+        and r.request_item_id = i1.id
+        and i1.member_id = m1.id
+        and r.response_item_id = i2.id
+        and i2.member_id = m2.id
+    </select>
 </mapper>
