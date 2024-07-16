@@ -19,4 +19,10 @@ public class TradeDAOTest {
         System.out.println("결과 = " + tradeId);
     }
 
+    @Test
+    public void 상대아이디번호출력테스트() {
+        long otherMemberId = tradeDAO.getOtherMemberId(62, 207); //기댓값 62
+        System.out.println("상대 아이디는 === " + otherMemberId);
+    }
+
 }
