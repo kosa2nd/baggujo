@@ -17,5 +17,5 @@ public interface NotificationDAO {
     void insertResponseCancelNotiByRequestId(long requestId) throws SQLException;
     int updateNotificationById(long notificationId, NotificationStatus notificationStatus);
     void updateNotificationByMemberIdAndTradeId(long memberId, long tradeId, NotificationStatus notificationStatus);
-    List<NotificationDetailDTO> getNotifications(long memberId, long lastNotificationId, int offset);
+    List<NotificationDetailDTO> getNotifications(long memberId);
 }

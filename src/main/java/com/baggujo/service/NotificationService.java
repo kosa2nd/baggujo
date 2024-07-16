@@ -27,7 +27,7 @@ public class NotificationService {
         }
     }
 
-    public List<NotificationDetailDTO> getNotifications(long memberId, long lastNotificationId, int offset) {
-        return notificationDAO.getNotifications(memberId, lastNotificationId, offset);
+    public List<NotificationDetailDTO> getNotifications(long memberId) {
+        return notificationDAO.getNotifications(memberId);
     }
 }

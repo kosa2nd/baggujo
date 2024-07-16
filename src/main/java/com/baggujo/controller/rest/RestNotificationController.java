@@ -1,5 +1,8 @@
 package com.baggujo.controller.rest;
 
+import com.baggujo.dto.AuthDTO;
+import com.baggujo.dto.NotificationDetailDTO;
+import com.baggujo.dto.enums.NotificationStatus;
 import com.baggujo.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,22 +37,23 @@ public class RestNotificationController {
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
+    //조회
+    @GetMapping("/list")
+    public ResponseEntity<List<NotificationDetailDTO>> getNotifications(@AuthenticationPrincipal AuthDTO authDTO, @RequestParam long memberId) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<NotificationDetailDTO> dto = notificationService.getNotifications(memberId);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
     //알림
-//    @PostMapping("/update")
-//    public ResponseEntity<boolean> update() {
-//
-//            long notificationId = -1;
-//            if (!dtos.isEmpty()) {
-//                notificationId = dtos.get(dtos.size() - 1).getId();
-//            } else {
-//                map.put("finished", true);
-//            }
-//
-//            map.put("lastNotificationId", notificationId);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//        return new ResponseEntity<>(map, HttpStatus.OK);
-//    }
+    @PostMapping("/update")
+    public ResponseEntity<Boolean> update(@RequestParam long notificationId, @RequestParam NotificationStatus notificationStatus) {
+        notificationService.updateNotification(notificationId, notificationStatus);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 
 }
