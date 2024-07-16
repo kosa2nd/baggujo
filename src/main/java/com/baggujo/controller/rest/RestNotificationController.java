@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestNotificationController {
 
     @PostMapping("/removeAllChat")
-    public ResponseEntity<boolean> removeAll(@RequestParam long memberId, long tradeId) {
-        return new ResponseEntity<boolean>(true, HttpStatus.OK);
+    public ResponseEntity<Boolean> removeAll(@RequestParam long memberId, long tradeId) {
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<boolean> update() {
+    public ResponseEntity<Boolean> update() {
 
-        return new ResponseEntity<boolean>(true, HttpStatus.OK);
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
 
