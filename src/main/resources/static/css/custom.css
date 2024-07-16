@@ -263,3 +263,14 @@
     max-width: 80%;
     min-width: 540px;
 }
+
+/* 프리뷰 */
+#preview-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+#preview-container img {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
