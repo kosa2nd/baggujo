@@ -1,10 +1,16 @@
 package com.baggujo.service;
 
 import com.baggujo.dao.ChatDAO;
+import com.baggujo.dao.MemberDAO;
+import com.baggujo.dao.NotificationDAO;
+import com.baggujo.dao.TradeDAO;
 import com.baggujo.dto.ChatInsertDTO;
 import com.baggujo.dto.ItemImageInsertDTO;
+import com.baggujo.dto.NotificationInsertDTO;
 import com.baggujo.dto.UploadedChatImageDTO;
 import com.baggujo.dto.enums.ChatType;
+import com.baggujo.dto.enums.NotificationStatus;
+import com.baggujo.dto.enums.TradeStatus;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,10 @@ import java.util.stream.DoubleStream;
 public class ChatService {
     @Autowired
     ChatDAO chatDAO;
+    @Autowired
+    NotificationDAO notificationDAO;
+    @Autowired
+    TradeDAO tradeDAO;
     @Value("${com.baggujo.upload.path.chat}")
     private String uploadPath;
 
@@ -39,6 +49,12 @@ public class ChatService {
         if (chatDAO.insertChat(chatInsertDTO) != 1) {
             throw new SQLException();
         }
+        //기존의 채팅 알림 지움
+        long otherMemberId = tradeDAO.getOtherMemberId(chatInsertDTO.getMemberId(), chatInsertDTO.getTradeId());
+        notificationDAO.updateNotificationByMemberIdAndTradeId(otherMemberId, chatInsertDTO.getTradeId(), NotificationStatus.DELETED);
+        //새로운 채팅 알림을 생성
+        String text = chatInsertDTO.getChatType() == ChatType.TEXT ? chatInsertDTO.getText() : "(이미지)";
+        notificationDAO.insertNotification(new NotificationInsertDTO(otherMemberId, text , "/trade/" + chatInsertDTO.getTradeId(), true, chatInsertDTO.getTradeId()));
     }
 
     //채팅

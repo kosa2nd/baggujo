@@ -24,4 +24,6 @@ public interface TradeDAO {
     TradeDecisionResultDTO getTradeDecisionResultByTradeId(long tradeId);
 
     int updateTradeStatusByTradeId(long tradeId, TradeStatus tradeStatus);
+
+    long getOtherMemberId(long memberId, long tradeId);
 }

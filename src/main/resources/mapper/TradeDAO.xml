@@ -160,4 +160,18 @@
         where id = #{tradeId}
     </update>
 
+    <select id="getOtherMemberId" resultType="long">
+        select
+        case
+            when #{memberId} = i1.member_id then i2.member_id
+            when #{memberId} = i2.member_id then i1.member_id
+            end as other_member_id
+        from
+            Trade t
+            join item i1
+                on i1.id = t.request_item_id
+            join item i2
+                on i2.id = t.response_item_id
+        where t.id = #{tradeId}
+    </select>
 </mapper>

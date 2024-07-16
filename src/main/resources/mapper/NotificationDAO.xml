@@ -46,4 +46,22 @@
         and r.id != #{requestId}
         and r.status = 'WAITING'
     </insert>
+
+    <!-- 알림 하나에 대한 상태 변경(알림 읽음, 삭제 처리용) -->
+    <update id="updateNotificationById">
+        update notification
+        set status = #{notificationStatus}
+        where id = #{notificationId}
+        where status != 'DELETED'
+    </update>
+
+    <!-- 거래번호에 맞는 알림 상태 변경 (채팅 알림 처리용) -->
+    <update id="updateNotificationByMemberIdAndTradeId">
+        update notification
+        set status = #{notificationStatus}
+        where trade_id = #{tradeId}
+        and member_id = #{memberId}
+        and status != 'DELETED'
+    </update>
+
 </mapper>

@@ -29,15 +29,14 @@ public class RestChatController {
     // stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMappiong 경로가 병합됨
     @MessageMapping("/chat/message")
     public void send(ChatInsertDTO message) throws SQLException {
-        // chatType == TEXT 인 경우에만 저장
         try {
             chatService.insertChat(message);
-            System.out.println("@@@@@@@@@@@@@@@" + message.getImgSName());
             template.convertAndSend("/sub/chat/room" + message.getTradeId(), message);
+            //전송했으니까 새로운 알림 생성
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     @PostMapping("/chat/imageUpload")
