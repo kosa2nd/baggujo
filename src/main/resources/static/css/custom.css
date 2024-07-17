@@ -32,17 +32,17 @@
 .alarm {
     position: relative;
 }
-.alarm::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    width: 8px;
-    height: 8px;
-    background-color: red;
-    border-radius: 50%;
-    border: 1px solid white;
-}
+/*.alarm::after {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    top: 1px;*/
+/*    right: 1px;*/
+/*    width: 8px;*/
+/*    height: 8px;*/
+/*    background-color: red;*/
+/*    border-radius: 50%;*/
+/*    border: 1px solid white;*/
+/*}*/
 .alarm-read,
 .alarm-read.noti-delete{
     color: darkgray;
@@ -114,18 +114,6 @@
     border-style: solid;
     border-color: transparent transparent white transparent;
 }
-
-/*.dropup .dropdown-menu::before {*/
-/*    content: '';*/
-/*    position: absolute;*/
-/*    bottom: -10px;*/
-/*    left: 17%;*/
-/*    transform: translateX(-50%);*/
-/*    border-width: 10px 10px 0 10px;*/
-/*    border-style: solid;*/
-/*    border-color: #ced4da transparent transparent transparent;*/
-/*}*/
-
 
 .margin-top{
     margin-top: 75px;
@@ -204,12 +192,15 @@
 }
 
 /* 채팅 */
+html {
+    scroll-behavior: smooth;
+}
 .chat-message {
     padding: 10px 16px;
     border-radius: 20px;
     margin-bottom: 10px;
-    max-width: 60%;
-    word-wrap: break-word;
+    /*max-width: 70%;*/
+    /*word-wrap: break-word;*/
     position: relative;
 }
 .chat-message.text {
@@ -232,11 +223,11 @@
 }
 .chat-message-wrapper {
     display: flex;
-    flex-direction: column;
 }
 .chat-message-wrapper.sent {
     align-items: flex-end;
     justify-content: flex-end;
+    margin-left: auto;
 }
 .chat-message-wrapper.received {
     align-items: flex-start;

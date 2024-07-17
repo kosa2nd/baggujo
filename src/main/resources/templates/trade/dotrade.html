@@ -32,9 +32,9 @@
                          alt="Response Thumbnail">
                     <div class="flex-column justify-content-between align-items-center pl-2">
                         <p class="itemName pb-2" th:text="${tradeInfoDTO.responseTitle}">물품이름</p>
-                        <div class="d-flex justify-content-between">
-                            <p class="userNickname mb-0" style="font-size: 14px;" th:text="${tradeInfoDTO.responseNickname}">유저닉네임</p>
-                            <p class="itemStatus mb-0" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="userNickname mb-0 mr-2" style="font-size: 14px;" th:text="${tradeInfoDTO.responseNickname}">유저닉네임</p>
+                            <p class="itemStatus mb-0 badge rounded-pill py-1 text-white" style="font-size: 14px;" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
                         </div>
                     </div>
 
@@ -50,9 +50,9 @@
                          alt="Response Thumbnail">
                     <div class="flex-column justify-content-between align-items-center pl-2">
                         <p class="itemName pb-2" th:text="${tradeInfoDTO.requestTitle}">물품이름</p>
-                        <div class="d-flex justify-content-between">
-                            <p class="userNickname mb-0" style="font-size: 14px;" th:text="${tradeInfoDTO.requestNickname}">유저닉네임</p>
-                            <p class="itemStatus mb-0" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="userNickname mb-0 mr-2" style="font-size: 14px;" th:text="${tradeInfoDTO.requestNickname}">유저닉네임</p>
+                            <p class="itemStatus mb-0 badge rounded-pill py-1 text-white" style="font-size: 14px;" th:text="${tradeInfoDTO.status.getKor()}">교환상태</p>
                         </div>
                     </div>
 
@@ -126,7 +126,7 @@
     <!-- 메세지 전송 공간 -->
     <div class="msgArea w-90 fixed-bottom bg-white px-1">
         <div class="btn-group dropup d-flex align-items-center">
-            <button type="button" class="btn dropdown-toggle no-outline" data-toggle="dropdown"
+            <button type="button" class="btn dropdown-toggle no-outline no-caret" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                 <i class="bi bi-plus-lg fs-5"></i>
             </button>
@@ -144,7 +144,7 @@
                 <button class="dropdown-item py-2" id="noneButton">요청 취소</button>
             </div>
 
-            <div class="d-flex w-100 align-items-center mr-2">
+            <div class="d-flex w-100 align-items-center mr-4">
                 <input id='msg' type="text" class="form-control mr-3" placeholder="메세지를 입력하세요">
                 <button class="btn btn-secondary" id="sendBtn">전송</button>
             </div>
@@ -252,29 +252,68 @@
             });
         }
 
+        function getCurrentFormattedTime() {
+            let now = new Date();
+
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+
+            return `${hours}:${minutes}`;
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case '미거래':
+                    return 'bg-primary';
+                case '거래중':
+                    return 'bg-secondary';
+                case '거래완료':
+                    return 'bg-dark';
+                default:
+                    return 'bg-primary';
+            }
+        }
+
+        function updateProfileStatusBadges() {
+            document.querySelectorAll('.itemStatus').forEach(function (statusElement) {
+                const statusText = statusElement.textContent.trim();
+                const badgeClass = getStatusBadgeClass(statusText);
+                statusElement.classList.add(badgeClass);
+            });
+        }
+
+        updateProfileStatusBadges();
+
         stomp.connect({}, function() {
             removeChatNoti([[${#authentication.principal.id}]], [[${tradeInfoDTO.id}]]);
 
             stomp.subscribe("/sub/chat/room" + tradeId, function(chat) {
                 let content = JSON.parse(chat.body);
                 let chatType = content.chatType;
-                let time = new Date(content.sendDate).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
                 let str = '';
                 if (chatType == 'TEXT') {
                     str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '">';
-                    str += '<p class="chat-time ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + time + '</p>';
-                    str += '<p class="chat-message text ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + content.text + '</p></div>';
+                    str += '<div class="d-flex align-items-end">';
+                    if (content.memberId == memberId) {
+                        str += '<p class="chat-time sent">' + getCurrentFormattedTime() + '</p>';
+                    }
+                    str += '<p class="chat-message text ' + (content.memberId == memberId ? 'sent' : 'received') + '">' + content.text + '</p>';
+                    if (content.memberId != memberId) {
+                        str += '<p class="chat-time received">' + getCurrentFormattedTime() + '</p>';
+                    }
+                    str += '</div></div>';
                 } else if (chatType == 'IMAGE') {
                     str = '<div class="chat-message-wrapper ' + (content.memberId == memberId ? 'sent' : 'received') + '">';
+                    str += '<div class="d-flex align-items-end">';
                     if (content.memberId == memberId) {
-                        str += '<p class="chat-time sent">' + time + '</p>';
+                        str += '<p class="chat-time sent">' + getCurrentFormattedTime() + '</p>';
                         str += '<img class="chat-message sent image" src="/chatImages/' + content.imgSName + '" alt="chat image" />';
                     } else {
                         str += '<img class="chat-message received image" src="/chatImages/' + content.imgSName + '" alt="chat image" />';
-                        str += '<p class="chat-time received">' + time + '</p>';
+                        str += '<p class="chat-time received">' + getCurrentFormattedTime() + '</p>';
                     }
-                    str += '</div>';
+                    str += '</div></div>';
                 } else if (chatType == 'TRADE_END') {
                     str = '<div class="chat-message-wrapper"><p class="chat-message chat-message-end">' + content.text + '</p></div>';
 
