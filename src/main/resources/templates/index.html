@@ -24,8 +24,8 @@
     <div class="btn-group m-3" role="group">
         <select class="form-control" id="itemCategoryId" name="itemCategoryId" onchange="javascript:changeCategory()">
             <option value="" selected disabled><span>카테고리</span><i class="bi bi-caret-down-fill"></i></option>
-            <option value="0">모든 물품</option>
-            <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
+            <option value="0" th:selected="${param.itemCategoryId == null}">모든 물품</option>
+            <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}" th:selected="${#strings.equals(category.itemCategoryId, param.itemCategoryId)}"></option>
         </select>
     </div>
 </div>
@@ -39,7 +39,6 @@
 </div>
 
 <th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
-
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
