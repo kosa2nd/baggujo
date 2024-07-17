@@ -50,10 +50,11 @@ public class ChatService {
         TradeInfoDTO tradeInfoDTO = tradeDAO.getTradeInfoByTradeId(chatInsertDTO.getTradeId());
         String myNickname = chatInsertDTO.getMemberId() == tradeInfoDTO.getRequestMemberId() ? tradeInfoDTO.getRequestNickname() : tradeInfoDTO.getResponseNickname();
         long otherMemberId = chatInsertDTO.getMemberId() == tradeInfoDTO.getRequestMemberId() ? tradeInfoDTO.getResponseMemberId() : tradeInfoDTO.getRequestMemberId();
+        String myTitle = chatInsertDTO.getMemberId() == tradeInfoDTO.getRequestMemberId() ? tradeInfoDTO.getRequestTitle() : tradeInfoDTO.getResponseTitle();
         notificationDAO.updateNotificationByMemberIdAndTradeId(otherMemberId, chatInsertDTO.getTradeId(), NotificationStatus.DELETED);
 
         //새로운 채팅 알림을 생성
-        String text = myNickname + " : " + (chatInsertDTO.getChatType() == ChatType.TEXT ? chatInsertDTO.getText() : "(이미지)");
+        String text = myTitle + "<br>" + myNickname + " : " + (chatInsertDTO.getChatType() == ChatType.TEXT ? chatInsertDTO.getText() : "(이미지)");
         notificationDAO.insertNotification(new NotificationInsertDTO(otherMemberId, text , "/trade/" + chatInsertDTO.getTradeId(), true, chatInsertDTO.getTradeId()));
     }
 
