@@ -42,7 +42,7 @@ public class TradeService {
         //상대방에게 알림 생성
         ItemNotiDTO itemNotiDTO = itemDAO.getItemNoti(requestInsertDTO.getResponseItemId());
         notificationDAO.insertNotification(new NotificationInsertDTO(itemNotiDTO.getMemberId(),
-                "'" + itemNotiDTO.getTitle() + "'에 대한 거래 요청이 왔어요","/trade/myTrade"));
+                "'" + itemNotiDTO.getTitle() + "'에 대한 거래 요청이 있어요","/trade/myTrade"));
 
         requestDAO.insertRequest(requestInsertDTO);
     }
@@ -76,12 +76,11 @@ public class TradeService {
             throw new SQLException("거래 생성에 실패했습니다");
         }
 
-        System.out.println("=!!!!+!+!+!++!+!+!++!=!+=!+=1+!+!" + tradeInsertDTO.getId());
-
         TradeInfoDTO tradeInfoDTO = tradeDAO.getTradeInfoByTradeId(tradeInsertDTO.getId()); //지금 null인 상황
-        ItemNotiDTO requestNotiDTO = itemDAO.getItemNoti(tradeInfoDTO.getRequestItemId());
+        System.out.println("======================================" + tradeInfoDTO.getRequestNickname());
+        //ItemNotiDTO requestNotiDTO = itemDAO.getItemNoti(tradeInfoDTO.getRequestItemId());
         notificationDAO.insertNotification(new NotificationInsertDTO(tradeInfoDTO.getRequestMemberId(),
-                        "'" + tradeInfoDTO.getResponseTitle() + "'로 보낸 요청이 수락돼 거래를 할 수 있어요","/trade/" + tradeInfoDTO.getId()));
+                        "'" + tradeInfoDTO.getResponseTitle() + "'로 보낸 요청이 수락되었어요","/trade/" + tradeInfoDTO.getId()));
 
         //거래 아이디 반환
         return tradeInsertDTO.getId();
@@ -95,7 +94,7 @@ public class TradeService {
 
         RequestInfoDTO requestInfoDTO = requestDAO.getRequestInfoByRequestId(requestId);
         notificationDAO.insertNotification(new NotificationInsertDTO(requestInfoDTO.getRequestMemberId(),
-                "'" + requestInfoDTO.getResponseTitle() + "'로 보낸 요청이 거절됐어요","/item/detail/" + requestInfoDTO.getResponseItemId()));
+                "'" + requestInfoDTO.getResponseTitle() + "'로 보낸 요청이 거절되었어요","/item/detail/" + requestInfoDTO.getResponseItemId()));
     }
 
     @Transactional
@@ -105,7 +104,7 @@ public class TradeService {
         }
         RequestInfoDTO requestInfoDTO = requestDAO.getRequestInfoByRequestId(requestId);
         notificationDAO.insertNotification(new NotificationInsertDTO(requestInfoDTO.getResponseMemberId(),
-                "'" + requestInfoDTO.getRequestTitle() + "'로 부터 받은 요청이 취소됐어요","/item/detail/" + requestInfoDTO.getRequestItemId()));
+                "'" + requestInfoDTO.getRequestTitle() + "'로 부터 받은 요청이 취소되었어요","/item/detail/" + requestInfoDTO.getRequestItemId()));
     }
 
     public TradeInfoDTO getTradeInfoByTradeId(long tradeId) {

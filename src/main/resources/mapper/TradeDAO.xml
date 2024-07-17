@@ -29,6 +29,8 @@
                m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle, ii2.s_name responseThumbnail, t.status
         from trade t, member m1, member m2, item i1, item i2, item_image ii1, item_image ii2
         where
+            t.id = #{tradeId}
+          and
             t.request_item_id = i1.id
           and
             t.response_item_id = i2.id
@@ -36,9 +38,14 @@
             i1.member_id = m1.id
           and
             i2.member_id = m2.id
-          and ii1.item_id = i1.id
-          and ii2.item_id = i2.id
-          and t.id = #{requestId}
+          and
+            i1.id = ii1.item_id(+)
+          and
+            (ii1.img_no = 1 or ii1.img_no is null)
+          and
+            i2.id = ii2.item_id(+)
+          and
+            (ii2.img_no = 1 or ii2.img_no is null)
     </select>
 
     <select id="getTradeListByMemberId" resultType="com.baggujo.dto.TradeDetailDTO">
