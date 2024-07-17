@@ -98,7 +98,7 @@
     content: '';
     position: absolute;
     top: -7px;
-    right: 34px;
+    right: 17px;
     border-width: 0 10px 10px 10px;
     border-style: solid;
     border-color: transparent transparent white transparent;
@@ -109,7 +109,7 @@
     content: '';
     position: absolute;
     top: -7px;
-    right: 18px;
+    right: 2px;
     border-width: 0 10px 10px 10px;
     border-style: solid;
     border-color: transparent transparent white transparent;
@@ -141,6 +141,10 @@
     height: 400px;
     object-fit: cover;
     border-radius: 10px;
+}
+#delete-btn:hover,
+.edit-btn:hover {
+    color: dimgray;
 }
 /* 캐러셀 버튼 */
 .carousel-control-prev-icon,
@@ -300,4 +304,27 @@
     margin-right: 10px;
     margin-bottom: 10px;
     border-radius: 8px;
+}
+
+.no-caret::after {
+    display: none !important;
+}
+
+/* 푸터 */
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+}
+.footer a {
+    color: #f8f9fa;
+    text-decoration: none;
+}
+.footer a:hover {
+    text-decoration: underline;
 }
