@@ -39,12 +39,14 @@ public class RestFavoriteController {
     }
 
     @GetMapping("/count/{itemId}")
-    public ResponseEntity<Map<String, Object>> getTotalFavoriteCount(@PathVariable long itemId, @AuthenticationPrincipal AuthDTO authDTO) {
+    public ResponseEntity<Map<String, Object>> getTotalFavoriteCount(@PathVariable long itemId, @AuthenticationPrincipal AuthDTO authDTO) throws SQLException {
         Map<String, Object> result = new HashMap<>();
 
         if (authDTO == null) {
+            int totalFavorites = favoriteService.getTotalFavoriteCount(itemId);
+            result.put("totalFavorites", totalFavorites);
             result.put("isFavorite", false);
-            return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         try {
