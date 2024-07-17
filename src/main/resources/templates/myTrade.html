@@ -139,14 +139,14 @@
                 response.requestList.forEach(function(request) {
                     waitingContent += `<tr id="request-${request.id}">
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.requestItemId}'">
-                            <img src="/images/${request.requestThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Request Thumbnail">
+                            <img src="/images/${request.requestThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'">
                             <div class="pl-2 align-content-center">
                                 <h5 class="mr-2">${request.requestItemTitle}</h5>
                             </div>
                         </td>
                         <td>${request.requestNickname}</td>
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${request.responseItemId}'">
-                            <img src="/images/${request.responseThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Response Thumbnail">
+                            <img src="/images/${request.responseThumbnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'">
                             <div class="pl-2 align-content-center">
                                 <h5 class="mr-2">${request.responseItemTitle}</h5>
                             </div>
@@ -203,14 +203,14 @@
 
                     tradingContent += `<tr>
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
-                            <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'">
                             <div class="pl-2 align-content-center">
                                 <h5 class="mr-2">${trade.requestTitle}</h5>
                             </div>
                         </td>
                         <td>${trade.requestNickname}</td>
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
-                            <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'">
                             <div class="pl-2 align-content-center">
                                 <h5 class="mr-2">${trade.responseTitle}</h5>
                             </div>
@@ -265,14 +265,14 @@
 
                     succeedContent += `<tr>
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
-                            <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <img src="/images/${trade.requestThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'">
                             <div class="pl-2 align-content-center">
                                 <h5 class="mr-2">${trade.requestTitle}</h5>
                             </div>
                         </td>
                         <td>${trade.requestNickname}</td>
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.responseItemId}'">
-                            <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" alt="Trade Thumbnail">
+                            <img src="/images/${trade.responseThumnail}" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'">
                             <div class="pl-2 align-content-center">
                                 <h5 class="mr-2">${trade.responseTitle}</h5>
                             </div>
