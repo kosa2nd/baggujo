@@ -1,5 +1,6 @@
 package com.baggujo.controller.rest;
 
+import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.ChatInsertDTO;
 import com.baggujo.dto.UploadedChatImageDTO;
 import com.baggujo.service.ChatService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +30,7 @@ public class RestChatController {
     // Client가 send할 수 있는 경로
     // stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMappiong 경로가 병합됨
     @MessageMapping("/chat/message")
-    public void send(ChatInsertDTO message) throws SQLException {
+    public void send(ChatInsertDTO message) {
         try {
             chatService.insertChat(message);
             template.convertAndSend("/sub/chat/room" + message.getTradeId(), message);
@@ -40,13 +42,12 @@ public class RestChatController {
     }
 
     @PostMapping("/chat/imageUpload")
-    public ResponseEntity<UploadedChatImageDTO> itemRejectWithdraw(MultipartFile image) {
+    public ResponseEntity<UploadedChatImageDTO> itemRejectWithdraw(MultipartFile image, @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         try {
-            if (image.isEmpty()) {
-                System.out.println("-----------------------업로드 실패" );
-            } else {
-                System.out.println("-------------------이미지 있음");
-            }
             UploadedChatImageDTO uploadChatImageDTO = chatService.getUploadedChatImageNames(image);
             return new ResponseEntity<>(uploadChatImageDTO, HttpStatus.OK);
         } catch (FileNotFoundException e) {

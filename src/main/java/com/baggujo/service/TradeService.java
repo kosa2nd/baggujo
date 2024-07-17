@@ -156,10 +156,10 @@ public class TradeService {
                 itemDAO.updateItemStatus(tradeInfoDTO.getResponseItemId(), ItemStatus.TRADED);
                 //요청자
                 notificationDAO.insertNotification(new NotificationInsertDTO(tradeInfoDTO.getRequestMemberId(),
-                        "'" + tradeInfoDTO.getResponseTitle() + "'와의 거래가 완료되었어요","/trade/myTrade"));
+                        "'" + tradeInfoDTO.getResponseTitle() + "'와의 거래가 완료되었어요","/trade/myTrade?tab=complete"));
                 //응답자
                 notificationDAO.insertNotification(new NotificationInsertDTO(tradeInfoDTO.getResponseMemberId(),
-                        "'" + tradeInfoDTO.getRequestTitle() + "'와의 거래가 완료되었어요","/trade/myTrade"));
+                        "'" + tradeInfoDTO.getRequestTitle() + "'와의 거래가 완료되었어요","/trade/myTrade?tab=complete"));
             } else if (resultDTO.getRequestDecision() == TradeDecision.REJECT) {
                 updatedTradeStatus = tradeDAO.updateTradeStatusByTradeId(tradeId, TradeStatus.CANCELED);
                 resultDTO.setTradeStatus(TradeStatus.CANCELED);
@@ -167,10 +167,10 @@ public class TradeService {
                 itemDAO.updateItemStatus(tradeInfoDTO.getResponseItemId(), ItemStatus.WAITING);
                 //알림 처리
                 notificationDAO.insertNotification(new NotificationInsertDTO(tradeInfoDTO.getRequestMemberId(),
-                        "'" + tradeInfoDTO.getResponseTitle() + "'와의 거래가 취소되었어요","/trade/myTrade"));
+                        "'" + tradeInfoDTO.getResponseTitle() + "'와의 거래가 취소되었어요","/trade/myTrade?tab=complete"));
                 //응답자
                 notificationDAO.insertNotification(new NotificationInsertDTO(tradeInfoDTO.getResponseMemberId(),
-                        "'" + tradeInfoDTO.getRequestTitle() + "'와의 거래가 취소되었어요","/trade/myTrade"));
+                        "'" + tradeInfoDTO.getRequestTitle() + "'와의 거래가 취소되었어요","/trade/myTrade?tab=complete"));
             }
 
             if (updatedTradeStatus != 1) {

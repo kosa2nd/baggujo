@@ -313,6 +313,15 @@
         }
     }
 
+    function setCompleteTab() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab === 'complete') {
+            $('#nav-succeed-tab').tab('show');
+            activeTab = 'succeed';
+        }
+    }
+
     $('#nav-waiting-tab').click(function() {
         lastRequestId = 0;
         activeTab = 'waiting';
@@ -368,6 +377,7 @@
     $(document).ready(function() {
         setRequestFilter();
         setActiveTab();
+        setCompleteTab();
         if (activeTab === 'waiting') {
             $('#nav-waiting-tab').click();
         } else if (activeTab === 'trading') {

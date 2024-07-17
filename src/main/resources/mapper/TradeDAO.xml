@@ -141,7 +141,7 @@
         <if test="lastRequestId != 0">
             <![CDATA[and r.id < #{lastRequestId}]]>
         </if>
-        and t.status = 'SUCCEED'
+        and t.status != 'TRADING'
         order by t.start_date desc
         fetch first #{offset} rows only
     </select>
