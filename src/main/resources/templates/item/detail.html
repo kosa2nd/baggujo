@@ -89,9 +89,9 @@
                         </button>
                     </div>
 
+                    <button id="exchange-btn" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
                     <!-- 교환 신청 버튼 -->
                     <th:block sec:authorize="isAuthenticated()">
-                        <button id="exchange-btn" th:if="${(#authentication.principal.id != itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
                         <button id="exchangeList-btn" onclick="location.href='/trade/myTrade'" th:if="${(#authentication.principal.id == itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청내역</button>
                     </th:block>
                 </div>
@@ -153,27 +153,17 @@
 
 <script>
     $(document).ready(function() {
-        // 좋아요 버튼 클릭 시 처리
-        $('#favorite-btn').click(function() {
-            let itemId = [[${itemDetail.id}]];
-            $.ajax({
-                url: '/favorite/toggle/' + itemId,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(response) {
-                    let icon = $('#favorite-icon');
-                    let count = $('#favorite-count-logged-in');  // 로그인된 사용자용 count 업데이트
-                    if (response.isFavorite) {
-                        icon.removeClass('bi-heart').addClass('bi-heart-fill');
-                    } else {
-                        icon.removeClass('bi-heart-fill').addClass('bi-heart');
-                    }
-                    count.text(response.totalFavorites);
-                },
-                error: function(xhr, status, error) {
-                    console.error('좋아요 토글 실패:', error);
-                }
-            });
+        // 로그인 여부 확인
+        const isLoggedIn = [[${#authentication.principal != 'anonymousUser'}]];
+
+        // 교환 신청 버튼 클릭 이벤트
+        $('#exchange-btn').click(function() {
+            if (!isLoggedIn) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/member/login';
+            } else {
+                $('#exchangeModal').modal('show');
+            }
         });
 
         // 페이지 로드 시 좋아요 상태 및 개수 초기화
@@ -285,16 +275,6 @@
                     console.error('삭제 요청 실패:', error);
                 }
             });
-        });
-
-        // 교환 신청 버튼 클릭 시 로그인 확인
-        $('#exchange-btn2').click(function() {
-            const isLoggedIn = [[${#authentication.principal != 'anonymousUser'}]];
-
-            if (!isLoggedIn) {
-                alert('로그인이 필요합니다.');
-                window.location.href = '/member/login';
-            }
         });
 
         // 이미지가 하나일 경우 캐러셀의 이전 및 다음 버튼 숨기기
