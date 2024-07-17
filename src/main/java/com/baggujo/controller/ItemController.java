@@ -6,6 +6,7 @@ import com.baggujo.service.FavoriteService;
 import com.baggujo.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -89,13 +90,16 @@ public class ItemController {
 
     @GetMapping("/myfavorite")
     public String getMyFavoriteItems(@AuthenticationPrincipal AuthDTO authDTO, Model model) {
+        if (authDTO == null) {
+            return "redirect:/member/login";
+        }
         return "item/myfavorite";
     }
 
     @GetMapping("/myitems")
     public String getMyItems(@AuthenticationPrincipal AuthDTO authDTO) {
         if (authDTO == null) {
-            return "/member/login";
+            return "redirect:/member/login";
         }
         return "item/myitems";
     }

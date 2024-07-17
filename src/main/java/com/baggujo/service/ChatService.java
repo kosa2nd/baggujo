@@ -4,10 +4,7 @@ import com.baggujo.dao.ChatDAO;
 import com.baggujo.dao.MemberDAO;
 import com.baggujo.dao.NotificationDAO;
 import com.baggujo.dao.TradeDAO;
-import com.baggujo.dto.ChatInsertDTO;
-import com.baggujo.dto.ItemImageInsertDTO;
-import com.baggujo.dto.NotificationInsertDTO;
-import com.baggujo.dto.UploadedChatImageDTO;
+import com.baggujo.dto.*;
 import com.baggujo.dto.enums.ChatType;
 import com.baggujo.dto.enums.NotificationStatus;
 import com.baggujo.dto.enums.TradeStatus;
@@ -50,10 +47,14 @@ public class ChatService {
             throw new SQLException();
         }
         //기존의 채팅 알림 지움
-        long otherMemberId = tradeDAO.getOtherMemberId(chatInsertDTO.getMemberId(), chatInsertDTO.getTradeId());
+        TradeInfoDTO tradeInfoDTO = tradeDAO.getTradeInfoByTradeId(chatInsertDTO.getTradeId());
+        String myNickname = chatInsertDTO.getMemberId() == tradeInfoDTO.getRequestMemberId() ? tradeInfoDTO.getRequestNickname() : tradeInfoDTO.getResponseNickname();
+        long otherMemberId = chatInsertDTO.getMemberId() == tradeInfoDTO.getRequestMemberId() ? tradeInfoDTO.getResponseMemberId() : tradeInfoDTO.getRequestMemberId();
+        String myTitle = chatInsertDTO.getMemberId() == tradeInfoDTO.getRequestMemberId() ? tradeInfoDTO.getRequestTitle() : tradeInfoDTO.getResponseTitle();
         notificationDAO.updateNotificationByMemberIdAndTradeId(otherMemberId, chatInsertDTO.getTradeId(), NotificationStatus.DELETED);
+
         //새로운 채팅 알림을 생성
-        String text = chatInsertDTO.getChatType() == ChatType.TEXT ? chatInsertDTO.getText() : "(이미지)";
+        String text = myTitle + "<br>" + myNickname + " : " + (chatInsertDTO.getChatType() == ChatType.TEXT ? chatInsertDTO.getText() : "(이미지)");
         notificationDAO.insertNotification(new NotificationInsertDTO(otherMemberId, text , "/trade/" + chatInsertDTO.getTradeId(), true, chatInsertDTO.getTradeId()));
     }
 

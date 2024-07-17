@@ -33,10 +33,13 @@
     <div class="row" id="cards">
     </div>
 </div>
-<div id="more">
+<div id="more" class="d-flex justify-content-center">
     <input type="text" id="lastItemId" value="0" hidden>
-    <a href="javascript:getItems()">더보기</a>
+    <button type="button" class="btn btn-primary m-3" onclick="getItems()">더보기</button>
 </div>
+
+<th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
+
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

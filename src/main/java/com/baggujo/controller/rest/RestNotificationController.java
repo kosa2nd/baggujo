@@ -27,7 +27,11 @@ public class RestNotificationController {
 
     //채팅방 입장하거나 채팅 수신시 관련 채팅 알림 모두 지우기
     @PostMapping("/removeAllChat")
-    public ResponseEntity<Boolean> removeAll(@RequestParam long memberId, @RequestParam long tradeId) {
+    public ResponseEntity<Boolean> removeAll(@RequestParam long memberId, @RequestParam long tradeId, @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         try {
             notificationService.removeAllChat(memberId, tradeId);
         } catch (Exception e) {

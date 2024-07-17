@@ -22,21 +22,10 @@
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 <div style="margin-top: 75px;">
     <div class="btn-group m-3" role="group">
-<!--        <button id="btnGroupDrop1" type="button" class="btn btn-light border dropdown-toggle" data-toggle="dropdown"-->
-<!--                aria-haspopup="true" aria-expanded="false">모든 제품-->
-<!--        </button>-->
-<!--        <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1" id="productDropdown">-->
-<!--            <a class="dropdown-item py-2 px-0" href="#">모든 제품</a>-->
-<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리1</a>-->
-<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리2</a>-->
-<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리3</a>-->
-<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리4</a>-->
-<!--            <a class="dropdown-item py-2 px-0" href="#">카테고리5</a>-->
-<!--        </div>-->
         <select class="form-control" id="itemCategoryId" name="itemCategoryId" onchange="javascript:changeCategory()">
-            <option value="" selected disabled>카테고리</option>
-            <option value="0">모든 물품</option>
-            <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}"></option>
+            <option value="" selected disabled><span>카테고리</span><i class="bi bi-caret-down-fill"></i></option>
+            <option value="0" th:selected="${param.itemCategoryId == null}">모든 물품</option>
+            <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}" th:selected="${#strings.equals(category.itemCategoryId, param.itemCategoryId)}"></option>
         </select>
     </div>
 </div>
@@ -48,6 +37,8 @@
     <input type="text" id="lastItemId" value="0" hidden>
     <button type="button" class="btn btn-primary m-3" onclick="getItems()">더보기</button>
 </div>
+
+<th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

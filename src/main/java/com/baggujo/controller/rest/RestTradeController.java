@@ -28,24 +28,26 @@ public class RestTradeController {
     private RequestService requestService;
 
     @PostMapping("/request")
-    public void insertRequest(@RequestBody RequestInsertDTO requestInsertDTO, @AuthenticationPrincipal AuthDTO authDTO) throws SQLException, BadRequestException {
+    public ResponseEntity<Boolean> insertRequest(@RequestBody RequestInsertDTO requestInsertDTO, @AuthenticationPrincipal AuthDTO authDTO) {
         if (authDTO == null) {
-            throw new BadRequestException("Invalid request");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         try {
             tradeService.insertRequest(requestInsertDTO);
         } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+            return new ResponseEntity<Boolean>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
     @GetMapping("/requestList")
-    public ResponseEntity<Map<String, Object>> getRequestList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+    public ResponseEntity<Map<String, Object>> getRequestList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) {
         Map<String, Object> map = new HashMap<>();
         List<RequestDTO> requestDTOS;
         if (authDTO == null) {
-            throw new BadRequestException("Invalid request");
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
         long memberId = authDTO.getId();
@@ -63,22 +65,20 @@ public class RestTradeController {
             }
 
             map.put("lastItemId", lastItemId);
-        } catch (SQLException e) {
-            throw new BadRequestException(e.getMessage());
-        } catch (IndexOutOfBoundsException e) {
-            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (SQLException | IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @GetMapping("/tradeList")
-    public ResponseEntity<Map<String, Object>> getTradeList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+    public ResponseEntity<Map<String, Object>> getTradeList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO){
         Map<String, Object> map = new HashMap<>();
         List<TradeDetailDTO> tradeDTOs;
 
         if (authDTO == null) {
-            throw new BadRequestException("Invalid request");
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
         long memberId = authDTO.getId();
@@ -97,7 +97,7 @@ public class RestTradeController {
 
             map.put("lastItemId", lastItemId);
         } catch (SQLException e) {
-            throw new BadRequestException(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IndexOutOfBoundsException e) {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
@@ -106,12 +106,12 @@ public class RestTradeController {
     }
 
     @GetMapping("/succeedList")
-    public ResponseEntity<Map<String, Object>> getTradeSucceedList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) throws BadRequestException {
+    public ResponseEntity<Map<String, Object>> getTradeSucceedList(@RequestParam long lastRequestId, @RequestParam(required = false) Boolean request, @RequestParam(defaultValue = "12") long offset, @AuthenticationPrincipal AuthDTO authDTO) {
         Map<String, Object> map = new HashMap<>();
         List<TradeDetailDTO> tradeDTOs;
 
         if (authDTO == null) {
-            throw new BadRequestException("Invalid request");
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
         long memberId = authDTO.getId();
@@ -130,7 +130,7 @@ public class RestTradeController {
 
             map.put("lastItemId", lastItemId);
         } catch (SQLException e) {
-            throw new BadRequestException(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IndexOutOfBoundsException e) {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
@@ -139,7 +139,11 @@ public class RestTradeController {
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<Map<String, Object>> acceptRequest(@RequestParam long requestId) {
+    public ResponseEntity<Map<String, Object>> acceptRequest(@RequestParam long requestId, @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
         Map<String, Object> response = new HashMap<>();
         try {
             long tradeId = tradeService.acceptRequest(requestId);
@@ -153,7 +157,11 @@ public class RestTradeController {
     }
 
     @PostMapping("/reject")
-    public ResponseEntity<Map<String, Object>> rejectRequest(@RequestParam long requestId) {
+    public ResponseEntity<Map<String, Object>> rejectRequest(@RequestParam long requestId, @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
         Map<String, Object> response = new HashMap<>();
         try {
             tradeService.rejectRequest(requestId);
@@ -166,7 +174,11 @@ public class RestTradeController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<Map<String, Object>> cancelRequest(@RequestParam long requestId) {
+    public ResponseEntity<Map<String, Object>> cancelRequest(@RequestParam long requestId, @AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
         Map<String, Object> response = new HashMap<>();
         try {
             tradeService.cancelRequest(requestId);
@@ -181,7 +193,7 @@ public class RestTradeController {
     @PostMapping("/decision")
     public ResponseEntity<TradeDecisionResultDTO> decision(@RequestParam long memberId, @RequestParam long tradeId, @RequestParam TradeDecision tradeDecision, @AuthenticationPrincipal AuthDTO authDTO) {
         if (authDTO == null || authDTO.getId() != memberId) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         try {

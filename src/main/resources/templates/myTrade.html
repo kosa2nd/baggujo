@@ -19,7 +19,7 @@
 <body>
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 
-<div class="margin-top">
+<div class="margin-top" style="height: calc(100vh - 175px);">
     <h3>거래내역</h3>
 
     <div class="mx-3 mt-5">
@@ -99,6 +99,8 @@
         </div>
     </div>
 </div>
+
+<th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -311,6 +313,15 @@
         }
     }
 
+    function setCompleteTab() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab === 'complete') {
+            $('#nav-succeed-tab').tab('show');
+            activeTab = 'succeed';
+        }
+    }
+
     $('#nav-waiting-tab').click(function() {
         lastRequestId = 0;
         activeTab = 'waiting';
@@ -366,6 +377,7 @@
     $(document).ready(function() {
         setRequestFilter();
         setActiveTab();
+        setCompleteTab();
         if (activeTab === 'waiting') {
             $('#nav-waiting-tab').click();
         } else if (activeTab === 'trading') {
