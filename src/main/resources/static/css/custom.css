@@ -43,12 +43,29 @@
     border-radius: 50%;
     border: 1px solid white;
 }
-.alarm-read {
+.alarm-read,
+.alarm-read.noti-delete{
     color: darkgray;
 }
-.alarm-read:hover{
+.alarm-read:hover,
+.alarm-read.noti-delete{
     color: gray;
     background-color: #fff;
+}
+.noti-msg {
+    width: 100%;
+    line-height: 1.3rem;
+    text-decoration: none;
+}
+.noti-msg:hover {
+    text-decoration: none;
+    color: inherit;
+}
+.noti-delete {
+    color: black;
+}
+#notifications.dropdown-item {
+    padding: .25rem 1rem !important;
 }
 
 /* 커서 */
