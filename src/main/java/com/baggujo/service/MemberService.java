@@ -29,22 +29,4 @@ public class MemberService {
     public void signUpMember(SignupMemberDTO signupMemberDTO) throws SQLException {
         signupMemberDAO.signUpMember(signupMemberDTO);
     }
-    // 비밀번호 수정
-    public void updatePasswordMember(UpdatePasswordMemberDTO updatePasswordMemberDTO, long memberId) throws InternalException {
-        if (memberDAO.updatePasswordMember(updatePasswordMemberDTO, memberId) != 1) {
-            throw new InternalException("비밀번호 수정 실패했습니다.");
-        }
-    }
-    // 그외 내용 수정
-    public void updateTextMember(UpdateTextMemberDTO updateTextMemberDTO, long memberId) throws InternalException {
-        System.out.println(updateTextMemberDTO + " " + memberId);
-        int result = memberDAO.updateTextMember(updateTextMemberDTO, memberId);
-
-        if (result != 1) {
-            throw new InternalException("이름, 닉네임, 전화번호 수정 실패했습니다.");
-        }
-    }
-    public UpdateTextMemberDTO getMemberById(long memberId) {
-        return memberDAO.getMemberById(memberId);
-    }
 }
