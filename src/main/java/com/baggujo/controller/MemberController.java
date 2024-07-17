@@ -52,42 +52,4 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/update")
-    public String update(@AuthenticationPrincipal AuthDTO authDTO, Model model) {
-        model.addAttribute("updateMember", memberService.getMemberById(authDTO.getId()));
-        return "member/updatemember";
-    }
-
-    // 비밀번호 수정
-//    @PostMapping("/update")
-//    public String updatePassword(@RequestParam UpdatePasswordMemberDTO updatePasswordMemberDTO, @AuthenticationPrincipal AuthDTO authDTO, Model model) {
-//        try{
-//            updatePasswordMemberDTO.setPassword(passwordEncoder.encode(updatePasswordMemberDTO.getPassword()));
-//            memberService.updatePasswordMember(password, authDTO.getId());
-//            return "redirect:/";
-//        } catch (Exception e) {
-//            model.addAttribute("errorMessage", "비밀번호 수정 중 오류가 발생했습니다.");
-//            return "member/login";
-//        }
-//    }
-
-    // 이름, 닉네임, 전화번호 수정
-    @PostMapping("/updatetext")
-    public String updateText(@Validated UpdateTextMemberDTO updateTextMemberDTO, BindingResult result, @AuthenticationPrincipal AuthDTO authDTO, Model model) {
-        System.out.println(updateTextMemberDTO);
-        if (authDTO == null) {
-            return "member/login";
-        }
-        if (result.hasErrors()) {
-            return "member/updatemember";
-        }
-        try{
-            memberService.updateTextMember(updateTextMemberDTO, authDTO.getId());
-            return "redirect:/";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            model.addAttribute("errorMessage", "회원정보 수정 중 오류가 발생했습니다.");
-            return "member/updatemember";
-        }
-    }
 }
