@@ -77,7 +77,18 @@
 }
 
 /* 드롭다운 화살표 스타일 */
-.dropdown .dropdown-menu::before {
+#notifications.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 34px;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+}
+
+#header-menu.dropdown-menu::before,
+#header-menu2.dropdown-menu::before{
     content: '';
     position: absolute;
     top: -7px;
