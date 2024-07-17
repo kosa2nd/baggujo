@@ -154,7 +154,7 @@
                         <td>${request.responseNickname}</td>
                         <td>${request.requestDate}</td>
                         <td>${memberId === request.requestMemberId ? '<button id="request-cancel" type="button" class="btn btn-outline-danger" data-request-id="' + request.id + '">요청취소</button>'
-                        : '<div class="d-flex align-content-center">' +
+                        : '<div class="d-flex align-content-center justify-content-center">' +
                         '<button id="request-reject" type="button" class="btn btn-outline-danger mr-2" data-request-id="' + request.id + '">요청거절</button>' +
                         '<button id="request-accept" type="button" class="btn btn-outline-primary" data-request-id="' + request.id + '">요청수락</button>' +
                         '</div>'}</td>
