@@ -64,7 +64,8 @@
             m2.nickname responseNickname,
             i2.id responseItemId,
             i2.title responseItemTitle,
-            ii2.s_name responseThumbnail
+            ii2.s_name responseThumbnail,
+            t.status
         from trade t, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
         where
         <choose>
@@ -113,7 +114,8 @@
         m2.nickname responseNickname,
         i2.id responseItemId,
         i2.title responseItemTitle,
-        ii2.s_name responseThumbnail
+        ii2.s_name responseThumbnail,
+        t.status
         from trade t, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
         where
         <choose>
