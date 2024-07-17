@@ -20,7 +20,7 @@
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 
 <div class="margin-top" style="height: calc(100vh - 100px);">
-    <h3>거래내역</h3>
+    <h3 class="pt-2 pl-2">거래내역</h3>
 
     <div class="mx-3 mt-5">
         <nav>
@@ -88,6 +88,7 @@
                         <th>응답자</th>
                         <th>거래 시작 날짜</th>
                         <th>거래 완료 날짜</th>
+                        <th>거래 상태</th>
                     </tr>
                     </thead>
                     <tbody id="succeed-content"></tbody>
@@ -261,7 +262,12 @@
 
                 let succeedContent = '';
                 response.tradeSucceedList.forEach(function(trade) {
-                    console.log(trade);
+                    let statusKor = '';
+                    if (trade.status == 'CANCELED') {
+                        statusKor = '거래 취소'
+                    } else {
+                        statusKor = '거래 완료'
+                    }
 
                     succeedContent += `<tr>
                         <td class="d-flex align-content-center cursor" onclick="location.href='/item/detail/${trade.requestItemId}'">
@@ -280,6 +286,7 @@
                         <td>${trade.responseNickname}</td>
                         <td>${trade.tradeStartDate}</td>
                         <td>${trade.tradeEndDate}</td>
+                        <td>${statusKor}</td>
                     </tr>`;
                 });
                 if (append) {
