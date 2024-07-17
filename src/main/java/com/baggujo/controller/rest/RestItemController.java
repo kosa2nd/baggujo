@@ -64,7 +64,7 @@ public class RestItemController {
     public ResponseEntity<Map<String, Object>> getFavoriteItems(@RequestParam(defaultValue = "0") int lastFavoriteNo, @RequestParam(required = false) ItemStatus itemStatus, @AuthenticationPrincipal AuthDTO authDTO) {
 
         if (authDTO == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         Map<String, Object> map = new HashMap<>();

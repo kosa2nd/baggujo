@@ -34,7 +34,7 @@
                         <div>
                             <div class="d-flex align-items-center mt-4 mb-2">
                                 <label for="email" class="form-label mb-0">이메일</label>
-                                <input class="dup ml-2" id="dup" type="checkbox">
+                                <input class="dup ml-2" id="dup" type="checkbox" hidden>
                             </div>
 
 
@@ -131,8 +131,9 @@
     }
 
     $(document).ready(function() {
-    document.getElementById('email').setCustomValidity("중복 확인해주세요");
-    $('#reTypeBtn').hide();
+        document.getElementById('email').setCustomValidity("중복 확인해주세요");
+
+        $('#reTypeBtn').hide();
         $('#checkDupBtn').click(function(event) {
             event.preventDefault();
             checkDup();
@@ -143,8 +144,21 @@
         });
         $('#reTypeBtn').click(function(){
             emailNNValidate();
-
         });
+
+        var pw = document.getElementById("InputPassword");
+        var pwConfirm = document.getElementById("confirmInputPassword");
+        function validatePassword() {
+            if (pw.value != pwConfirm.value) {
+                pwConfirm.setCustomValidity("비밀번호가 일치하지 않습니다");
+            } else {
+                pwConfirm.setCustomValidity("");
+            }
+        }
+
+        pw.onchange = validatePassword;
+        pwConfirm.onchange = validatePassword;
+
     });
 </script>
 </body>
