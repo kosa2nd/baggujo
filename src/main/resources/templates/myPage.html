@@ -19,16 +19,16 @@
 <body>
 <th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
 
-<div class="margin-top" style="height: calc(100vh - 175px);">
-    <h3>마이페이지</h3>
+<div class="margin-top mx-auto" style="width: 80%; height: calc(100vh - 175px);">
+    <h3 class="pt-2">마이페이지</h3>
 
-    <div class="mx-3 mt-5">
+    <div class="mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex justify-content-between align-contents-center">
                 <p th:text="${#authentication.principal.getNickname()}" class="fs-4">유저이름</p>
                 <span class="fs-5 pt-1">&nbsp;님</span>
             </div>
-            <button type="button" class="btn btn-primary" onclick="window.location.href = '/member/update'">프로필 수정</button>
+            <button type="button" class="btn btn-primary">프로필 수정</button>
         </div>
 
         <hr />

@@ -92,6 +92,7 @@
                     <!-- 교환 신청 버튼 -->
                     <th:block sec:authorize="isAuthenticated()">
                         <button id="exchange-btn" th:if="${(#authentication.principal.id != itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
+                        <button id="exchangeList-btn" onclick="location.href='/trade/myTrade'" th:if="${(#authentication.principal.id == itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청내역</button>
                     </th:block>
                 </div>
 
