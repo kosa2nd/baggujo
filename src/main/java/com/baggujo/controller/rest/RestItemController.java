@@ -1,7 +1,6 @@
 package com.baggujo.controller.rest;
 
 import com.baggujo.dto.*;
-import com.baggujo.dao.ItemDAO;
 import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.FavoriteItemPreviewDTO;
 import com.baggujo.dto.ItemPreviewDTO;
@@ -14,13 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.*;

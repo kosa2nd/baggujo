@@ -14,7 +14,6 @@ public interface RequestDAO {
     List<RequestDTO> getRequestByMemberId(long memberId, long lastRequestId, Boolean request, long offset) throws SQLException;
     List<RequestUserItemDTO> getUserItemList(long memberId);
     int updateRequestStatus(long requestId, RequestStatus requestStatus);
-    RequestItemsDTO getRequestItemsByRequestId(long requestId);
     void cancelOther(long requestId) throws SQLException;
     RequestInfoDTO getRequestInfoByRequestId(long requestId) throws SQLException;
 }

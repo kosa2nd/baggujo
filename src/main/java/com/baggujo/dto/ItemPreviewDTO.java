@@ -1,6 +1,5 @@
 package com.baggujo.dto;
 
-import com.baggujo.dto.enums.ItemCondition;
 import com.baggujo.dto.enums.ItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

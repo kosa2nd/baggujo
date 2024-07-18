@@ -1,7 +1,6 @@
 package com.baggujo.service;
 
 import com.baggujo.dao.FavoriteDAO;
-import org.apache.ibatis.jdbc.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

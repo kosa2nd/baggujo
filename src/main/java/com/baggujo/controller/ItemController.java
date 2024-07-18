@@ -2,11 +2,9 @@ package com.baggujo.controller;
 
 import com.baggujo.dto.*;
 import com.baggujo.security.dto.MemberAuthDTO;
-import com.baggujo.service.FavoriteService;
 import com.baggujo.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +22,6 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
-    @Autowired
-    private FavoriteService favoriteService;
 
     @GetMapping("/insert")
     public String insert(Model model) {
