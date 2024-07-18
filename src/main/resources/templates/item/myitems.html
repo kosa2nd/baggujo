@@ -60,19 +60,40 @@
                          return;
                     }
                     response.items.forEach(function(item) {
+
+                        let badgeClass = 'bg-primary';
+                        let statusValuekor = '';
+
+                        switch (item.status) {
+                            case 'WAITING':
+                                badgeClass = 'bg-primary';
+                                statusValuekor = '미거래';
+                                break;
+                            case 'TRADING':
+                                badgeClass = 'bg-secondary';
+                                statusValuekor = '거래중';
+                                break;
+                            case 'TRADED':
+                                badgeClass = 'bg-dark';
+                                statusValuekor = '거래완료';
+                                break;
+                            default:
+                                badgeClass = 'bg-primary';
+                        }
+
                         let itemHtml = '<div class="col-md-3 mb-4" onclick="window.location.href=\'/item/detail/' + item.id + '\'">'
-                                        + '<div class="product-card border rounded-lg cursor p-3">'
-                                            + '<div class="product-image">'
-                                                + '<img class="w-100 h-100 border rounded-lg my-2" src="/images/' + item.s_name + '" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'"/>'
-                                            + '</div>'
-                                            + '<div class="d-flex justify-content-between align-items-center py-1">'
-                                                + '<span class="badge rounded-pill bg-secondary text-white px-2 py-1">' + item.status + '</span>'
-                                            + '</div>'
-                                            + '<h5 class="product-title text-truncate py-1"><b>' + item.title + '</b></h5>'
-                                            + '<p>' + item.nickname + '</p>'
-                                            + '<p>' + item.uploadDate + '</p>'
-                                        + '</div>'
-                                     + '</div>';
+                            + '<div class="product-card border rounded-lg cursor p-3">'
+                            + '<div class="product-image">'
+                            + '<img class="w-100 h-100 border rounded-lg my-2" src="/images/' + item.s_name + '" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'" />'
+                            + '</div>'
+                            + '<div class="d-flex justify-content-between align-items-center py-1">'
+                            + '<span class="badge rounded-pill ' + badgeClass + ' mt-1 text-white px-2 py-1">' + statusValuekor + '</span>'
+                            + '</div>'
+                            + '<h5 class="product-title text-truncate py-1"><b>' + item.title + '</b></h5>'
+                            + '<p>' + item.nickname + '</p>'
+                            + '<p>' + item.uploadDate + '</p>'
+                            + '</div>'
+                            + '</div>';
 
                         $('#cards').append(itemHtml);
                     });
