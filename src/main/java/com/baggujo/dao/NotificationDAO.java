@@ -3,10 +3,8 @@ package com.baggujo.dao;
 import com.baggujo.dto.NotificationDetailDTO;
 import com.baggujo.dto.NotificationInsertDTO;
 import com.baggujo.dto.enums.NotificationStatus;
-import com.baggujo.dto.enums.TradeStatus;
 import org.apache.ibatis.annotations.Mapper;
 
-import javax.management.remote.TargetedNotification;
 import java.sql.SQLException;
 import java.util.List;
 

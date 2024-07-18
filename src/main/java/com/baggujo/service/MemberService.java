@@ -4,9 +4,6 @@ import com.baggujo.dao.MemberDAO;
 import com.baggujo.dao.SignupMemberDAO;
 import com.baggujo.dto.MemberDTO;
 import com.baggujo.dto.SignupMemberDTO;
-import com.baggujo.dto.UpdatePasswordMemberDTO;
-import com.baggujo.dto.UpdateTextMemberDTO;
-import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

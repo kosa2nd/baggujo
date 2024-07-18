@@ -1,11 +1,8 @@
 package com.baggujo.controller;
 
-import com.baggujo.dto.AuthDTO;
 import com.baggujo.dto.SignupMemberDTO;
-import com.baggujo.dto.UpdateTextMemberDTO;
 import com.baggujo.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

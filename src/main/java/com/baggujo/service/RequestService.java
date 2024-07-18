@@ -4,7 +4,6 @@ import com.baggujo.dao.NotificationDAO;
 import com.baggujo.dao.RequestDAO;
 import com.baggujo.dto.RequestDTO;
 import com.baggujo.dto.RequestUserItemDTO;
-import com.baggujo.dto.TradeDetailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +16,10 @@ public class RequestService {
 
     @Autowired
     private RequestDAO requestDAO;
-    @Autowired
-    private NotificationDAO notificationDAO;
 
     // 유저 물품 리스트 조회
     public List<RequestUserItemDTO> getRequestUserItems(long memberId) {
-        List<RequestUserItemDTO> requestUserItemDTOs = new ArrayList<>();
+        List<RequestUserItemDTO> requestUserItemDTOs;
         requestUserItemDTOs = requestDAO.getUserItemList(memberId);
         return requestUserItemDTOs;
     }

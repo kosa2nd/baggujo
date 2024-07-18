@@ -3,16 +3,12 @@ package com.baggujo.controller;
 import com.baggujo.dto.*;
 import com.baggujo.service.ChatService;
 import com.baggujo.service.TradeService;
-import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.sql.SQLException;
@@ -63,7 +59,7 @@ public class TradeController {
                 System.out.println(chat);
             }
         } catch (SQLException e) {
-            System.out.println("--------------------!!!!");
+            System.out.println(e.getMessage());
         }
         model.addAttribute("tradeInfoDTO", tradeInfoDTO);
         return "/trade/dotrade";

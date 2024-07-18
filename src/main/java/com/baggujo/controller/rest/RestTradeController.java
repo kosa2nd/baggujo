@@ -4,7 +4,6 @@ import com.baggujo.dto.*;
 import com.baggujo.dto.enums.TradeDecision;
 import com.baggujo.service.RequestService;
 import com.baggujo.service.TradeService;
-import org.apache.coyote.BadRequestException;
 import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
