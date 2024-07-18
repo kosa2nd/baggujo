@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TradeStatus {
-    TRADING("거래중"), SUCCEED("거래 완료"), CANCELED("거래 취소");
+    TRADING("거래중"), SUCCEED("거래완료"), CANCELED("거래취소");
 
     private String kor;
 

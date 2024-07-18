@@ -211,6 +211,7 @@ html {
     background-color: #f8f9fa;
 }
 .chat-message-end {
+    justify-content: center;
     background-color: #f8d7da;
 }
 .chat-message.sent {

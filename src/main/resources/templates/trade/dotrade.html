@@ -73,7 +73,7 @@
                 <p th:if="${chat.chatType.name().equals('TEXT') && chat.memberId != #authentication.principal.id}" class="chat-time received"
                    th:text="${chat.getFormattedSendDate()}">21:49</p>
             </div>
-            <p th:if="${chat.chatType.name().equals('TRADE_END')}" th:text="${chat.text}"
+            <p class="chat-message" th:if="${chat.chatType.name().equals('TRADE_END')}" th:text="${chat.text}"
                th:classappend="chat-message-end"></p>
             <div class="d-flex align-items-end">
                 <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId == #authentication.principal.id}" class="chat-time sent"
@@ -83,42 +83,6 @@
                      th:classappend="${chat.memberId == #authentication.principal.id} ? 'chat-message sent image' : 'chat-message received image'"/>
                 <p th:if="${chat.chatType.name().equals('IMAGE') && chat.memberId != #authentication.principal.id}" class="chat-time received"
                    th:text="${chat.getFormattedSendDate()}"></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- 모달 -->
-    <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deliveryModalLabel">배송조회</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="https://info.sweettracker.co.kr/tracking/5" method="post">
-                        <div class="form-group" hidden="true">
-                            <label for="t_key">API key</label>
-                            <input type="text" class="form-control" id="t_key" name="t_key" value="rF2oGHDAwE5BEgjdXnO81Q" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>택배사: </label>
-                            <select id="delivery-code-select" class="deliveryCompany-selectpicker selectpicker" data-live-search="true" name="t_code">
-                                <option value="" selected disabled>택배사 선택</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="t_invoice">운송장 번호</label>
-                            <input type="text" class="form-control" name="t_invoice" id="t_invoice" placeholder="운송장 번호">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button id="delivery-select-btn" type="submit" class="btn btn-success">택배조회</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                </div>
             </div>
         </div>
     </div>
@@ -147,6 +111,42 @@
             <div class="d-flex w-100 align-items-center">
                 <input id='msg' type="text" class="form-control mr-3" placeholder="메세지를 입력하세요">
                 <button class="btn btn-secondary" id="sendBtn">전송</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 모달 -->
+<div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deliveryModalLabel">배송조회</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="https://info.sweettracker.co.kr/tracking/5" method="post">
+                    <div class="form-group" hidden="true">
+                        <label for="t_key">API key</label>
+                        <input type="text" class="form-control" id="t_key" name="t_key" value="rF2oGHDAwE5BEgjdXnO81Q" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>택배사: </label>
+                        <select id="delivery-code-select" class="deliveryCompany-selectpicker selectpicker" data-live-search="true" name="t_code">
+                            <option value="" selected disabled>택배사 선택</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="t_invoice">운송장 번호</label>
+                        <input type="text" class="form-control" name="t_invoice" id="t_invoice" placeholder="운송장 번호">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="delivery-select-btn" type="submit" class="btn btn-success">택배조회</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
@@ -269,6 +269,8 @@
                     return 'bg-secondary';
                 case '거래완료':
                     return 'bg-dark';
+                case '거래취소':
+                    return 'bg-danger';
                 default:
                     return 'bg-primary';
             }
@@ -315,7 +317,7 @@
                     }
                     str += '</div></div>';
                 } else if (chatType == 'TRADE_END') {
-                    str = '<div class="chat-message-wrapper"><p class="chat-message chat-message-end">' + content.text + '</p></div>';
+                    str = '<div class="chat-message-wrapper"><div class="d-flex"><p class="chat-message chat-message-end">' + content.text + '</p></div></div>';
 
                     alert(content.text);
                     $('#sendDecisionBox').remove();
