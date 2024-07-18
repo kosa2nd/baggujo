@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.NotificationDAO">
+    <insert id="insertNotification">
+        insert into notification (
+            member_id, text, link, is_chat
+        <if test="isChat == true">
+            , trade_id
+        </if>
+        )
+        values (
+            #{memberId}, #{text}, #{link}, #{isChat}
+        <if test="isChat == true">
+            , #{tradeId}
+        </if>
+        )
+    </insert>
+
+    <!--거래 수락시 해당 물품과 관련된 다른 요청은 자동 취소(요청 송신측)-->
+    <insert id="insertRequestCancelNotiByRequestId">
+        insert into notification (member_id, text, link, is_chat)
+            select i1.member_id member_id, i2.title || '로 보낸 요청이 취소됐어요' text, '/trade/myTrade' link, 0
+        from request r, item i1, item i2
+        where r.request_item_id = i1.id
+        and r.response_item_id = i2.id
+        and (r.request_item_id = (select request_item_id from request where id = #{requestId})
+            or r.request_item_id = (select response_item_id from request where id = #{requestId})
+            or r.response_item_id = (select request_item_id from request where id = #{requestId})
+            or r.response_item_id = (select response_item_id from request where id = #{requestId}))
+        and r.id != #{requestId}
+        and r.status = 'WAITING'
+    </insert>
+
+    <!--거래 수락시 해당 물품과 관련된 다른 요청은 자동 취소(요청 수신측)-->
+    <insert id="insertResponseCancelNotiByRequestId">
+        insert into notification (member_id, text, link, is_chat)
+            select i2.member_id member_id, i1.title || '로 부터 받은 요청이 취소됐어요' text, '/trade/myTrade' link, 0
+        from request r, item i1, item i2
+        where r.request_item_id = i1.id
+        and r.response_item_id = i2.id
+        and (r.request_item_id = (select request_item_id from request where id = #{requestId})
+            or r.request_item_id = (select response_item_id from request where id = #{requestId})
+            or r.response_item_id = (select request_item_id from request where id = #{requestId})
+            or r.response_item_id = (select response_item_id from request where id = #{requestId}))
+        and r.id != #{requestId}
+        and r.status = 'WAITING'
+    </insert>
+
+    <!-- 알림 하나에 대한 상태 변경(알림 읽음, 삭제 처리용) -->
+    <update id="updateNotificationById">
+        update notification
+        set status = #{notificationStatus}
+        where id = #{notificationId}
+        and status != 'DELETED'
+    </update>
+
+    <!-- 거래번호에 맞는 알림 상태 변경 (채팅 알림 처리용) -->
+    <update id="updateNotificationByMemberIdAndTradeId">
+        update notification
+        set status = #{notificationStatus}
+        where trade_id = #{tradeId}
+        and member_id = #{memberId}
+        and status != 'DELETED'
+    </update>
+
+    <select id="getNotifications" resultType="com.baggujo.dto.NotificationDetailDTO">
+        select id, notified_date, status, text, link, is_chat, trade_id
+        from notification
+        where member_id = #{memberId}
+        and status != 'DELETED'
+        order by notified_date desc
+    </select>
+</mapper>

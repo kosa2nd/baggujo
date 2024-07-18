@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.TradeDAO">
+    <insert id="insertTradeByRequestId">
+        <selectKey order="BEFORE" keyProperty="id" resultType="long">
+            select trade_pk_seq.nextval from dual
+        </selectKey>
+        insert into trade (
+            id,
+            status,
+            request_decision,
+            response_decision,
+            request_item_id,
+            response_item_id)
+        select
+            #{id},
+            #{status},
+            #{tradeDecision},
+            #{tradeDecision},
+            r.request_item_id,
+            r.response_item_id
+        from request r
+        where r.id = #{requestId}
+    </insert>
+
+    <select id="getTradeInfoByTradeId" resultType="com.baggujo.dto.TradeInfoDTO">
+        select t.id, m1.id requestMemberId, m1.nickname requestNickname, i1.id requestItemId, i1.title requestTitle, ii1.s_name requestThumbnail,
+               m2.id responseMemberId, m2.nickname responseNickname, i2.id responseItemId, i2.title responseTitle, ii2.s_name responseThumbnail, t.status
+        from trade t, member m1, member m2, item i1, item i2, item_image ii1, item_image ii2
+        where
+            t.id = #{tradeId}
+          and
+            t.request_item_id = i1.id
+          and
+            t.response_item_id = i2.id
+          and
+            i1.member_id = m1.id
+          and
+            i2.member_id = m2.id
+          and
+            i1.id = ii1.item_id(+)
+          and
+            (ii1.img_no = 1 or ii1.img_no is null)
+          and
+            i2.id = ii2.item_id(+)
+          and
+            (ii2.img_no = 1 or ii2.img_no is null)
+    </select>
+
+    <select id="getTradeListByMemberId" resultType="com.baggujo.dto.TradeDetailDTO">
+        select
+            t.id,
+            t.start_date tradeStartDate,
+            t.end_date tradeEndDate,
+
+            m1.id requestMemberId,
+            m1.nickname requestNickname,
+            i1.id requestItemId,
+            i1.title requestItemTitle,
+            ii1.s_name requestThumbnail,
+
+            m2.id responseMemberId,
+            m2.nickname responseNickname,
+            i2.id responseItemId,
+            i2.title responseItemTitle,
+            ii2.s_name responseThumbnail,
+            t.status
+        from trade t, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
+        where
+        <choose>
+            <when test="request == null">
+                (i1.member_id = #{memberId} or i2.member_id = #{memberId})
+            </when>
+            <when test="request">
+                i1.member_id = #{memberId}
+            </when>
+            <otherwise>
+                i2.member_id = #{memberId}
+            </otherwise>
+        </choose>
+            and t.request_item_id = i1.id
+            and i1.member_id = m1.id
+            and i1.id = ii1.item_id(+)
+            and (ii1.img_no = 1 or ii1.img_no is null)
+            and i1.member_id = m1.id
+
+            and t.response_item_id = i2.id
+            and i2.member_id = m2.id
+            and i2.id = ii2.item_id(+)
+            and (ii2.img_no = 1 or ii2.img_no is null)
+            and i2.member_id = m2.id
+        <if test="lastRequestId != 0">
+            <![CDATA[and r.id < #{lastRequestId}]]>
+        </if>
+         and t.status = 'TRADING'
+        order by t.start_date desc
+        fetch first #{offset} rows only
+    </select>
+
+    <select id="getTradeSucceedListByMemberId" resultType="com.baggujo.dto.TradeDetailDTO">
+        select
+        t.id,
+        t.start_date tradeStartDate,
+        t.end_date tradeEndDate,
+
+        m1.id requestMemberId,
+        m1.nickname requestNickname,
+        i1.id requestItemId,
+        i1.title requestItemTitle,
+        ii1.s_name requestThumbnail,
+
+        m2.id responseMemberId,
+        m2.nickname responseNickname,
+        i2.id responseItemId,
+        i2.title responseItemTitle,
+        ii2.s_name responseThumbnail,
+        t.status
+        from trade t, item i1, item i2, item_image ii1, item_image ii2, member m1, member m2
+        where
+        <choose>
+            <when test="request == null">
+                (i1.member_id = #{memberId} or i2.member_id = #{memberId})
+            </when>
+            <when test="request">
+                i1.member_id = #{memberId}
+            </when>
+            <otherwise>
+                i2.member_id = #{memberId}
+            </otherwise>
+        </choose>
+        and t.request_item_id = i1.id
+        and i1.member_id = m1.id
+        and i1.id = ii1.item_id(+)
+        and (ii1.img_no = 1 or ii1.img_no is null)
+        and i1.member_id = m1.id
+
+        and t.response_item_id = i2.id
+        and i2.member_id = m2.id
+        and i2.id = ii2.item_id(+)
+        and (ii2.img_no = 1 or ii2.img_no is null)
+        and i2.member_id = m2.id
+        <if test="lastRequestId != 0">
+            <![CDATA[and r.id < #{lastRequestId}]]>
+        </if>
+        and t.status != 'TRADING'
+        order by t.start_date desc
+        fetch first #{offset} rows only
+    </select>
+
+    <update id="updateRequestDecision">
+        update trade
+        set request_decision = #{tradeDecision}
+        where id = #{tradeId}
+    </update>
+
+    <update id="updateResponseDecision">
+        update trade
+        set response_decision = #{tradeDecision}
+        where id = #{tradeId}
+    </update>
+
+    <select id="getTradeDecisionResultByTradeId" resultType="com.baggujo.dto.TradeDecisionResultDTO">
+        select request_decision, response_decision, status
+        from trade
+        where id = #{tradeId}
+    </select>
+
+    <update id="updateTradeStatusByTradeId">
+        update trade
+        set status = #{tradeStatus}, end_date = sysdate
+        where id = #{tradeId}
+    </update>
+
+    <select id="getOtherMemberId" resultType="long">
+        select
+        case
+            when #{memberId} = i1.member_id then i2.member_id
+            when #{memberId} = i2.member_id then i1.member_id
+            end as other_member_id
+        from
+            Trade t
+            join item i1
+                on i1.id = t.request_item_id
+            join item i2
+                on i2.id = t.response_item_id
+        where t.id = #{tradeId}
+    </select>
+</mapper>

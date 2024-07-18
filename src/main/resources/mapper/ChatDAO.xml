@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.ChatDAO">
+    <!-- 채팅 생성 -->
+    <insert id="insertChat" parameterType="com.baggujo.dto.ChatInsertDTO">
+        INSERT INTO chat (
+        <if test="chatType.name() == 'IMAGE'">
+            img_name, img_s_name
+        </if>
+        <if test="chatType.name() == 'TEXT' or chatType.name() == 'TRADE_END'">
+            text
+        </if>
+        , chat_type, trade_id, member_id
+        )
+        VALUES (
+        <if test="chatType.name() == 'IMAGE'">
+            #{imgName}, #{imgSName}
+        </if>
+        <if test="chatType.name() == 'TEXT' or chatType.name() == 'TRADE_END'">
+            #{text}
+        </if>
+        , #{chatType}, #{tradeId}, #{memberId})
+    </insert>
+
+    <select id="getChat" resultType="com.baggujo.dto.ChatInsertDTO">
+        select member_id, trade_id, text, img_name, img_s_name, chat_type, send_date
+        from chat
+        where trade_id = #{tradeId}
+        order by send_date
+    </select>
+</mapper>

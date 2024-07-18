@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="../../static/img/favicon.png" type="image/png">
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootswatch Litera theme -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
+    <link href="../../static/css/custom.css?ver=1.0" rel="stylesheet">
+
+    <title>바꾸조</title>
+</head>
+<body>
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+<div style="margin-top: 75px;">
+    <div class="btn-group m-3" role="group">
+        <select class="form-control" id="itemCategoryId" name="itemCategoryId" onchange="javascript:changeCategory()">
+            <option value="" selected disabled><span>카테고리</span><i class="bi bi-caret-down-fill"></i></option>
+            <option value="0" th:selected="${param.itemCategoryId == null}">모든 물품</option>
+            <option th:each="category : ${categories}" th:value="${category.itemCategoryId}" th:text="${category.itemCategoryName}" th:selected="${#strings.equals(category.itemCategoryId, param.itemCategoryId)}"></option>
+        </select>
+    </div>
+</div>
+<div class="container mt-3 p-0">
+    <div class="row" id="cards">
+    </div>
+</div>
+<div id="more" class="d-flex justify-content-center">
+    <input type="text" id="lastItemId" value="0" hidden>
+    <button type="button" class="btn btn-primary m-3" onclick="getItems()">더보기</button>
+</div>
+
+<th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function getItems() {
+            urlSearch = new URLSearchParams(location.search);
+            $.ajax({
+                url : '/item/list',
+                method : 'GET',
+                dataType: 'json',
+                data: {
+                    "itemId" : document.getElementById("lastItemId").value,
+                    "itemStatus" : urlSearch.has("itemStatus") ? urlSearch.get("itemStatus") : '',
+                    "itemCategoryId" :  urlSearch.has("itemCategoryId") ? urlSearch.get("itemCategoryId") : 0,
+                    "exceptTraded" : urlSearch.has("exceptTraded") ? urlSearch.get("exceptTraded") : true,
+                    "keyword" : urlSearch.has("keyword") ? urlSearch.get("keyword") : ''
+                },
+                success: function(response) {
+                    if (response.finished) {
+                         alert("마지막 페이지입니다");
+                         return;
+                    }
+
+                response.items.forEach(function(item) {
+
+                    let badgeClass = 'bg-primary';
+                    let statusValuekor = '';
+
+                    switch (item.status) {
+                        case 'WAITING':
+                            badgeClass = 'bg-primary';
+                            statusValuekor = '미거래';
+                            break;
+                        case 'TRADING':
+                            badgeClass = 'bg-secondary';
+                            statusValuekor = '거래중';
+                            break;
+                        case 'TRADED':
+                            badgeClass = 'bg-dark';
+                            statusValuekor = '거래완료';
+                            break;
+                        default:
+                            badgeClass = 'bg-primary';
+                    }
+
+                    let itemHtml = '<div class="col-md-3 mb-4" onclick="window.location.href=\'/item/detail/' + item.id + '\'">'
+                                    + '<div class="product-card border rounded-lg cursor p-3">'
+                                        + '<div class="product-image">'
+                                            + '<img class="w-100 h-100 border rounded-lg my-2" src="/images/' + item.s_name + '" onerror="this.onerror=null; this.src=\'/static/img/logo_black.svg\'" />'
+                                        + '</div>'
+                                        + '<div class="d-flex justify-content-between align-items-center py-1">'
+                                            + '<span class="badge rounded-pill ' + badgeClass + ' mt-1 text-white px-2 py-1">' + statusValuekor + '</span>'
+                                        + '</div>'
+                                        + '<h5 class="product-title text-truncate py-1"><b>' + item.title + '</b></h5>'
+                                        + '<p>' + item.nickname + '</p>'
+                                        + '<p>' + item.uploadDate + '</p>'
+                                    + '</div>'
+                                 + '</div>';
+
+                    $('#cards').append(itemHtml);
+                });
+                document.getElementById("lastItemId").value = response.lastItemId;
+            },
+            error: function(error) {
+                alert('물품을 불러올 수 없습니다');
+                console.error('Error:', error);
+            }
+        });
+    };
+
+    function changeCategory() {
+        const val = $("#itemCategoryId option:selected").val();
+        if (val != 0) {
+            window.location.href='/?itemCategoryId=' + val;
+        } else {
+            window.location.href='/';
+        }
+    }
+
+    $(document).ready(function() {
+        getItems(0);
+    });
+</script>
+</body>
+</html>

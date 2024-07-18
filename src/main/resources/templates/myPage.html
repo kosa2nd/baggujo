@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="../../static/img/favicon.png" type="image/png">
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootswatch Litera theme -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
+    <link href="../../static/css/custom.css?ver=1.0" rel="stylesheet">
+    <title>바꾸조</title>
+</head>
+<body>
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+
+<div class="margin-top mx-auto" style="width: 80%; height: calc(100vh - 175px);">
+    <h3 class="pt-2">마이페이지</h3>
+
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-contents-center">
+                <p th:text="${#authentication.principal.getNickname()}" class="fs-4">유저이름</p>
+                <span class="fs-5 pt-1">&nbsp;님</span>
+            </div>
+        </div>
+
+        <hr />
+
+        <div>
+            <div class="px-2 py-3 fs-5 cursor" onclick="location.href='/item/myfavorite'">
+                <i class="bi bi-heart pr-2"></i>
+                <span>관심 내역</span>
+            </div>
+            <div class="px-2 py-3 fs-5 cursor" onclick="location.href='trade/myTrade'">
+                <i class="bi bi-card-list pr-2"></i>
+                <span>거래 내역</span>
+            </div>
+            <div class="px-2 py-3 fs-5 cursor" onclick="location.href='/item/myitems'">
+                <i class="bi bi-people pr-2"></i>
+                <span>내 교환글</span>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

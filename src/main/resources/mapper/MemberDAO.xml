@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baggujo.dao.MemberDAO">
+    <select id="findMemberByEmail" resultType="com.baggujo.dto.MemberDTO">
+        <![CDATA[
+            select * from member where email = #{email}
+        ]]>
+    </select>
+
+    <!-- 회원가입시 중복 이메일 조회 -->
+    <select id="getEmailDuplicated" resultType="boolean">
+        select case when count(*) > 0 then 1 else 0 end
+        from member
+        where email = #{email}
+    </select>
+
+    <!-- 회원정보 조회 -->
+    <select id="getMemberById" resultType="com.baggujo.dto.UpdateTextMemberDTO">
+        select password, name, nickname, phone_number from member where id = #{memberId}
+    </select>
+
+    <select id="getMemberIdByItemId" resultType="long">
+        select m.id
+        from member m, item i
+        where m.id = i.member_id
+        and i.id = #{itemId}
+    </select>
+</mapper>
