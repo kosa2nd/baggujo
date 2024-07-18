@@ -15,17 +15,166 @@
         ]]>
     </insert>
 
-    <!-- 아이템 상세 조회 -->
-    <select id="getItemDetailById" parameterType="long" resultType="com.baggujo.dto.ItemDetailDTO">
-        SELECT i.id, i.title, i.description, i.enable, i.status AS itemStatus, i.condition AS itemCondition,
-               i.item_category_id AS itemCategoryId, c.category AS itemCategoryName
-        FROM BAGGUJO.ITEM i
-                 JOIN ITEM_CATEGORY c ON i.item_category_id = c.id
+    <!-- 물품 상세 결과 -->
+    <resultMap id="ItemDetailResultMap" type="com.baggujo.dto.ItemDetailDTO">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="enable" column="enable"/>
+        <result property="uploadDate" column="uploadDate"/>
+        <result property="updateDate" column="updateDate"/>
+        <result property="itemStatus" column="itemStatus"/>
+        <result property="itemCondition" column="itemCondition"/>
+        <result property="itemCategoryId" column="itemCategoryId"/>
+        <result property="itemCategoryName" column="itemCategoryName"/>
+        <result property="memberId" column="member_id"/>
+        <result property="nickname" column="nickname"/>
+        <collection property="itemImages" ofType="java.lang.String">
+            <result column="imgUrl"/>
+        </collection>
+    </resultMap>
+
+    <!-- 물품 상세 조회 -->
+    <select id="getItemDetailById" parameterType="long" resultMap="ItemDetailResultMap">
+        SELECT i.id, i.title, i.description, i.enable, i.upload_date as uploadDate, i.update_date as updateDate,
+               i.status AS itemStatus, i.condition AS itemCondition,
+               i.item_category_id, c.category AS itemCategoryName,
+               i.member_id, m.nickname,
+               img.name AS imgUrl
+        FROM item i
+        JOIN ITEM_CATEGORY c
+            ON i.item_category_id = c.id
+        JOIN MEMBER m
+            ON i.MEMBER_ID = m.id
+        LEFT JOIN ITEM_IMAGE img ON i.ID = img.ITEM_ID
         WHERE i.id = #{id}
     </select>
 
     <!-- 아이템 카테고리 조회 -->
     <select id="getCategories" resultType="com.baggujo.dto.CategoryDTO">
         SELECT id as itemCategoryId, category as itemCategoryName FROM ITEM_CATEGORY
+    </select>
+
+    <!-- 상품리스트 조회 -->
+    <select id="getItemPreviews" resultType="com.baggujo.dto.ItemPreviewDTO">
+        select * from (
+            select i.id, i.title, ii.s_name, i.upload_date, i.status, i.item_category_id, ic.category, i.member_id, m.nickname
+            from item i, item_image ii, item_category ic, member m
+            where i.item_category_id = ic.id
+                and i.id = ii.item_id(+)
+                and (ii.img_no = 1 or ii.img_no is null)
+                and i.member_id = m.id
+            <if test="exceptTraded">
+                and i.status != 'TRADED'
+            </if>
+            <if test="itemCategoryId != 0">
+                and ic.id = #{itemCategoryId}
+            </if>
+            <if test="itemStatus != null">
+                and i.status = #{itemStatus}
+            </if>
+            <if test="lastItemId != 0">
+                <![CDATA[and i.id < #{lastItemId}]]>
+            </if>
+            <if test="keyword != null">
+                and i.title like '%' || #{keyword} || '%'
+            </if>
+                and i.enable = 1
+            order by i.upload_date desc)
+            fetch first #{offset} rows only
+    </select>
+
+    <!-- 교환 상태 변경 -->
+    <update id="updateItemStatus">
+        UPDATE item
+        set status = #{itemStatus}
+        WHERE id = #{itemId}
+    </update>
+
+    <!-- 물품 상태 조회 -->
+    <select id="getItemStatusById" resultType="com.baggujo.dto.enums.ItemStatus">
+        select status
+        from item
+        where id = #{itemId}
+    </select>
+
+    <!--- 물품 상태 변경(조회 아이디로 변경) -->
+    <update id="updateItemStatusByRequestId">
+        UPDATE item
+        set status = #{itemStatus}
+        WHERE id = (select request_item_id
+                    from request
+                    where id = #{requestId})
+        or id = (select response_item_id
+                from request
+                where id = #{requestId})
+    </update>
+
+    <select id="getFavoriteItemPreviews" resultType="com.baggujo.dto.FavoriteItemPreviewDTO">
+        select i.id, i.title, ii.s_name, i.upload_date, i.status, i.item_category_id, ic.category, i.member_id, m.nickname, f.no favoriteNo
+        from item i, item_image ii, item_category ic, member m, favorite f
+        where i.item_category_id = ic.id
+        and i.id = ii.item_id(+)
+        and (ii.img_no = 1 or ii.img_no is null)
+        and i.member_id = m.id
+        and f.item_id = i.id
+        and f.member_id = #{memberId}
+        <if test="itemStatus != null">
+            and i.status = #{itemStatus}
+        </if>
+        <if test="lastFavoriteNo != 0">
+            <![CDATA[and f.no < #{lastFavoriteNo}]]>
+        </if>
+            and i.enable = 1
+        order by f.no desc
+        fetch first #{offset} rows only
+    </select>
+
+    <!--- 내가 작성한 글목록 조회 -->
+    <select id="getMyItems" resultType="com.baggujo.dto.ItemPreviewDTO">
+        select * from (
+        select i.id, i.title, ii.s_name, i.upload_date uploadDate, i.status, i.item_category_id itemCategoryId,
+        ic.category, i.member_id, m.nickname
+        from item i, item_image ii, item_category ic, member m
+        where i.item_category_id = ic.id
+        and i.id = ii.item_id(+)
+        and (ii.img_no = 1 or ii.img_no is null)
+        and i.member_id = m.id
+        and i.member_id = #{memberId}
+        <if test="itemStatus != null">
+            and i.status = #{itemStatus}
+        </if>
+        <if test="lastItemId != 0">
+            <![CDATA[and i.id < #{lastItemId}]]>
+        </if>
+            and i.enable = 1
+        order by i.upload_date desc)
+        fetch first #{offset} rows only
+    </select>
+
+    <!-- 내가 작성한 글 삭제 -->
+    <update id="deleteItem">
+        update item
+        set enable = 0
+        where member_id = #{memberId}
+            and id = #{itemId}
+            and status = 'WAITING'
+    </update>
+
+    <!-- 물품 수정 -->
+    <update id="updateItem" parameterType="map">
+        <![CDATA[
+        UPDATE item
+        SET title = #{item.title}, description = #{item.description}, status = #{item.itemStatus},
+            condition = #{item.itemCondition}, item_category_id = #{item.itemCategoryId}, member_id = #{item.memberId}
+        WHERE id = #{id}
+        ]]>
+    </update>
+
+    <select id="getItemNoti" resultType="com.baggujo.dto.ItemNotiDTO">
+        select i.title, m.id, m.nickname
+        from item i, member m
+        where i.member_id = m.id
+        and i.id = #{itemId}
     </select>
 </mapper>

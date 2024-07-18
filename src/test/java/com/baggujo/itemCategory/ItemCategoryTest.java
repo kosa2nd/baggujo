@@ -1,4 +1,4 @@
-package com.baggujo.emergency;
+package com.baggujo.itemCategory;
 
 import com.baggujo.dao.ItemCategoryDAO;
 import com.baggujo.dto.ItemCategoryDTO;

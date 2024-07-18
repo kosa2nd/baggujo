@@ -2,16 +2,12 @@ package com.baggujo.service;
 
 import com.baggujo.dao.ItemDAO;
 import com.baggujo.dao.ItemImageDAO;
-import com.baggujo.dto.CategoryDTO;
-import com.baggujo.dto.ItemDetailDTO;
-import com.baggujo.dto.ItemImageInsertDTO;
-import com.baggujo.dto.ItemInsertDTO;
+import com.baggujo.dto.*;
+import com.baggujo.dto.enums.ItemStatus;
 import net.coobird.thumbnailator.Thumbnailator;
-import net.coobird.thumbnailator.util.ThumbnailatorUtils;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,47 +33,57 @@ public class ItemService {
     private String uploadPath;
 
     @Transactional
-    public long insertItem(ItemInsertDTO itemInsertDTO) throws SQLException, FileNotFoundException {
+    public long insertItem(ItemInsertDTO itemInsertDTO) throws SQLException, IOException {
         itemDAO.insertItem(itemInsertDTO);
         long id = itemInsertDTO.getId();
-        System.out.println("물품번호 ====== " + id);
+        processItemImages(itemInsertDTO.getFiles(), id);
+        return id;
+    }
 
-        if (itemInsertDTO.getFiles() != null) {
+    @Transactional
+    public void updateItem(long id, ItemInsertDTO itemInsertDTO) throws SQLException, IOException {
+        itemDAO.updateItem(id, itemInsertDTO);
+        if (itemInsertDTO.getFiles() != null && itemInsertDTO.getFiles().length > 0) {
+            boolean hasNonEmptyFile = Arrays.stream(itemInsertDTO.getFiles())
+                    .anyMatch(file -> !file.isEmpty());
+            if (hasNonEmptyFile) {
+                itemImageDAO.deleteItemImages(id);
+                processItemImages(itemInsertDTO.getFiles(), id);
+            }
+        }
+    }
+
+    @Transactional
+    public void updateItemWithoutImages(long id, ItemInsertDTO itemInsertDTO) throws SQLException {
+        itemDAO.updateItem(id, itemInsertDTO);
+    }
+
+    private void processItemImages(MultipartFile[] multipartFiles, long itemId) throws IOException, SQLException {
+        if (multipartFiles != null && multipartFiles.length > 0) {
             List<ItemImageInsertDTO> itemInsertDTOList = new ArrayList<>();
-            LocalDate today = LocalDate.now();
-            String path = makeFolder();
+            String folderPath = makeFolder();
 
-            MultipartFile[] multipartFiles = itemInsertDTO.getFiles();
             for (int i = 0; i < multipartFiles.length; i++) {
-                if (!multipartFiles[i].getContentType().startsWith("image")) {
+                if (!multipartFiles[i].getContentType().startsWith("image") || multipartFiles[i].isEmpty()) {
                     continue;
                 }
 
                 String originalName = multipartFiles[i].getOriginalFilename();
-                String folderPath = makeFolder();
                 String uuid = UUID.randomUUID().toString();
-                String saveName = uploadPath + File.separator + folderPath +
-                        File.separator + uuid + "_" + originalName;
-                Path savePath = Paths.get(saveName);
+                String saveName = folderPath + File.separator + uuid + "_" + originalName;
+                Path savePath = Paths.get(uploadPath + File.separator + saveName);
 
-                try { //실제 저장
-                    // 원본 이미지 파일 저장
-                    multipartFiles[i].transferTo(savePath);
-                    String thumbnailSaveName = uploadPath + File.separator + folderPath +
-                            File.separator + "s_" + uuid + "_" + originalName;
-                    File thumbnailFile = new File(thumbnailSaveName);
-                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
-                    itemInsertDTOList.add(new ItemImageInsertDTO(saveName, thumbnailSaveName, i + 1, id));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                multipartFiles[i].transferTo(savePath);
+                String thumbnailSaveName = folderPath + File.separator + "s_" + uuid + "_" + originalName;
+                File thumbnailFile = new File(uploadPath + File.separator + thumbnailSaveName);
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 300, 300);
+                itemInsertDTOList.add(new ItemImageInsertDTO(saveName, thumbnailSaveName, i + 1, itemId));
             }
 
-            itemImageDAO.insertItemImages(Map.of("list", itemInsertDTOList));
+            if (!itemInsertDTOList.isEmpty()) {
+                itemImageDAO.insertItemImages(Map.of("list", itemInsertDTOList));
+            }
         }
-
-        return id;
     }
 
     private String makeFolder() throws FileNotFoundException {
@@ -100,5 +106,28 @@ public class ItemService {
         return itemDAO.getCategories();
     }
 
+    public List<ItemPreviewDTO> getItemPreviews(int lastItemId, int offset, ItemStatus itemStatus, int itemCategoryId, boolean noTraded, String keyword) throws SQLException {
+        return itemDAO.getItemPreviews(lastItemId, offset, itemStatus, itemCategoryId, noTraded, keyword);
+    }
 
+    public List<FavoriteItemPreviewDTO> getFavoriteItemPreviews(long lastFavoriteNo, long memberId, int offset, ItemStatus itemStatus) throws SQLException {
+        return itemDAO.getFavoriteItemPreviews(lastFavoriteNo, memberId, offset, itemStatus);
+    }
+
+    public List<ItemPreviewDTO> getMyItems(long memberId, long lastItemId, ItemStatus itemStatus, int offset) throws SQLException {
+        return itemDAO.getMyItems(memberId, lastItemId, itemStatus, offset);
+    }
+
+    public void deleteItem(long memberId, long itemId) throws InternalException {
+        try {
+            int result = itemDAO.deleteItem(memberId, itemId);
+            System.out.println(result + "----------------");
+
+            if (result != 1) {
+                throw new InternalException("삭제할 수 없습니다.");
+            }
+        } catch (SQLException e) {
+            throw new InternalException("SQL에러." + e);
+        }
+    }
 }

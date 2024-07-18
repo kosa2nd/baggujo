@@ -1,49 +1,51 @@
 <th:block th:fragment="headerFragment" xmlns:sec="http://www.w3.org/1999/xhtml">
     <nav class="navbar fixed-top bg-dark container-fluid m-0 p-0">
-        <div class="container-fluid d-flex justify-content-between align-items-center m-0 p-0">
+        <div class="container-fluid d-flex justify-content-between align-items-center flex-nowrap m-0 p-0">
             <a class="navbar-brand pl-2" href="/">
-                <img class="p-0 m-0" th:src="@{/static/logo/logo_white.svg}" alt="logo" width="65" height="65" />
+                <img class="p-0 m-0" th:src="@{../../static/img/logo_white.svg}" alt="logo" width="65" height="65" />
             </a>
             <div class="w-75">
-                <form class="d-flex w-60 mx-auto rounded-pill bg-white">
-                    <input class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" type="search" placeholder="Search">
-                    <button class="btn no-outline rounded-circle" type="submit">
+                <div class="d-flex w-60 mx-auto rounded-pill bg-white">
+                    <input id='keyword' class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" type="search" placeholder="Search" th:value="${param.keyword}">
+                    <button id="searchBtn" class="btn no-outline rounded-circle" onclick="javascript:search()">
                         <i class="bi bi-search"></i>
                     </button>
-                </form>
+                </div>
             </div>
             <div class="d-flex justify-content-between align-items-center pr-3">
                 <div class="pr-3" role="button" sec:authorize="isAuthenticated()" onclick="location.href='/item/insert'">
                     <i class="bi bi-pencil-square fs-4 text-white"></i>
                 </div>
 
-                <div class="dropdown">
-                    <div class="pr-3 cursor" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="dropdown" id='notiDrop' sec:authorize="isAuthenticated()">
+                    <input type="checkbox" id="notificationOpened" hidden>
+                    <div class="pr-3 cursor dropdown-toggle no-caret" role="button" type="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="bi bi-bell text-white fs-4 alarm"></i>
                     </div>
-                    <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="notificationDropdown">
-                        <a class="dropdown-item py-2" href="#">교환 신청 | ㅇㅇ님의 교환 신청이 도착했습니다.</a>
-                        <a class="dropdown-item py-2 alarm-read" href="#">교환 완료 | ㅇㅇ님과의 교환이 완료되었습니다.</a>
-                        <a class="dropdown-item py-2 alarm-read" href="#">교환 신청 | ㅇㅇ님이 교환 신청을 수락했습니다. </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-center py-2" href="#"><strong>모든 알림 보기</strong></a>
+                    <div id='notifications' class="dropdown-menu dropdown-menu-right mt-2 p-2" style="min-width: 300px;" aria-labelledby="notificationDropdown">
+                        <!-- 알림 항목들 동적 추가 -->
                     </div>
                 </div>
                 <div class="dropdown">
-                    <div role="button" class="cursor dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div role="button" class="cursor dropdown-toggle no-caret" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="bi bi-list text-white fs-4"></i>
                     </div>
                     <!--로그인 후-->
-                    <div  sec:authorize="isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                    <div id="header-menu" sec:authorize="isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton" style="width: 200px;">
+                        <div class="dropdown-item py-2">
+                            <span class="nav-nickname" th:text="${#authentication.principal.getNickname()}">닉네임</span>
+                            <span>님, 안녕하세요.</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/mypage">
                             <i class="bi bi-person fs-5 pr-1"></i>
                             <span>마이페이지</span>
                         </a>
-                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/item/myfavorite">
                             <i class="bi bi-heart fs-6 pr-2"></i>
                             <span>관심목록</span>
                         </a>
-                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="#">
+                        <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/trade/myTrade">
                             <i class="bi bi-card-list fs-6 pr-2"></i>
                             <span>거래내역</span>
                         </a>
@@ -54,7 +56,7 @@
                         </a>
                     </div>
                     <!--로그인 전-->
-                    <div  sec:authorize="!isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+                    <div id="header-menu2" sec:authorize="!isAuthenticated()" class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton" style="width: 200px;">
                         <a class="dropdown-item flex justify-content-start align-items-center py-2" href="/member/login">
                             <i class="bi bi-box-arrow-right fs-5 pr-1"></i>
                             <span>로그인</span>
@@ -64,5 +66,111 @@
             </div>
         </div>
     </nav>
-</th:block>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+    <script>
+        search = function() {
+            let keyword = $('#keyword').val();
+            window.location.href='/?keyword=' + keyword;
+        };
+
+        $('#keyword').on('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Enter 키로 인한 기본 폼 제출 방지
+                search();
+            }
+        });
+    </script>
+
+    <th:block sec:authorize="isAuthenticated()">
+        <script>
+            $(document).ready(function() {
+                $(".dropdown").on("show.bs.dropdown", function(event){
+                    const dropdownId = $(this).find('[data-toggle="dropdown"]').attr('id');
+                    if (dropdownId === 'notificationDropdown') {
+                        $.ajax({
+                            url : '/notification/list',
+                            method : 'GET',
+                            dataType: 'json',
+                            data: {
+                                "memberId" : [[${#authentication.principal.id}]]
+                            },
+                            success: function(notifications) {
+                                displayNotifications(notifications);
+                            },
+                            error: function(error) {
+                                alert('알림을 불러올 수 없습니다');
+                                console.error('Error:', error);
+                            }
+                        });
+                    }
+                });
+
+                function displayNotifications(notifications) {
+                    $('#notifications').empty();
+                    let maxWidth = 200; // 최소 너비 설정
+
+                    if (notifications.length === 0) {
+                        $('#notifications').append('<div class="dropdown-item py-2 text-center">알림이 비어있습니다.</div>');
+                    } else {
+                        notifications.forEach(function(notification) {
+                            let item = ''
+                                + '<div class="dropdown-item py-2 d-flex justify-content-between align-items-end ' + (notification.status === 'CHECKED' ? 'alarm-read' : '') + '" id="noti' + notification.id + '">'
+                                + '<div class="d-flex flex-column w-100">'
+                                + '<p class="mb-1" style="font-size: .8rem">' + notification.notifiedDate + '</p>'
+                                + '<a class="noti-msg text-nowrap" href="javascript:updateNoti(' + notification.id + ', \'CHECKED\', \'' + notification.link + '\')">' + notification.text + '</a>'
+                                + '</div>'
+                                + '<div class="d-flex align-items-center">'
+                                + '<input type="checkbox" ' + (notification.status === 'CHECKED' ? 'checked' : '') + ' onclick="javascript:updateNoti(' + notification.id + ', \'CHECKED\', \'' + notification.link + '\')" hidden>'
+                                + '<button class="btn btn-link p-0" onclick="javascript:updateNoti(' + notification.id + ', \'DELETED\')">'
+                                + '<i class="noti-delete bi bi-x"></i>'
+                                + '</button>'
+                                + '</div>'
+                                + '</div>';
+
+                            $('#notifications').append(item);
+
+                            // 각 알림 항목의 너비를 계산하여 최대 너비를 업데이트
+                            let itemWidth = $(`#noti${notification.id}`).outerWidth();
+                            if (itemWidth > maxWidth) {
+                                maxWidth = itemWidth;
+                            }
+                        });
+
+                        // 드롭다운의 너비를 알림 텍스트에 맞게 설정
+                        $('#notifications').css('width', maxWidth + 30 + 'px'); // 여백 추가
+                    }
+                }
+
+                function updateNoti(notificationId, notificationStatus, notificationLink) {
+                    $.ajax({
+                        url : '/notification/update',
+                        method : 'POST',
+                        dataType: 'json',
+                        data: {
+                            "notificationId" : notificationId,
+                            "notificationStatus" : notificationStatus
+                        },
+                        success: function(response) {
+                            if (notificationStatus == 'DELETED') {
+                                $('#noti' + notificationId).remove();
+                                if ($('#notifications').children().length === 0) {
+                                    $('#notifications').append('<div class="dropdown-item py-2 text-center">알림이 비어있습니다.</div>');
+                                }
+                            } else if (notificationStatus == 'CHECKED'){
+                                $('#noti' + notificationId).addClass('alarm-read'); // 읽음 처리 시 색상 변경
+                                location.href = notificationLink;
+                            }
+                        },
+                        error: function(error) {
+                            alert('알림 상태를 업데이트할 수 없습니다');
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+
+                window.updateNoti = updateNoti;
+            });
+        </script>
+    </th:block>
+</th:block>

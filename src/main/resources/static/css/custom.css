@@ -1,0 +1,313 @@
+.border-none {
+    border: none !important;
+}
+
+.no-outline:focus {
+    outline: none !important;
+    box-shadow: none;
+}
+
+/* 폰트 사이즈 */
+.fs-1 {
+    font-size: 2.5rem;
+}
+.fs-2 {
+    font-size: 2rem;
+}
+.fs-3 {
+    font-size: 1.75rem;
+}
+.fs-4 {
+    font-size: 1.5rem;
+}
+.fs-5 {
+    font-size: 1.25rem;
+}
+.fs-6 {
+    font-size: 1rem;
+}
+
+
+/* 알림 */
+.alarm {
+    position: relative;
+}
+.alarm-read,
+.alarm-read.noti-delete{
+    color: darkgray;
+}
+.alarm-read:hover,
+.alarm-read.noti-delete{
+    color: gray;
+    background-color: #fff;
+}
+.noti-msg {
+    width: 100%;
+    line-height: 1.3rem;
+    text-decoration: none;
+}
+.noti-msg:hover {
+    text-decoration: none;
+    color: inherit;
+}
+.noti-delete {
+    color: black;
+}
+#notifications {
+    max-height: 400px;
+    overflow-y: auto;
+}
+#notifications.dropdown-item {
+    padding: .25rem 1rem !important;
+}
+
+/* 커서 */
+.cursor {
+    cursor: pointer;
+}
+.cursor-none{
+    cursor: none;
+}
+
+.box-size{
+    width: 300px;
+    height: 300px;
+}
+
+
+/* 드롭 다운 */
+.dropdown-item:active {
+    background-color: #375a7f;
+    color: white;
+}
+
+.dropdown-menu {
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 드롭다운 화살표 스타일 */
+#notifications.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 17px;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+}
+
+#header-menu.dropdown-menu::before,
+#header-menu2.dropdown-menu::before{
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 2px;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+}
+
+.margin-top{
+    margin-top: 75px;
+}
+
+.height-100 {
+    height: 100vh;
+}
+
+/* 상세 이미지 */
+.detail-image {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+#delete-btn:hover,
+.edit-btn:hover {
+    color: dimgray;
+}
+/* 캐러셀 버튼 */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    display: none;
+    background-color: black;
+    background-size: 70%, 70%;
+    border-radius: 20px;
+}
+
+.carousel:hover .carousel-control-prev-icon,
+.carousel:hover .carousel-control-next-icon {
+    display: block;
+}
+
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+
+}
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+    background-color: dimgray;
+    background-size: 70%, 70%;
+    border-radius: 20px;
+}
+
+/* 제품 카드 */
+.product-card {
+    transition: box-shadow 0.3s ease-in-out; /* 애니메이션 효과 추가 */
+}
+.product-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 추가 */
+}
+.product-image {
+    width: 100%;
+    height: 250px;
+    margin: auto 0;
+    object-fit: cover;
+}
+
+/* favorite */
+.favorite-btn,
+.favorite-btn:focus,
+.favorite-btn:active {
+    outline: none;
+    box-shadow: none;
+    background-color: inherit;
+    border: none
+;
+}
+
+.favorite-btn > .bi-heart,
+.favorite-btn > .bi-heart-fill {
+    color: red;
+}
+
+/* 채팅 */
+html {
+    scroll-behavior: smooth;
+}
+.chat-message {
+    padding: 10px 16px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.chat-message.text {
+    background-color: #f8f9fa;
+}
+.chat-message-end {
+    justify-content: center;
+    background-color: #f8d7da;
+}
+.chat-message.sent {
+    background-color: #343a40;
+    color: #fff;
+    margin-left: auto;
+    text-align: left;
+}
+.chat-message.received {
+    background-color: #adb5bd;
+    color: #000;
+    margin-right: auto;
+    text-align: left;
+}
+.chat-message-wrapper {
+    display: flex;
+}
+.chat-message-wrapper.sent {
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+.chat-message-wrapper.received {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.chat-time {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.chat-time.sent {
+    margin-left: auto;
+    margin-right: 8px;
+}
+.chat-time.received {
+    margin-left: 8px;
+    margin-right: auto;
+}
+.chatSpace {
+    padding-top: 150px;
+    overflow-y: auto;
+    height: calc(100vh - 65px);
+}
+
+.profile-header {
+    position: fixed;
+    top: 75px;
+    z-index: 50;
+    border: 1px solid #ddd;
+    background-color: #fff;
+
+}
+
+.profile .itemName {
+    margin: 0;
+    font-weight: 700;
+}
+
+/* 헤더 */
+.nav-nickname {
+    font-weight: 700;
+}
+
+/* 거래내역 테이블 */
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* 회원가입 */
+.sign-up {
+    margin: 85px auto 30px auto;
+}
+.sign-up > div {
+    margin: auto 20px;
+    max-width: 80%;
+    min-width: 540px;
+}
+
+/* 프리뷰 */
+#preview-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+#preview-container img {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.no-caret::after {
+    display: none !important;
+}
+
+/* 푸터 */
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+}
+.footer a {
+    color: #f8f9fa;
+    text-decoration: none;
+}
+.footer a:hover {
+    text-decoration: underline;
+}

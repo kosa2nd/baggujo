@@ -1,14 +1,15 @@
 package com.baggujo.dto;
 
-import com.baggujo.dto.enums.ItemCondition;
 import com.baggujo.dto.enums.ItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class ItemPreviewDTO {
 
     private long id;

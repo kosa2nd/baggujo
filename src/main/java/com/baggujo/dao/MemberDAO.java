@@ -8,4 +8,6 @@ import java.sql.SQLException;
 @Mapper
 public interface MemberDAO {
     MemberDTO findMemberByEmail(String email) throws SQLException, NullPointerException;
+    boolean getEmailDuplicated(String email) throws SQLException;
+    long getMemberIdByItemId(long itemId);
 }

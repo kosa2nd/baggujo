@@ -4,33 +4,313 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>바꾸조</title>
+    <link rel="icon" href="../../static/img/favicon.png" type="image/png">
+    <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootswatch Litera theme -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.2.0/litera/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- bootstrap-select CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
+    <link href="../../static/css/custom.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <h1>게시글 상세</h1>
-    <div>
-        <div class="d-flex">
-            <label class="pr-3">제목</label>
-            <h3 th:text="${itemDetail.title}">제목</h3>
+
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+
+<div class="margin-top container" style="height: 100vh;">
+    <div class="d-flex w-90 p-2">
+        <div id="carouselExampleIndicators" class="carousel slide w-50 mr-5" data-ride="carousel" data-interval="false">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li th:each="itemImage, iterStat : ${itemDetail.itemImages}" th:if="${iterStat.index > 0}" data-target="#carouselExampleIndicators" th:data-slide-to="${iterStat.index}"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div th:if="${#lists.isEmpty(itemDetail.itemImages)}">
+                    <img src="/static/img/logo_black.svg" class="d-block detail-image mx-auto"/>
+                </div>
+                <div th:each="itemImage, iterStat : ${itemDetail.itemImages}" th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                    <img th:src="@{'/images/' + ${itemImage}}" class="d-block detail-image mx-auto" alt="상품이미지">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
-        <div class="d-flex">
-            <label class="pr-3">내용</label>
-            <p th:text="${itemDetail.description}">내용</p>
+
+        <div class="w-100 h-100 mt-3">
+            <div class="mb-3">
+                <h1 th:text="${itemDetail.title}">제목</h1>
+                <hr />
+            </div>
+            <div class="d-flex">
+                <label class="pr-3">작성자</label>
+                <p th:text="${itemDetail.nickname}">작성자</p>
+            </div>
+            <div class="d-flex">
+                <label class="pr-3">작성일</label>
+                <p th:text="${itemDetail.formattedUpdateDate}">업데이트 날짜</p>
+            </div>
+            <div class="d-flex">
+                <label class="pr-3">사용감</label>
+                <p th:text="${itemDetail.itemCondition.kor}">사용감</p>
+            </div>
+            <div class="d-flex">
+                <label class="pr-3">상태</label>
+                <p th:text="${itemDetail.itemStatus.kor}">상태</p>
+            </div>
+            <div class="d-flex">
+                <label class="pr-3">카테고리</label>
+                <p th:text="${itemDetail.itemCategoryName}">카테고리 이름</p>
+            </div>
+
+            <div class="d-flex w-100 justify-content-between mt-5">
+                <!-- 왼쪽 버튼 그룹 -->
+                <div class="d-flex">
+                    <!-- 로그인된 사용자에게만 보이는 좋아요 버튼 (anonymousUser는 인증되지 않은 사용자) -->
+                    <th:block sec:authorize="isAuthenticated()">
+                        <div class="d-flex align-items-center mr-2" th:if="${#authentication.principal != 'anonymousUser'}">
+                            <button id="favorite-btn" class="d-flex btn btn-outline-danger align-items-center fs-5 mr-2">
+                                <i id="favorite-icon" class="bi bi-heart mr-2 fs-5" th:classappend="${isFavorite} ? 'bi-heart-fill' : 'bi-heart'"></i>
+                                <span id="favorite-count-logged-in" th:text="${totalFavorites}">0</span>
+                            </button>
+                        </div>
+                    </th:block>
+
+                    <!-- 비로그인 사용자에게만 보이는 로그인 유도 버튼 -->
+                    <div class="d-flex align-items-center mr-2" th:if="${#authentication.principal == 'anonymousUser'}">
+                        <button class="d-flex btn btn-outline-danger align-items-center fs-5 mr-2" onclick="alert('로그인이 필요합니다.'); window.location.href='/member/login';">
+                            <i class="bi bi-heart mr-2 fs-5"></i>
+                            <span id="favorite-count-anonymous" th:text="${totalFavorites}">0</span>
+                        </button>
+                    </div>
+
+                    <button id="exchange-btn2" th:if="${(#authentication.principal == 'anonymousUser')}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
+
+                    <!-- 교환 신청 버튼 -->
+                    <th:block sec:authorize="isAuthenticated()">
+                        <button id="exchange-btn" th:if="${(#authentication.principal.id != itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청</button>
+                        <button id="exchangeList-btn" onclick="location.href='/trade/myTrade'" th:if="${(#authentication.principal.id == itemDetail.memberId)}" type="button" class="btn btn-success fs-5" data-toggle="modal" data-target="#exchangeModal">교환신청내역</button>
+                    </th:block>
+                </div>
+
+                <!-- 오른쪽 버튼 그룹 -->
+                <div class="d-flex align-items-center">
+                    <th:block sec:authorize="isAuthenticated()">
+                        <div th:if="${#authentication.principal.id == itemDetail.memberId}" class="d-flex align-items-center">
+                            <button th:onclick="|location.href='/item/update/${itemDetail.id}'|" type="button" class="edit-btn mr-2" style="font-size: 14px;">수정</button>
+                            <button type="button" class="fs-5" style="font-size: 14px;" id="delete-btn">삭제</button>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+
         </div>
-        <div class="d-flex">
-            <label class="pr-3">사용감</label>
-            <p th:text="${itemDetail.itemCondition}">사용감</p>
-        </div>
-        <div class="d-flex">
-            <label class="pr-3">상태</label>
-            <p th:text="${itemDetail.itemStatus}">상태</p>
-        </div>
-        <div class="d-flex">
-            <label class="pr-3">카테고리</label>
-            <p th:text="${itemDetail.itemCategoryName}">카테고리 이름</p>
+    </div>
+
+    <hr class="w-80"/>
+
+    <div class="w-80">
+        <h4 class="pr-3 mb-4">물품 내용</h4>
+        <p th:text="${itemDetail.description}" style="white-space:pre; line-height: 1.5rem;">내용</p>
+    </div>
+</div>
+
+<!-- 모달 -->
+<div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exchangeModalLabel">교환 신청</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <select id="user-item-select" class="my-image-selectpicker selectpicker" data-live-search="true">
+                        <option value="" selected disabled>교환 물품 선택</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button id="request-insert-btn" type="button" class="btn btn-success">교환신청</button>
+            </div>
         </div>
     </div>
 </div>
+
+<th:block th:replace="~{/fragment/footer :: footerFragement}"></th:block>
+
+
+<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/bootstrap-select@1.13.8/dist/js/bootstrap-select.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        // 좋아요 버튼 클릭 시 처리
+        $('#favorite-btn').click(function() {
+            let itemId = [[${itemDetail.id}]];
+            $.ajax({
+                url: '/favorite/toggle/' + itemId,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(response) {
+                    let icon = $('#favorite-icon');
+                    let count = $('#favorite-count-logged-in');  // 로그인된 사용자용 count 업데이트
+                    if (response.isFavorite) {
+                        icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                    } else {
+                        icon.removeClass('bi-heart-fill').addClass('bi-heart');
+                    }
+                    count.text(response.totalFavorites);
+                },
+                error: function(xhr, status, error) {
+                    console.error('좋아요 토글 실패:', error);
+                }
+            });
+        });
+
+        // 로그인 여부 확인
+        const isLoggedIn = [[${#authentication.principal != 'anonymousUser'}]];
+
+        // 교환 신청 버튼 클릭 이벤트
+        $('#exchange-btn2').click(function() {
+            if (!isLoggedIn) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/member/login';
+            } else {
+                $('#exchangeModal').modal('show');
+            }
+        });
+
+        // 페이지 로드 시 좋아요 상태 및 개수 초기화
+        let itemId = [[${itemDetail.id}]];
+        $.ajax({
+            url: '/favorite/count/' + itemId,
+            method: 'GET',
+            success: function(response) {
+                $('#favorite-count-logged-in').text(response.totalFavorites);  // 로그인된 사용자용 count 업데이트
+                $('#favorite-count-anonymous').text(response.totalFavorites);  // 비로그인 사용자용 count 업데이트
+
+                if (response.isFavorite !== undefined) {
+                    let icon = $('#favorite-icon');
+                    if (response.isFavorite) {
+                        icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                    } else {
+                        icon.removeClass('bi-heart-fill').addClass('bi-heart');
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('좋아요 상태 및 개수 불러오기 실패:', error);
+            }
+        });
+
+        // 모달이 열릴 때마다 물품 목록을 동적으로 불러오기
+        $('#exchangeModal').on('show.bs.modal', function () {
+            const selectPicker = $('.my-image-selectpicker');
+            $.ajax({
+                url: '/item/request',
+                method: 'GET',
+                success: function(data) {
+                    selectPicker.empty();
+                    selectPicker.append('<option value="" selected disabled>교환 물품 선택</option>');
+                    if (Array.isArray(data)) {
+                        data.forEach(function(item) {
+                            const option = `<option data-thumbnail="/images/${item.itemImage}" value="${item.itemId}">${item.itemTitle}</option>`;
+                            selectPicker.append(option);
+                        });
+
+                        // 옵션에 이미지 추가
+                        selectPicker.find('option').each(function() {
+                            const $option = $(this);
+                            const itemImage = $option.attr('data-thumbnail');
+                            if (itemImage) {
+                                const content = `<div style="display: flex; align-items: center;">
+                                        <img src="${itemImage}" style="width: 16px; height: 16px; margin-right: 8px; object-fit: cover; border-radius: 2px;"/>
+                                        ${$option.text()}
+                                     </div>`;
+                                $option.attr('data-content', content);
+                            }
+                        });
+
+                        // selectpicker를 다시 초기화하여 새로운 옵션을 반영
+                        selectPicker.selectpicker('refresh');
+                    } else {
+                        console.error('응답 데이터가 배열이 아닙니다:', data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('물품 목록 불러오기 실패:', error);
+                }
+            });
+        });
+
+        // 교환 신청 버튼 클릭하여 교환 신청하기
+        $('#request-insert-btn').click(function() {
+            let itemId = [[${itemDetail.id}]];
+            let selectedItemId = $('#user-item-select').val();
+            let itemStatus = "[[${itemDetail.itemStatus}]]"; // 문자열로 지정
+
+            if (!selectedItemId) {
+                alert("교환할 물품을 선택해주세요.");
+                return;
+            }
+
+            $.ajax({
+                url: '/item/request',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    requestItemId: selectedItemId,
+                    responseItemId: itemId, // 물품목록에서 선택한 물품 id
+                    requestStatus: itemStatus
+                }),
+                success: function(response) {
+                    console.log(response, "교환 신청 성공");
+                    location.href = "/trade/myTrade?request=sent";
+                },
+                error: function(xhr, status, error) {
+                    console.error('교환 신청 실패:', error);
+                }
+            });
+        });
+
+        //삭제 버튼 클릭하여 글 삭제하기
+        $('#delete-btn').click(function() {
+            let itemId = [[${itemDetail.id}]];
+            let memberId = [[${itemDetail.memberId}]];
+            alert("memberId: " + memberId + ", itemId: " + itemId);
+            $.ajax({
+                url: '/item/deletemyitems',
+                method: 'POST',
+                data: {memberId: memberId, itemId: itemId},
+                success: function(response) {
+                    history.back();
+                },
+                error: function(xhr, status, error) {
+                    console.error('삭제 요청 실패:', error);
+                }
+            });
+        });
+
+        // 이미지가 하나일 경우 캐러셀의 이전 및 다음 버튼 숨기기
+        if ($('.carousel-item').length <= 1) {
+            $('.carousel-control-prev, .carousel-control-next, .carousel-indicators').hide();
+        }
+    });
+</script>
 </body>
 </html>

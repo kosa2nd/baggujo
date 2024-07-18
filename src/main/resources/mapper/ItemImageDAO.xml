@@ -4,18 +4,23 @@
 <mapper namespace="com.baggujo.dao.ItemImageDAO">
 
     <insert id="insertItemImages" parameterType="java.util.Map">
-        INSERT INTO item_image (
-        name, s_name, img_no, item_id)
+        insert into item_image(name, s_name, img_no, item_id)
         SELECT A.*
         FROM (
         <foreach collection="list" item="item" separator="UNION ALL ">
-            SELECT #{item.name} as name,
-            #{item.sName} as s_name,
-            #{item.imgNo} as img_no,
-            #{item.itemId} as item_id
-            FROM DUAL
+            SELECT
+                #{item.name} name,
+                #{item.sName} s_name,
+                #{item.imgNo} img_no,
+                #{item.itemId} item_id
+            from dual
         </foreach>
         ) A
     </insert>
+
+    <!-- 물품 이미지 삭제 -->
+    <delete id="deleteItemImages" parameterType="long">
+        delete from item_image where item_id = #{id}
+    </delete>
 
 </mapper>

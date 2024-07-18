@@ -4,14 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>바꾸조</title>
-    <link rel="stylesheet" href="../../static/style.css"/>
+    <link rel="icon" href="../../static/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="../../static/css/style.css"/>
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootswatch Litera theme -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3/litera/bootstrap.min.css?ver=1.0"
           rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="../../static/css/reset.css?ver=1.0" rel="stylesheet">
+    <link href="../../static/css/custom.css" rel="stylesheet">
+
 </head>
 <body>
+
+<th:block th:replace="~{/fragment/header :: headerFragment}"></th:block>
+
 <div class="container h-100 d-flex align-items-center justify-content-center">
     <div class="row w-100">
         <div class="col"></div>
@@ -25,24 +34,25 @@
                     <!-- ID,Password 입력공간 -->
                     <form method="post" action="/loginProcess">
                         <div>
-                            <label for="InputEmail" class="form-label mt-4">ID</label>
-                            <input type="text" class="form-control" id="InputEmail" placeholder="Enter email" name="username">
+                            <label for="InputEmail" class="form-label mt-4">Email</label>
+                            <input type="text" class="form-control" id="InputEmail" placeholder="Enter email" name="username" required>
                         </div>
                         <div class="lastLabel-margin mb-4">
                             <label for="InputPassword" class="form-label mt-4">Password</label>
                             <input type="password" class="form-control" id="InputPassword" placeholder="Password"
-                                   autocomplete="off" name="password">
+                                   autocomplete="off" name="password" required>
                             <small id="Info" class="form-text text-muted"></small>
                         </div>
                         <!-- ID,Password 불일치 -->
                         <div th:if="${error != null}">
-                            <p th:text="'아이디 또는 비밀번호가 틀렸습니다.'"></p>
+                            <p class="text-danger" th:text="'아이디 또는 비밀번호가 틀렸습니다.'"></p>
                         </div>
                         <!-- 버튼 공간 -->
-                        <div class="bottom d-flex">
+                        <div class="bottom flex-column text-align-center">
                             <!-- 메인페이지 생성시 html 연결해야함 -->
-                            <input type="submit" class="btn btn-primary mx-auto" onclick="login()" value="로그인">
-                            <button type="button" class="btn btn-primary mx-auto" onClick="location.href='signUp.html'">
+                            <input type="submit" class="btn btn-primary w-100 mb-3" onclick="login()" value="로그인">
+                            <hr class="m-1" />
+                            <button type="button" class="mt-2 btn btn-link w-100" onClick="location.href='/member/signup'">
                                 회원가입
                             </button>
                         </div>
@@ -53,10 +63,9 @@
         <div class="col"></div>
     </div>
 </div>
-<script>
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

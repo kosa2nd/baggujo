@@ -1,24 +1,16 @@
 package com.baggujo.controller;
 
-import com.baggujo.dto.AuthDTO;
-import com.baggujo.dto.CategoryDTO;
-import com.baggujo.dto.ItemDetailDTO;
-import com.baggujo.dto.ItemInsertDTO;
-import com.baggujo.dto.enums.ItemCondition;
+import com.baggujo.dto.*;
+import com.baggujo.security.dto.MemberAuthDTO;
 import com.baggujo.service.ItemService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,7 +31,11 @@ public class ItemController {
     }
 
     @PostMapping("/insert")
-    public String submitPost(@Validated @ModelAttribute ItemInsertDTO itemInsertDTO, BindingResult bindingResult, Model model) {
+    public String submitPost(@Validated @ModelAttribute ItemInsertDTO itemInsertDTO, @AuthenticationPrincipal AuthDTO authDTO,BindingResult bindingResult, Model model) {
+        if(authDTO == null) {
+            return "redirect:/member/login";
+        }
+
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             boolean missingValue = false;
@@ -62,17 +58,45 @@ public class ItemController {
             return "redirect:/item/detail/" + id;
         } catch (Exception e) {
             e.printStackTrace();
+
+            model.addAttribute("categories", itemService.getCategories());
             model.addAttribute("errorMessage", "게시글 등록 중 오류가 발생했습니다.");
             return "item/insert";
         }
     }
 
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") long id, Model model, @AuthenticationPrincipal AuthDTO authDTO) throws SQLException {
+        if (authDTO == null) {
+            return "redirect:/member/login";
+        }
 
-    @GetMapping("detail/{id}")
-    public String getItemDetail(@PathVariable("id") long id, Model model) throws SQLException {
+        ItemDetailDTO itemDetail = itemService.getItemDetailById(id);
+        model.addAttribute("itemDetail", itemDetail);
+        model.addAttribute("categories", itemService.getCategories());
+        return "item/update";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String getItemDetail(@PathVariable("id") long id, @AuthenticationPrincipal MemberAuthDTO memberAuthDTO, Model model) throws SQLException {
         ItemDetailDTO itemDetail = itemService.getItemDetailById(id);
         model.addAttribute("itemDetail", itemDetail);
         return "item/detail";
     }
 
+    @GetMapping("/myfavorite")
+    public String getMyFavoriteItems(@AuthenticationPrincipal AuthDTO authDTO, Model model) {
+        if (authDTO == null) {
+            return "redirect:/member/login";
+        }
+        return "item/myfavorite";
+    }
+
+    @GetMapping("/myitems")
+    public String getMyItems(@AuthenticationPrincipal AuthDTO authDTO) {
+        if (authDTO == null) {
+            return "redirect:/member/login";
+        }
+        return "item/myitems";
+    }
 }

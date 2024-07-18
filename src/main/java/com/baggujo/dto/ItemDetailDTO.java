@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -18,13 +19,24 @@ public class ItemDetailDTO {
     private long id;
     private String title;
     private String description;
-    private LocalDate uploadDate;
-    private LocalDate updateDate;
+    private LocalDateTime uploadDate;
+    private LocalDateTime updateDate;
     private ItemStatus itemStatus;
     private ItemCondition itemCondition;
     private long itemCategoryId;
     private String itemCategoryName;
-    private long member_id;
+    private long memberId;
     private String nickname;
     private List<String> itemImages;
+    private int enable;
+
+    public String getFormattedUploadDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return uploadDate.format(formatter);
+    }
+
+    public String getFormattedUpdateDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return updateDate.format(formatter);
+    }
 }
