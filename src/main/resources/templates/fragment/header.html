@@ -6,7 +6,7 @@
             </a>
             <div class="w-75">
                 <div class="d-flex w-60 mx-auto rounded-pill bg-white">
-                    <input id='keyword' class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" type="search" placeholder="Search">
+                    <input id='keyword' class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" type="search" placeholder="Search" th:value="${param.keyword}">
                     <button id="searchBtn" class="btn no-outline rounded-circle" onclick="javascript:search()">
                         <i class="bi bi-search"></i>
                     </button>
