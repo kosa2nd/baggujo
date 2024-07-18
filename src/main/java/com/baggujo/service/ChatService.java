@@ -79,7 +79,6 @@ public class ChatService {
         }
 
         String originalName = image.getOriginalFilename();
-        System.out.println("!!!!!!!!!!!!!!!!+" + originalName);
         String folderPath = makeFolder();
         String uuid = UUID.randomUUID().toString();
         String saveName = folderPath +
@@ -91,7 +90,6 @@ public class ChatService {
             String thumbnailSaveName = folderPath + File.separator + "s_" + uuid + "_" + originalName;
             File thumbnailFile = new File(uploadPath + File.separator + thumbnailSaveName);
             Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 300, 300);
-            System.out.println("!!!!!!!!!!!!!!!!!!!" + thumbnailSaveName);
             UploadedChatImageDTO uploadedChatImageDTO = new UploadedChatImageDTO(saveName, thumbnailSaveName);
 
             return uploadedChatImageDTO;

@@ -307,7 +307,7 @@
         });
 
         // 이미지가 하나일 경우 캐러셀의 이전 및 다음 버튼 숨기기
-        if ($('.carousel-item').length < 1) {
+        if ($('.carousel-item').length <= 1) {
             $('.carousel-control-prev, .carousel-control-next, .carousel-indicators').hide();
         }
     });

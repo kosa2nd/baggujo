@@ -32,17 +32,6 @@
 .alarm {
     position: relative;
 }
-/*.alarm::after {*/
-/*    content: '';*/
-/*    position: absolute;*/
-/*    top: 1px;*/
-/*    right: 1px;*/
-/*    width: 8px;*/
-/*    height: 8px;*/
-/*    background-color: red;*/
-/*    border-radius: 50%;*/
-/*    border: 1px solid white;*/
-/*}*/
 .alarm-read,
 .alarm-read.noti-delete{
     color: darkgray;
@@ -203,8 +192,6 @@ html {
     padding: 10px 16px;
     border-radius: 20px;
     margin-bottom: 10px;
-    /*max-width: 70%;*/
-    /*word-wrap: break-word;*/
     position: relative;
 }
 .chat-message.text {

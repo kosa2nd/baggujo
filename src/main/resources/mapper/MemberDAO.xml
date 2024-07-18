@@ -15,22 +15,6 @@
         where email = #{email}
     </select>
 
-    <!-- 비밀번호 수정-->
-    <update id="updatePasswordMember">
-        update member
-        set password = #{password}
-        where id = #{memberId}
-    </update>
-
-    <!-- 이름 닉네임 전화번호 수정-->
-    <update id="updateTextMember" >
-        update member
-        set name = #{name},
-            nickname = #{nickname},
-            phone_number = #{phoneNumber}
-        where id = #{memberId}
-    </update>
-
     <!-- 회원정보 조회 -->
     <select id="getMemberById" resultType="com.baggujo.dto.UpdateTextMemberDTO">
         select password, name, nickname, phone_number from member where id = #{memberId}
